@@ -1,18 +1,27 @@
 module mod_init
   use FFTW3
+  use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   use mod_utils
 
   implicit none
   public
   real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass
-  real(DP), dimension(:), allocatable    :: x,y,z
-  complex(DP), dimension(:), allocatable :: wfx, wfp
-  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p
-  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p
+  real(DP), dimension(:), allocatable    :: x,y,z,point
+  complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1
+  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2
+  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3
   integer               :: run, nstep, ngrid, wf, rank, iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
 
-  namelist /general/run,nstep,dt,ngrid,rank,xmin,xmax,mass,wf
+  real(DP), dimension(:), allocatable     :: v1
+  real(DP), dimension(:,:), allocatable   :: v2
+  real(DP), dimension(:,:,:), allocatable :: v3
+  character(len=50)             :: pot=''
+  character(len=*),dimension(1),parameter :: var1 = (/'x'/)
+  character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
+  character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
+
+  namelist /general/run,nstep,dt,ngrid,rank,xmin,xmax,mass,wf,pot
 
 CONTAINS
 
@@ -36,13 +45,13 @@ subroutine init()
 dx=(xmax-xmin)/(ngrid-1)
 
 ! allocating arrays
-allocate(x(ngrid))
-if(rank .eq. 2) allocate(y(ngrid))
-if(rank .eq. 3) allocate(y(ngrid),z(ngrid))
+if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),point(1))
+if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),point(2))
+if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),point(3))
 
-if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid))
-if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid))
+if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid))
+if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid))
 
 ! setting up grid poitns
 x(1)=xmin
@@ -164,10 +173,56 @@ elseif(rank .eq. 3) then
 endif
 
 !-- POTENTIAL energy init
+  write(*,*)"Potential: ",pot
+  call initf (1)                                                     !Initialization of parser
 
-
+  if(rank .eq. 1) then
+    call parsef (1, pot, var1)                                       !Bytcompiling function string  
+    do i=1, ngrid
+      point = x(i)
+      v1(i) = evalf (1, point)                                       !Evaluating potential for grid
+      if (EvalErrType > 0) then
+        WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+        stop 1
+      end if
+      theta_v1(i) = cmplx(cos(v1(i)*dt/2.0d0),sin(v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+    end do
+!2D   
+  elseif(rank .eq. 2) then
+    call parsef (1, pot, var2)                                      
+    do i=1, ngrid
+      do j=1, ngrid
+        point = (/x(i),y(j)/)
+        v2(i,j) = evalf (1, point) 
+        if (EvalErrType > 0) then
+          WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+          stop 1
+        end if
+        theta_v2(i,j) = cmplx(cos(v2(i,j)*dt/2.0d0),sin(v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      end do
+    end do
+  
+!3D
+  elseif(rank .eq. 3) then
+    call parsef (1, pot, var3)
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          point = (/x(i),y(j),z(k)/)
+          v3(i,j,k) = evalf (1, point)
+          if (EvalErrType > 0) then
+            WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+            stop 1
+          end if
+          theta_v3(i,j,k) = cmplx(cos(v3(i,j,k)*dt/2.0d0),sin(v3(i,j,k)*dt/2.0d0))  
+        end do
+      end do
+    end do 
+  end if
 
 !-- KINETIC energy init
+
+
 
 
 end subroutine init
@@ -214,9 +269,10 @@ select case (wf)
     write(*,*) "ERR: wf must be either 0 or 1."
 end select
 
-! loading potential
-
-
+if (pot == "") then
+  write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
+  stop 1
+end if
 
 write(*,*) 'All checked.'
 
