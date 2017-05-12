@@ -1,17 +1,226 @@
 module mod_init
+  use FFTW3
+  use mod_utils
+
   implicit none
   public
-  INTEGER, PARAMETER  :: DP = KIND(1.0d0)
-! real(DP)    ::
-  
+  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass
+  real(DP), dimension(:), allocatable    :: x,y,z
+  complex(DP), dimension(:), allocatable :: wfx, wfp
+  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p
+  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p
+  integer               :: run, nstep, ngrid, wf, rank, iost, i, j, k
+  integer ( kind = 8 )  :: plan_forward, plan_backward
+
+  namelist /general/run,nstep,dt,ngrid,rank,xmin,xmax,mass,wf
 
 CONTAINS
 
 subroutine init()
   implicit none
 
+!-- Reading input file
+  open(100,file='input.q', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+  read(100, general, iostat=iost)
+  if (iost.ne.0) then
+    write(*,*)'ERROR: input.q file must be provided'
+    write(*,*) iost
+    stop 1
+  end if
+
+!-- Input check
+  call check()
+
+!-- GRID set-up
+
+dx=(xmax-xmin)/(ngrid-1)
+
+! allocating arrays
+allocate(x(ngrid))
+if(rank .eq. 2) allocate(y(ngrid))
+if(rank .eq. 3) allocate(y(ngrid),z(ngrid))
+
+if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid))
+if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid))
+
+! setting up grid poitns
+x(1)=xmin
+if(rank .gt. 1) y(1)=xmin
+if(rank .gt. 2) z(1)=xmin
+
+do i=2, ngrid
+  x(i) = x(i-1) + dx
+  if(rank .gt. 1) y(i) = y(i-1) + dx
+  if(rank .gt. 2) z(i) = z(i-1) + dx
+end do
+
+!-- Initialization of WafeFunction
+
+if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
+  write(*,*) "Generating gaussian wave packet at the center of the grid."
+  xmean=(xmax-xmin)/2.0d0+xmin
+  stddev=(xmax-xmean)/5.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
+  k_0 = sqrt(2*mass*1)                                                       ! sqrt(2*m*E)/h = k0
+  do i=1, ngrid
+    select case (rank)
+      case (1)
+        wfx(i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
+                       exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
+      case (2)
+        do j=1, ngrid
+          wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) ), &
+                             exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) )
+        end do
+      case (3)
+        do j=1, ngrid
+          do k=1, ngrid
+            wf3x(i,j,k) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
+                           - (((z(k)-xmean)**2)/(2*stddev**2))), &
+                           exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
+                           - (((z(k)-xmean)**2)/(2*stddev**2))))
+          end do
+        end do
+    end select
+  end do
+elseif(wf .eq. 1) then
+!Procedure for loading WF from file
+end if
+
+if(rank .eq. 1) call normalize1d(wfx,ngrid,dx) 
+if(rank .eq. 2) call normalize2d(wf2x,ngrid,dx)
+if(rank .eq. 3) call normalize3d(wf3x,ngrid,dx) 
+
+!-- Initialization of FFT procedures
+if(rank .eq. 1) then
+
+call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wfx, wfp)
+call dfftw_destroy_plan(plan_forward)
+
+call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wfp, wfx)
+call dfftw_destroy_plan(plan_backward)
+
+elseif(rank .eq. 2) then
+
+call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wf2x, wf2p)
+call dfftw_destroy_plan(plan_forward)
+
+call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wf2p, wf2x)
+call dfftw_destroy_plan(plan_backward)
+
+elseif(rank .eq. 3) then
+
+call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wf3x, wf3p)
+call dfftw_destroy_plan(plan_forward)
+
+call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wf3p, wf3x)
+call dfftw_destroy_plan(plan_backward)
+
+end if
+
+!--Printing of WF
+
+if(rank .eq. 1) then
+  call normalize1d(wfx,ngrid,dx)
+
+  open(201,file='wf1d.out', action='WRITE', iostat=iost)
+  write(201,*) "#WF - QDYN output"
+  write(201,*) "#x   REAL   IMAG   PROBABILITY-DENSITY"
+  close(201)
+  open(201,file='wf1d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf1d(wfx,x)
+  write(*,*)"Outputing WF to file wf1d.out"
+
+elseif(rank .eq. 2) then
+  call normalize2d(wf2x,ngrid,dx)
+
+  open(202,file='wf2d.out', action='WRITE', iostat=iost)
+  write(202,*) "#WF - QDYN output"
+  write(202,*) "#x  y   REAL   IMAG   PROBABILITY-DENSITY"
+  close(202)
+  open(202,file='wf2d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf2d(wf2x,x,y)
+  write(*,*)"Outputing WF to file wf2d.out"
+
+elseif(rank .eq. 3) then
+  call normalize3d(wf3x,ngrid,dx)
+
+  open(203,file='wf3d.out', action='WRITE', iostat=iost)
+  write(203,*) "#WF - QDYN output"
+  write(203,*) "#x  y  z   REAL   IMAG   PROBABILITY-DENSITY"
+  close(203)
+  open(203,file='wf3d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf3d(wf3x,x,y,z)
+  write(*,*)"Outputing WF to file wf3d.out"
+endif
+
+!-- POTENTIAL energy init
+
+
+
+!-- KINETIC energy init
+
 
 end subroutine init
+
+subroutine check()
+
+write(*,*) "====== Qdyn ====="
+
+! ngrid is power of 2
+if ((ngrid .ne. 0) .and. (IAND(ngrid, ngrid-1) .eq. 0))  then
+  write(*,*) "Grid size: ",ngrid
+else
+  write(*,*) "ERR: Grid size must be power of two."
+  stop 1
+end if 
+
+! params of grid
+if ((rank .lt. 1) .or. (rank .gt. 3)) then
+  write(*,*) "ERR: Dimensionality must be 1,2 or 3."
+  stop 1
+else
+  write(*,*) "Number of dimensions: ",rank
+end if
+
+if (xmin .gt. xmax) then
+  write(*,*) "ERR: xmin must be smaller than xmax."
+  stop 1
+else
+  write(*,*) "xmin, xmax:", xmin, xmax
+end if
+
+select case (wf)
+  case (0)
+    write(*,*) "WF will be generated by program."
+  case (1)
+    write(*,*) "WF will be read from wf.in file."
+    open(200,file='wf.in', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+    if (iost.ne.0) then
+      write(*,*)'ERROR: wf.in file must be provided'
+      write(*,*) iost
+      stop 1
+    end if
+  case default
+    write(*,*) "ERR: wf must be either 0 or 1."
+end select
+
+! loading potential
+
+
+
+write(*,*) 'All checked.'
+
+end subroutine check
 
 end module
 

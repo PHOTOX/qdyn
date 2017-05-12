@@ -1,5 +1,6 @@
 program qdyn
-use mod_init
+!  use FFTW3
+  use mod_init
 
 ! -------------------------------------------------------------------!
 !                               / Qdyn \                             !
