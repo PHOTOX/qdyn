@@ -3,7 +3,7 @@ module mod_utils
   implicit none
   public
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
-! real(DP)              ::
+  real(DP), parameter   :: pi = 3.14159265
 
 CONTAINS
 
@@ -69,14 +69,14 @@ subroutine normalize3d(wf,ngrid,dx)
 end subroutine normalize3d
 
 !=== PRINTING ===!
-subroutine printwf1d(wf,x)
+subroutine printwf1d(wf,x,v1)
 
   complex(DP), intent(in)    :: wf(:)
-  real(DP), intent(in)       :: x(:)
+  real(DP), intent(in)       :: x(:),v1(:)
   integer                    :: i
 
   do i=1, size(x)
-    write(201,*) x(i), real(wf(i)), aimag(wf(i)), real(wf(i))**2+aimag(wf(i))**2
+    write(201,*) x(i), real(wf(i)), aimag(wf(i)), real(wf(i))**2+aimag(wf(i))**2, v1(i)
   end do
   write(201,*)
   write(201,*)
@@ -84,15 +84,15 @@ subroutine printwf1d(wf,x)
 end subroutine
 
 
-subroutine printwf2d(wf,x,y)
+subroutine printwf2d(wf,x,y,v2)
 
   complex(DP), intent(in)    :: wf(:,:)
-  real(DP), intent(in)       :: x(:),y(:)
+  real(DP), intent(in)       :: x(:),y(:),v2(:,:)
   integer                    :: i,j
 
   do i=1, size(x)
     do j=1, size(y)
-      write(202,*) x(i), y(j), real(wf(i,j)), aimag(wf(i,j)), real(wf(i,j))**2+aimag(wf(i,j))**2
+      write(202,*) x(i), y(j), real(wf(i,j)), aimag(wf(i,j)), real(wf(i,j))**2+aimag(wf(i,j))**2, v2(i,j)
     end do
   end do
   write(202,*)
@@ -100,16 +100,16 @@ subroutine printwf2d(wf,x,y)
 
 end subroutine
 
-subroutine printwf3d(wf,x,y,z)
+subroutine printwf3d(wf,x,y,z,v3)
 
   complex(DP), intent(in)    :: wf(:,:,:)
-  real(DP), intent(in)       :: x(:),y(:),z(:)
+  real(DP), intent(in)       :: x(:),y(:),z(:),v3(:,:,:)
   integer                    :: i,j,k
 
   do i=1, size(x)
     do j=1, size(y)
       do k=1, size(z)
-        write(203,*) x(i), y(j), z(k), real(wf(i,j,k)), aimag(wf(i,j,k)), real(wf(i,j,k))**2+aimag(wf(i,j,k))**2
+        write(203,*) x(i), y(j), z(k), real(wf(i,j,k)), aimag(wf(i,j,k)), real(wf(i,j,k))**2+aimag(wf(i,j,k))**2, v3(i,j,k)
       end do
      end do
   end do

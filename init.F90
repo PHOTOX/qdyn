@@ -5,15 +5,15 @@ module mod_init
 
   implicit none
   public
-  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass
+  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite
   real(DP), dimension(:), allocatable    :: x,y,z,point
-  complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1
-  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2
-  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3
+  complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1, kin_p1
+  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
+  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
   integer               :: run, nstep, ngrid, wf, rank, iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
 
-  real(DP), dimension(:), allocatable     :: v1
+  real(DP), dimension(:), allocatable     :: v1, px, py, pz
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
   character(len=50)             :: pot=''
@@ -21,7 +21,7 @@ module mod_init
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
   character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
 
-  namelist /general/run,nstep,dt,ngrid,rank,xmin,xmax,mass,wf,pot
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot
 
 CONTAINS
 
@@ -36,6 +36,7 @@ subroutine init()
     write(*,*) iost
     stop 1
   end if
+  close(100)
 
 !-- Input check
   call check()
@@ -45,13 +46,13 @@ subroutine init()
 dx=(xmax-xmin)/(ngrid-1)
 
 ! allocating arrays
-if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),point(1))
-if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),point(2))
-if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),point(3))
+if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
+if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
+if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
-if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid))
-if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid))
+if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
+if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid), kin_p3(ngrid,ngrid,ngrid))
 
 ! setting up grid poitns
 x(1)=xmin
@@ -69,8 +70,8 @@ end do
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
   xmean=(xmax-xmin)/2.0d0+xmin
-  stddev=(xmax-xmean)/5.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
-  k_0 = sqrt(2*mass*1)                                                       ! sqrt(2*m*E)/h = k0
+  stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
+  k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
   do i=1, ngrid
     select case (rank)
       case (1)
@@ -78,8 +79,8 @@ if(wf .eq. 0) then                                                           ! g
                        exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
       case (2)
         do j=1, ngrid
-          wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) ), &
-                             exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) )
+          wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &
+                             exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * sin(k_0*x(i)) )
         end do
       case (3)
         do j=1, ngrid
@@ -133,45 +134,6 @@ call dfftw_destroy_plan(plan_backward)
 
 end if
 
-!--Printing of WF
-
-if(rank .eq. 1) then
-  call normalize1d(wfx,ngrid,dx)
-
-  open(201,file='wf1d.out', action='WRITE', iostat=iost)
-  write(201,*) "#WF - QDYN output"
-  write(201,*) "#x   REAL   IMAG   PROBABILITY-DENSITY"
-  close(201)
-  open(201,file='wf1d.out', status='old', position='append', action='WRITE', iostat=iost)
-
-  call printwf1d(wfx,x)
-  write(*,*)"Outputing WF to file wf1d.out"
-
-elseif(rank .eq. 2) then
-  call normalize2d(wf2x,ngrid,dx)
-
-  open(202,file='wf2d.out', action='WRITE', iostat=iost)
-  write(202,*) "#WF - QDYN output"
-  write(202,*) "#x  y   REAL   IMAG   PROBABILITY-DENSITY"
-  close(202)
-  open(202,file='wf2d.out', status='old', position='append', action='WRITE', iostat=iost)
-
-  call printwf2d(wf2x,x,y)
-  write(*,*)"Outputing WF to file wf2d.out"
-
-elseif(rank .eq. 3) then
-  call normalize3d(wf3x,ngrid,dx)
-
-  open(203,file='wf3d.out', action='WRITE', iostat=iost)
-  write(203,*) "#WF - QDYN output"
-  write(203,*) "#x  y  z   REAL   IMAG   PROBABILITY-DENSITY"
-  close(203)
-  open(203,file='wf3d.out', status='old', position='append', action='WRITE', iostat=iost)
-
-  call printwf3d(wf3x,x,y,z)
-  write(*,*)"Outputing WF to file wf3d.out"
-endif
-
 !-- POTENTIAL energy init
   write(*,*)"Potential: ",pot
   call initf (1)                                                     !Initialization of parser
@@ -185,8 +147,9 @@ endif
         WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
         stop 1
       end if
-      theta_v1(i) = cmplx(cos(v1(i)*dt/2.0d0),sin(v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
     end do
+
 !2D   
   elseif(rank .eq. 2) then
     call parsef (1, pot, var2)                                      
@@ -220,10 +183,118 @@ endif
     end do 
   end if
 
-!-- KINETIC energy init
+!-- KINETIC energy init        exp[-iT/h_bar tau]
 
+select case(rank)
+  case(1)
+    do i=1, ngrid
+     if(i .lt. ngrid/2) then
+       px(i) = 2*pi*i/(ngrid*dx)
+     else
+       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+     end if
+     kin_p1(i) = cmplx(cos(-px(i)**2*dt/(2*mass)),sin(-px(i)**2*dt/(2*mass)))
+    end do
+  !2D
+  case(2)
 
+   do i=1, ngrid
+     if(i .lt. ngrid/2) then
+       px(i) = 2*pi*i/(ngrid*dx)
+     else
+       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+     end if
+   end do
 
+   do j=1, ngrid
+     if(j .lt. ngrid/2) then
+       py(j) = 2*pi*j/(ngrid*dx)
+     else
+       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+    do i=1, ngrid
+      do j=1, ngrid
+        kin_p2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
+      end do
+    end do
+
+  !3D
+  case(3)
+
+   do i=1, ngrid
+     if(i .lt. ngrid/2) then
+       px(i) = 2*pi*i/(ngrid*dx)
+     else
+       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+   do j=1, ngrid
+     if(j .lt. ngrid/2) then
+       py(j) = 2*pi*j/(ngrid*dx)
+     else
+       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+   do k=1, ngrid
+     if(k .lt. ngrid/2) then
+       pz(k) = 2*pi*k/(ngrid*dx)
+     else
+       pz(k) = 2*pi*(k-ngrid)/(ngrid*dx)
+     end if
+   end do
+ 
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          kin_p3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
+                                sin(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
+        end do
+      end do
+    end do
+end select
+
+!--Printing of WF
+
+if(rank .eq. 1) then
+  call normalize1d(wfx,ngrid,dx)
+
+  open(201,file='wf1d.out', action='WRITE', iostat=iost)
+  write(201,*) "#WF - QDYN output"
+  write(201,*) "#x   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
+  close(201)
+  open(201,file='wf1d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf1d(wfx,x,v1)
+  write(*,*)"Outputing WF to file wf1d.out"
+
+elseif(rank .eq. 2) then
+  call normalize2d(wf2x,ngrid,dx)
+
+  open(202,file='wf2d.out', action='WRITE', iostat=iost)
+  write(202,*) "#WF - QDYN output"
+  write(202,*) "#x  y   REAL   IMAG   PROBABILITY-DENSITY  POTENTIAL"
+  close(202)
+  open(202,file='wf2d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf2d(wf2x,x,y,v2)
+  write(*,*)"Outputing WF to file wf2d.out"
+
+elseif(rank .eq. 3) then
+  call normalize3d(wf3x,ngrid,dx)
+
+  open(203,file='wf3d.out', action='WRITE', iostat=iost)
+  write(203,*) "#WF - QDYN output"
+  write(203,*) "#x  y  z   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
+  close(203)
+  open(203,file='wf3d.out', status='old', position='append', action='WRITE', iostat=iost)
+
+  call printwf3d(wf3x,x,y,z,v3)
+  write(*,*)"Outputing WF to file wf3d.out"
+endif
 
 end subroutine init
 
@@ -272,6 +343,13 @@ end select
 if (pot == "") then
   write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
   stop 1
+end if
+
+if (run .eq. 0) then
+!   write(*,*) "0 - IMAGINARY TIME PROPAGATION"
+else
+   write(*,*) "ERR: run must be set to 0"
+   stop 1
 end if
 
 write(*,*) 'All checked.'
