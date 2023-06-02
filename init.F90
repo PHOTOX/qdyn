@@ -5,7 +5,7 @@ module mod_init
 
   implicit none
   public
-  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite
+  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite, energy
   real(DP), dimension(:), allocatable    :: x,y,z,point
   complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1, kin_p1
   complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
@@ -103,9 +103,9 @@ if(rank .eq. 3) read(666,*)wf3x
 close(666)
 end if
 
-if(rank .eq. 1) call normalize1d(wfx,ngrid,dx) 
-if(rank .eq. 2) call normalize2d(wf2x,ngrid,dx)
-if(rank .eq. 3) call normalize3d(wf3x,ngrid,dx) 
+if(rank .eq. 1) call normalize_1d(wfx,ngrid,dx,run) 
+if(rank .eq. 2) call normalize_2d(wf2x,ngrid,dx,run)
+if(rank .eq. 3) call normalize_3d(wf3x,ngrid,dx,run) 
 
 !-- Initialization of FFT procedures
 if(rank .eq. 1) then
@@ -113,30 +113,36 @@ if(rank .eq. 1) then
 call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_forward, wfx, wfp)
 call dfftw_destroy_plan(plan_forward)
+wfp = wfp / dsqrt(real(ngrid, kind=DP))
 
 call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_backward, wfp, wfx)
 call dfftw_destroy_plan(plan_backward)
+wfx = wfx / dsqrt(real(ngrid, kind=DP))
 
 elseif(rank .eq. 2) then
 
 call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_forward, wf2x, wf2p)
 call dfftw_destroy_plan(plan_forward)
+wf2p = wf2p / dsqrt(real(ngrid, kind=DP)**2)
 
 call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_backward, wf2p, wf2x)
 call dfftw_destroy_plan(plan_backward)
+wf2x = wf2x / dsqrt(real(ngrid, kind=DP)**2)
 
 elseif(rank .eq. 3) then
 
 call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_forward, wf3x, wf3p)
 call dfftw_destroy_plan(plan_forward)
+wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
 
 call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
 call dfftw_execute_dft(plan_backward, wf3p, wf3x)
 call dfftw_destroy_plan(plan_backward)
+wf3x = wf3x / dsqrt(real(ngrid, kind=DP)**3)
 
 end if
 
@@ -273,7 +279,7 @@ end select
 !--Printing of WF
 
 if(rank .eq. 1) then
-  call normalize1d(wfx,ngrid,dx)
+  call normalize_1d(wfx,ngrid,dx,run)
 
   open(201,file='wf1d.out', action='WRITE', iostat=iost)
   write(201,*) "#WF - QDYN output"
@@ -281,11 +287,11 @@ if(rank .eq. 1) then
   close(201)
   open(201,file='wf1d.out', status='old', position='append', action='WRITE', iostat=iost)
 
-  call printwf1d(wfx,x,v1)
+  call printwf_1d(wfx,x,v1)
   write(*,*)"Outputing WF to file wf1d.out"
 
 elseif(rank .eq. 2) then
-  call normalize2d(wf2x,ngrid,dx)
+  call normalize_2d(wf2x,ngrid,dx,run)
 
   open(202,file='wf2d.out', action='WRITE', iostat=iost)
   write(202,*) "#WF - QDYN output"
@@ -293,11 +299,11 @@ elseif(rank .eq. 2) then
   close(202)
   open(202,file='wf2d.out', status='old', position='append', action='WRITE', iostat=iost)
 
-  call printwf2d(wf2x,x,y,v2)
+  call printwf_2d(wf2x,x,y,v2)
   write(*,*)"Outputing WF to file wf2d.out"
 
 elseif(rank .eq. 3) then
-  call normalize3d(wf3x,ngrid,dx)
+  call normalize_3d(wf3x,ngrid,dx,run)
 
   open(203,file='wf3d.out', action='WRITE', iostat=iost)
   write(203,*) "#WF - QDYN output"
@@ -305,9 +311,16 @@ elseif(rank .eq. 3) then
   close(203)
   open(203,file='wf3d.out', status='old', position='append', action='WRITE', iostat=iost)
 
-  call printwf3d(wf3x,x,y,z,v3)
+  call printwf_3d(wf3x,x,y,z,v3)
   write(*,*)"Outputing WF to file wf3d.out"
 endif
+
+!--Writing energies
+
+open(101,file='energies.dat', action='WRITE', iostat=iost)
+write(101,*) "# time    energy"
+close(101)
+open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
 
 ! printing beggining of the output
 write(*,*) 
@@ -372,17 +385,6 @@ if (pot == "") then
   write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
   stop 1
 end if
-
-!if (run .eq. 0 .or. run .eq. 1) then
-!
-!else
-!   write(*,*) "ERROR: run must be set to 0 (real time propag), 1 (imag time propag)"
-!   stop 1
-!end if
-
-! for the future, I can have one case/if here to check for kind of propagation and then also for 
-! other options
-
 
 ! last check and printing for the run case
 select case(run)

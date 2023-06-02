@@ -9,105 +9,123 @@ CONTAINS
 
 !=== SCALAR PRODUCT ===!
 ! <bra|ket> (bra wavefunction is converted to conjugate in this function)
-function braket1d(bra, ket, ngrid, dx)
+function braket_1d(bra, ket, ngrid, dx)
 
   complex(DP), intent(in)       :: bra(:), ket(:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
-  real(DP)                      :: braket1d
+  real(DP)                      :: braket_1d
   integer                       :: i
 
-  braket1d=0.0d0
+  braket_1d=0.0d0
 
   do i=1,ngrid
-    braket1d = braket1d + dx * conjg(bra(i))*ket(i)
+    braket_1d = braket_1d + dx * conjg(bra(i))*ket(i)
   end do
 
-end function braket1d
+end function braket_1d
 
-function braket2d(bra, ket, ngrid, dx)
+function braket_2d(bra, ket, ngrid, dx)
 
   complex(DP), intent(in)       :: bra(:,:), ket(:,:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
-  real(DP)                      :: braket2d
+  real(DP)                      :: braket_2d
   integer                       :: i, j
 
-  braket2d=0.0d0
+  braket_2d=0.0d0
 
   do i=1,ngrid
     do j=1, ngrid
-      braket2d = braket2d + dx**2 * conjg(bra(i,j))*ket(i,j)
+      braket_2d = braket_2d + dx**2 * conjg(bra(i,j))*ket(i,j)
     end do
   end do
 
-end function braket2d
+end function braket_2d
 
-function braket3d(bra, ket, ngrid, dx)
+function braket_3d(bra, ket, ngrid, dx)
 
   complex(DP), intent(in)       :: bra(:,:,:), ket(:,:,:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
-  real(DP)                      :: braket3d
+  real(DP)                      :: braket_3d
   integer                       :: i, j, k
 
-  braket3d=0.0d0
+  braket_3d=0.0d0
   
   do i=1,ngrid
     do j=1, ngrid
       do k=1, ngrid
-        braket3d = braket3d + dx**3 * conjg(bra(i,j,k))*ket(i,j,k)
+        braket_3d = braket_3d + dx**3 * conjg(bra(i,j,k))*ket(i,j,k)
       end do
     end do
   end do
 
-end function braket3d
+end function braket_3d
 
 !=== NORMALIZATION ===!
-subroutine normalize1d(wf,ngrid,dx) 
+subroutine normalize_1d(wf,ngrid,dx,run) 
 
   complex(DP), intent(inout)    :: wf(:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: i
+  integer                       :: run, i
 
-  norm = braket1d(wf, wf, ngrid, dx)
+  norm = braket_1d(wf, wf, ngrid, dx)
 
-  wf = wf / sqrt(norm)
+  !TODO: here should be norm check with some clever threshold
+  ! currenlty very simple patch
+  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
+    write(*,*) "WARNING! Norm exceeded threshold", norm
+  end if
 
-end subroutine normalize1d
+  wf = wf / dsqrt(norm)
 
-subroutine normalize2d(wf,ngrid,dx)
+end subroutine normalize_1d
+
+subroutine normalize_2d(wf,ngrid,dx, run)
 
   complex(DP), intent(inout)    :: wf(:,:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: i, j
+  integer                       :: i, j, run
 
-  norm = braket2d(wf, wf, ngrid, dx)
+  norm = braket_2d(wf, wf, ngrid, dx)
 
-  wf = wf / sqrt(norm)
+  !TODO: here should be norm check with some clever threshold
+  ! currenlty very simple patch
+  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
+    write(*,*) "WARNING! Norm exceeded threshold", norm
+  end if
 
-end subroutine normalize2d
+  wf = wf / dsqrt(norm)
 
-subroutine normalize3d(wf,ngrid,dx)
+end subroutine normalize_2d
+
+subroutine normalize_3d(wf,ngrid,dx,run)
 
   complex(DP), intent(inout)    :: wf(:,:,:)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: i, j, k
+  integer                       :: i, j, k, run
 
-  norm = braket3d(wf, wf, ngrid, dx)
+  norm = braket_3d(wf, wf, ngrid, dx)
 
-  wf = wf / sqrt(norm)
+  !TODO: here should be norm check with some clever threshold
+  ! currenlty very simple patch
+  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
+    write(*,*) "WARNING! Norm exceeded threshold", norm
+  end if
 
-end subroutine normalize3d
+  wf = wf / dsqrt(norm)
+
+end subroutine normalize_3d
 
 !=== PRINTING ===!
-subroutine printwf1d(wf,x,v1)
+subroutine printwf_1d(wf,x,v1)
 
   complex(DP), intent(in)    :: wf(:)
   real(DP), intent(in)       :: x(:),v1(:)
@@ -122,7 +140,7 @@ subroutine printwf1d(wf,x,v1)
 end subroutine
 
 
-subroutine printwf2d(wf,x,y,v2)
+subroutine printwf_2d(wf,x,y,v2)
 
   complex(DP), intent(in)    :: wf(:,:)
   real(DP), intent(in)       :: x(:),y(:),v2(:,:)
@@ -138,7 +156,7 @@ subroutine printwf2d(wf,x,y,v2)
 
 end subroutine
 
-subroutine printwf3d(wf,x,y,z,v3)
+subroutine printwf_3d(wf,x,y,z,v3)
 
   complex(DP), intent(in)    :: wf(:,:,:)
   real(DP), intent(in)       :: x(:),y(:),z(:),v3(:,:,:)
@@ -154,6 +172,14 @@ subroutine printwf3d(wf,x,y,z,v3)
   write(203,*)
   write(203,*)
 
+end subroutine
+
+subroutine printen(time,energy)
+
+    real(DP), intent(in)     :: time, energy
+
+    write(101,'(F8.1,F15.8)') time, energy
+    
 end subroutine
 
 end module
