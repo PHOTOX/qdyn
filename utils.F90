@@ -7,6 +7,62 @@ module mod_utils
 
 CONTAINS
 
+!=== SCALAR PRODUCT ===!
+! <bra|ket> (bra wavefunction is converted to conjugate in this function)
+function braket1d(bra, ket, ngrid, dx)
+
+  complex(DP), intent(in)       :: bra(:), ket(:)
+  integer, intent(in)           :: ngrid
+  real(DP), intent(in)          :: dx
+  real(DP)                      :: braket1d
+  integer                       :: i
+
+  braket1d=0.0d0
+
+  do i=1,ngrid
+    braket1d = braket1d + dx * conjg(bra(i))*ket(i)
+  end do
+
+end function braket1d
+
+function braket2d(bra, ket, ngrid, dx)
+
+  complex(DP), intent(in)       :: bra(:,:), ket(:,:)
+  integer, intent(in)           :: ngrid
+  real(DP), intent(in)          :: dx
+  real(DP)                      :: braket2d
+  integer                       :: i, j
+
+  braket2d=0.0d0
+
+  do i=1,ngrid
+    do j=1, ngrid
+      braket2d = braket2d + dx**2 * conjg(bra(i,j))*ket(i,j)
+    end do
+  end do
+
+end function braket2d
+
+function braket3d(bra, ket, ngrid, dx)
+
+  complex(DP), intent(in)       :: bra(:,:,:), ket(:,:,:)
+  integer, intent(in)           :: ngrid
+  real(DP), intent(in)          :: dx
+  real(DP)                      :: braket3d
+  integer                       :: i, j, k
+
+  braket3d=0.0d0
+  
+  do i=1,ngrid
+    do j=1, ngrid
+      do k=1, ngrid
+        braket3d = braket3d + dx**3 * conjg(bra(i,j,k))*ket(i,j,k)
+      end do
+    end do
+  end do
+
+end function braket3d
+
 !=== NORMALIZATION ===!
 subroutine normalize1d(wf,ngrid,dx) 
 
@@ -16,11 +72,7 @@ subroutine normalize1d(wf,ngrid,dx)
   real(DP)                      :: norm
   integer                       :: i
 
-  norm=0.0d0
-
-  do i=1,ngrid
-    norm = norm + dx * (real(wf(i))**2+aimag(wf(i))**2)
-  end do
+  norm = braket1d(wf, wf, ngrid, dx)
 
   wf = wf / sqrt(norm)
 
@@ -34,13 +86,7 @@ subroutine normalize2d(wf,ngrid,dx)
   real(DP)                      :: norm
   integer                       :: i, j
 
-  norm=0.0d0
-
-  do i=1,ngrid
-    do j=1, ngrid
-      norm = norm + dx**2 * (real(wf(i,j))**2+aimag(wf(i,j))**2)
-    end do
-  end do
+  norm = braket2d(wf, wf, ngrid, dx)
 
   wf = wf / sqrt(norm)
 
@@ -54,15 +100,7 @@ subroutine normalize3d(wf,ngrid,dx)
   real(DP)                      :: norm
   integer                       :: i, j, k
 
-  norm=0.0d0
-
-  do i=1,ngrid
-    do j=1, ngrid
-      do k=1, ngrid
-        norm = norm + dx**3 * (real(wf(i,j,k))**2+aimag(wf(i,j,k))**2)
-      end do
-    end do
-  end do
+  norm = braket3d(wf, wf, ngrid, dx)
 
   wf = wf / sqrt(norm)
 

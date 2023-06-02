@@ -6,29 +6,22 @@ program qdyn
 ! -------------------------------------------------------------------!
 !                               / Qdyn \                             !
 ! Program for N-dimensional numerical quantum propagation on a grid. !
-! Authors: Jiri Suchan, Petr Slavicek (2017)                         !
+! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2023)             !
 ! -------------------------------------------------------------------!
 
    implicit none
    integer     :: n
-!  real(DP)    :: 
+   real(DP)    :: time
 
-!--Initialization
+!--Initialization--!
 
   call init()
 
-!--Propagation mode--
+!--Propagation mode--!
 
-select case(run)
-
-  ! CLASSICAL REAL/IMAGINARY TIME PROPAGATION
-  case(0,1)
-    write(*,*) 
-    write(*,*) "RUN: 0 - IMAGINARY TIME PROPAGATION"
-    write(*,*)
-    write(*,*) "------ time -----"
 
 do n=1, nstep
+  time = n*dt
   if (rank .eq. 1) then
       call propag_1d(wfx,wfp,ngrid,theta_v1,kin_p1,dt) 
       call normalize1d(wfx,ngrid,dx)
@@ -45,8 +38,8 @@ do n=1, nstep
   endif
  
 !Printing
-      if (modulo(dt*n,dtwrite) .eq. 0 ) then
-        write(*,'(F5.1)') n*dt
+      if (modulo(time,dtwrite) .eq. 0 ) then
+        write(*,'(F8.1,a)') time
         if(rank .eq. 1) call printwf1d(wfx,x,v1)
         if(rank .eq. 2) call printwf2d(wf2x,x,y,v2)
         if(rank .eq. 3) call printwf3d(wf3x,x,y,z,v3)
@@ -55,10 +48,9 @@ do n=1, nstep
 
 end do
 
-end select
+!--Finalization--!
 
-!-- Finalization
-
+! this should be also subroutine
 write(*,*) "JOB DONE."
 
   open(666,file='wf.chk', action='WRITE', iostat=iost)

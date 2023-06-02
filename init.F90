@@ -154,7 +154,7 @@ end if
         stop 1
       end if
       if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),exp(-v1(i)*dt/2.0d0))
+      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),exp(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
     end do
 
 !2D   
@@ -309,6 +309,21 @@ elseif(rank .eq. 3) then
   write(*,*)"Outputing WF to file wf3d.out"
 endif
 
+! printing beggining of the output
+write(*,*) 
+
+select case(run)
+  case(0)
+    write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
+  case(1)
+    write(*,*) "RUN: 1 - IMAGINARY TIME PROPAGATION"
+  case default
+    stop 1
+end select
+
+write(*,*)
+write(*,*) "------ time -----"
+
 end subroutine init
 
 subroutine check()
@@ -358,14 +373,32 @@ if (pot == "") then
   stop 1
 end if
 
-if (run .eq. 0 .or. run .eq. 1) then
+!if (run .eq. 0 .or. run .eq. 1) then
+!
+!else
+!   write(*,*) "ERROR: run must be set to 0 (real time propag), 1 (imag time propag)"
+!   stop 1
+!end if
 
-else
-   write(*,*) "ERR: run must be set to 0 (real time propag), 1 (iamg time propag)"
-   stop 1
-end if
+! for the future, I can have one case/if here to check for kind of propagation and then also for 
+! other options
 
-write(*,*) 'All checked.'
+
+! last check and printing for the run case
+select case(run)
+
+  ! CLASSICAL REAL TIME PROPAGATION
+  case(0)
+    write(*,*) "Propagation: REAL TIME"
+
+  ! CLASSICAL IMAGINARY TIME PROPAGATION
+  case(1)
+    write(*,*) "Propagation: IMAGINARY TIME"
+
+  case default
+    write(*,*) "ERR: Unrecongnized run option. Exiting"
+    stop 1
+end select
 
 end subroutine check
 
