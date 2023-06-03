@@ -41,6 +41,8 @@ do n=1, nstep
   case(1)
       call propag_1d(wfx,wfp,ngrid,theta_v1,kin_p1,dt) 
       call normalize_1d(wfx,ngrid,dx,run)
+      !jj
+      if (run.eq.1 .and. nstates.eq.2) call project_out_1d(wfxgs,wfx,ngrid,dx)
       call update_energy_1d(wfx, energy)
 
   case(2)

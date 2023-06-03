@@ -63,6 +63,24 @@ function braket_3d(bra, ket, ngrid, dx)
 
 end function braket_3d
 
+!=== PROJECT OUT STATE ===!
+! |psi> = sum c_i |phi_i>
+! |psi_new> = |psi> - <phi_i|psi>|phi_i> 
+! Projecting out the i-th state wavefunction phi_i from the total wavefunction
+subroutine project_out_1d(phi_i,wfx,ngrid,dx)
+
+  complex(DP), intent(inout)    :: wfx(:)
+  complex(DP), intent(in)       :: phi_i(:)
+  integer, intent(in)           :: ngrid
+  real(DP), intent(in)          :: dx
+  real(DP)                      :: c_i
+
+  c_i = braket_1d(phi_i, wfx, ngrid, dx)
+  write(*,*) 'c_0', c_i
+  wfx = wfx - c_i * phi_i
+
+end subroutine
+
 !=== NORMALIZATION ===!
 subroutine normalize_1d(wf,ngrid,dx,run) 
 
@@ -70,7 +88,7 @@ subroutine normalize_1d(wf,ngrid,dx,run)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: run, i
+  integer                       :: run
 
   norm = braket_1d(wf, wf, ngrid, dx)
 
@@ -90,7 +108,7 @@ subroutine normalize_2d(wf,ngrid,dx, run)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: i, j, run
+  integer                       :: run
 
   norm = braket_2d(wf, wf, ngrid, dx)
 
@@ -110,7 +128,7 @@ subroutine normalize_3d(wf,ngrid,dx,run)
   integer, intent(in)           :: ngrid
   real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: i, j, k, run
+  integer                       :: run
 
   norm = braket_3d(wf, wf, ngrid, dx)
 
