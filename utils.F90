@@ -8,11 +8,9 @@ CONTAINS
 
 !=== SCALAR PRODUCT ===!
 ! <bra|ket> (bra wavefunction is converted to conjugate in this function)
-function braket_1d(bra, ket, ngrid, dx)
+function braket_1d(bra, ket)
 
   complex(DP), intent(in)       :: bra(:), ket(:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: braket_1d
   integer                       :: i
 
@@ -24,11 +22,9 @@ function braket_1d(bra, ket, ngrid, dx)
 
 end function braket_1d
 
-function braket_2d(bra, ket, ngrid, dx)
+function braket_2d(bra, ket )
 
   complex(DP), intent(in)       :: bra(:,:), ket(:,:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: braket_2d
   integer                       :: i, j
 
@@ -42,11 +38,9 @@ function braket_2d(bra, ket, ngrid, dx)
 
 end function braket_2d
 
-function braket_3d(bra, ket, ngrid, dx)
+function braket_3d(bra, ket )
 
   complex(DP), intent(in)       :: bra(:,:,:), ket(:,:,:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: braket_3d
   integer                       :: i, j, k
 
@@ -66,29 +60,24 @@ end function braket_3d
 ! |psi> = sum c_i |phi_i>
 ! |psi_new> = |psi> - <phi_i|psi>|phi_i> 
 ! Projecting out the i-th state wavefunction phi_i from the total wavefunction
-subroutine project_out_1d(phi_i,wfx,ngrid,dx)
+subroutine project_out_1d(phi_i,wfx)
 
   complex(DP), intent(inout)    :: wfx(:)
   complex(DP), intent(in)       :: phi_i(:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: c_i
 
-  c_i = braket_1d(phi_i, wfx, ngrid, dx)
+  c_i = braket_1d(phi_i, wfx)
   wfx = wfx - c_i * phi_i
 
 end subroutine
 
 !=== NORMALIZATION ===!
-subroutine normalize_1d(wf,ngrid,dx,run) 
+subroutine normalize_1d(wf) 
 
   complex(DP), intent(inout)    :: wf(:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: run
 
-  norm = braket_1d(wf, wf, ngrid, dx)
+  norm = braket_1d(wf, wf)
 
   !TODO: here should be norm check with some clever threshold
   ! currenlty very simple patch
@@ -100,15 +89,12 @@ subroutine normalize_1d(wf,ngrid,dx,run)
 
 end subroutine normalize_1d
 
-subroutine normalize_2d(wf,ngrid,dx, run)
+subroutine normalize_2d(wf)
 
   complex(DP), intent(inout)    :: wf(:,:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: run
 
-  norm = braket_2d(wf, wf, ngrid, dx)
+  norm = braket_2d(wf, wf)
 
   !TODO: here should be norm check with some clever threshold
   ! currenlty very simple patch
@@ -120,15 +106,12 @@ subroutine normalize_2d(wf,ngrid,dx, run)
 
 end subroutine normalize_2d
 
-subroutine normalize_3d(wf,ngrid,dx,run)
+subroutine normalize_3d(wf)
 
   complex(DP), intent(inout)    :: wf(:,:,:)
-  integer, intent(in)           :: ngrid
-  real(DP), intent(in)          :: dx
   real(DP)                      :: norm
-  integer                       :: run
 
-  norm = braket_3d(wf, wf, ngrid, dx)
+  norm = braket_3d(wf, wf)
 
   !TODO: here should be norm check with some clever threshold
   ! currenlty very simple patch

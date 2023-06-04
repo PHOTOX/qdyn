@@ -1,18 +1,16 @@
 module mod_propag
 use FFTW3
 use mod_utils 
-use mod_init,     only:plan_forward, plan_backward
+use mod_vars
 
 implicit none
 
 CONTAINS
 
-subroutine propag_1d(wfx,wfp,ngrid,theta_v1,kin_p1,dt)
+subroutine propag_1d(wfx,wfp,theta_v1,kin_p1)
 
 implicit none
   complex(DP), intent(inout)    :: wfx(:),wfp(:),theta_v1(:),kin_p1(:)
-  real(DP), intent(in)          :: dt
-  integer, intent(in)           :: ngrid
   integer                       :: i
 
   ! V(t/2)
@@ -48,12 +46,10 @@ implicit none
 
 end subroutine propag_1d
 
-subroutine propag_2d(wf2x,wf2p,ngrid,theta_v2,kin_p2,dt)
+subroutine propag_2d(wf2x,wf2p,theta_v2,kin_p2)
 
 implicit none
   complex(DP), intent(inout)    :: wf2x(:,:),wf2p(:,:),theta_v2(:,:),kin_p2(:,:)
-  real(DP), intent(in)          :: dt
-  integer, intent(in)           :: ngrid
   integer                       :: i,j
 
   ! V(t/2)
@@ -93,12 +89,10 @@ implicit none
 
 end subroutine propag_2d
 
-subroutine propag_3d(wf3x,wf3p,ngrid,theta_v3,kin_p3,dt)
+subroutine propag_3d(wf3x,wf3p,theta_v3,kin_p3)
 
 implicit none
   complex(DP), intent(inout)    :: wf3x(:,:,:),wf3p(:,:,:),theta_v3(:,:,:),kin_p3(:,:,:)
-  real(DP), intent(in)          :: dt
-  integer, intent(in)           :: ngrid
   integer                       :: i,j,k
 
   ! V(t/2)

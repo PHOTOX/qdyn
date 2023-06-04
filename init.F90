@@ -68,9 +68,9 @@ end if
 !<jj
 
 !Normalize wf
-if(rank .eq. 1) call normalize_1d(wfx,ngrid,dx,run) 
-if(rank .eq. 2) call normalize_2d(wf2x,ngrid,dx,run)
-if(rank .eq. 3) call normalize_3d(wf3x,ngrid,dx,run) 
+if(rank .eq. 1) call normalize_1d(wfx) 
+if(rank .eq. 2) call normalize_2d(wf2x)
+if(rank .eq. 3) call normalize_3d(wf3x) 
 
 !-- Initialization of FFT procedures
 if(rank .eq. 1) then
@@ -114,7 +114,7 @@ end if
 !--Printing of WF
 
 if(rank .eq. 1) then
-  call normalize_1d(wfx,ngrid,dx,run)
+  call normalize_1d(wfx)
 
   ! creating file name
   write(file_name,*) nstates
@@ -131,7 +131,7 @@ if(rank .eq. 1) then
   write(*,*)"Outputing WF to file "//file_name
 
 elseif(rank .eq. 2) then
-  call normalize_2d(wf2x,ngrid,dx,run)
+  call normalize_2d(wf2x)
 
   open(202,file='wf2d.out', action='WRITE', iostat=iost)
   write(202,*) "#WF - QDYN output"
@@ -143,7 +143,7 @@ elseif(rank .eq. 2) then
   write(*,*)"Outputing WF to file wf2d.out"
 
 elseif(rank .eq. 3) then
-  call normalize_3d(wf3x,ngrid,dx,run)
+  call normalize_3d(wf3x)
 
   open(203,file='wf3d.out', action='WRITE', iostat=iost)
   write(203,*) "#WF - QDYN output"

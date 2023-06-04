@@ -1,8 +1,9 @@
 module mod_energies
 
 use FFTW3
-use mod_utils,  only: braket_1d, braket_2d, braket_3d, DP, normalize_1d
-use mod_init,   only: v1, v2, v3, px, py, pz, ngrid, dx, plan_forward, plan_backward, mass
+use mod_vars
+use mod_utils,  only: braket_1d, braket_2d, braket_3d, normalize_1d
+
 
 implicit none
 
@@ -46,7 +47,7 @@ implicit none
     h_wfx(i) = wft(i) + wfx(i)*v1(i)
   end do
 
-  energy = braket_1d(wfx, h_wfx, ngrid, dx)
+  energy = braket_1d(wfx, h_wfx)
 
 end subroutine
 
@@ -92,7 +93,7 @@ implicit none
    end do
   end do
 
-  energy = braket_2d(wf2x, h_wf2x, ngrid, dx)
+  energy = braket_2d(wf2x, h_wf2x)
 
 end subroutine
 
@@ -142,7 +143,7 @@ implicit none
     end do
   end do
 
-  energy = braket_3d(wf3x, h_wf3x, ngrid, dx)
+  energy = braket_3d(wf3x, h_wf3x)
 
 end subroutine
 
