@@ -14,7 +14,7 @@ OUT = qdyn
 #======================================================================
 
 # List of all files (NAME ALL F90)
-OBJS = fparser.o read.o utils.o fftw.o init.o energies.o propag.o qdyn.o
+OBJS = fparser.o fftw.o read.o utils.o init.o propag.o qdyn.o
 
 myprogram: $(OBJS) 
 	   $(FC) -o $(OUT) ${LIBS} ${FFLAGS} $(OBJS) ${LDLIBS}

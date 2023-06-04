@@ -155,12 +155,24 @@ elseif(rank .eq. 3) then
   write(*,*)"Outputing WF to file wf3d.out"
 endif
 
-!--Writing energies
-
+!--Open file with energies
 open(101,file='energies.dat', action='WRITE', iostat=iost)
 write(101,*) "# time    energy"
 close(101)
 open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
+
+!--Writing energies
+select case(rank)
+case(1)
+  call update_energy_1d(wfx, energy)
+  call printen(time, energy)
+case(2)
+  call update_energy_2d(wf2x, energy)
+  call printen(time, energy)
+case(3)
+  call update_energy_3d(wf3x, energy)
+  call printen(time, energy)
+end select
 
 ! printing beggining of the output
 write(*,*) 

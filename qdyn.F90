@@ -3,7 +3,6 @@ program qdyn
   use FFTW3
   use mod_init
   use mod_propag
-  use mod_energies
 
 ! -------------------------------------------------------------------!
 !                               / Qdyn \                             !
@@ -13,26 +12,12 @@ program qdyn
 
    implicit none
    integer     :: n
-   real(DP)    :: time = 0.0
 
 !--Initialization--!
 
   call read_input()
   call init()
 
-  select case(rank)
-  case(1)
-    call update_energy_1d(wfx, energy)
-    call printen(time, energy)
-
-  case(2)
-    call update_energy_2d(wf2x, energy)
-    call printen(time, energy)
-
-  case(3)
-    call update_energy_3d(wf3x, energy)
-    call printen(time, energy)
-  end select
 
 !--Propagation mode--!
 

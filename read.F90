@@ -7,6 +7,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
   real(DP), parameter   :: pi = 3.14159265
   real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite, energy
+  real(DP)              :: time = 0.0
   real(DP), dimension(:), allocatable    :: x,y,z,point
   complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1, kin_p1
   !jj - add up
