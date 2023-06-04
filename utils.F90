@@ -1,9 +1,8 @@
 module mod_utils
 
+use mod_vars
+
   implicit none
-  public
-  INTEGER, PARAMETER    :: DP = KIND(1.0d0)
-  real(DP), parameter   :: pi = 3.14159265
 
 CONTAINS
 
@@ -76,7 +75,6 @@ subroutine project_out_1d(phi_i,wfx,ngrid,dx)
   real(DP)                      :: c_i
 
   c_i = braket_1d(phi_i, wfx, ngrid, dx)
-  write(*,*) 'c_0', c_i
   wfx = wfx - c_i * phi_i
 
 end subroutine

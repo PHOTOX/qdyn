@@ -1,4 +1,5 @@
 program qdyn
+  use mod_vars
   use FFTW3
   use mod_init
   use mod_propag
@@ -16,6 +17,7 @@ program qdyn
 
 !--Initialization--!
 
+  call read_input()
   call init()
 
   select case(rank)
@@ -63,8 +65,8 @@ do n=1, nstep
     !TODO: change to case
     if(rank .eq. 1) call printwf_1d(wfx,x,v1)
     !TODO: slower writing of wf.. for 2 and 3 dim it is too much data
-    if(rank .eq. 2) call printwf_2d(wf2x,x,y,v2)
-    if(rank .eq. 3) call printwf_3d(wf3x,x,y,z,v3)
+!    if(rank .eq. 2) call printwf_2d(wf2x,x,y,v2)
+!    if(rank .eq. 3) call printwf_3d(wf3x,x,y,z,v3)
   end if
 
 
