@@ -27,26 +27,26 @@ do n=1, nstep
   select case(rank)
   case(1)
       call propag_1d(wfx,wfp,theta_v1,kin_p1) 
-      call normalize_1d(wfx)
-      !jj
+      !jj - I should already project out in the init part
       if (run.eq.1 .and. nstates.eq.2) call project_out_1d(wfxgs,wfx)
-      call update_energy_1d(wfx, energy)
+      call normalize_1d(wfx)
+      call update_energy_1d(wfx)
 
   case(2)
       call propag_2d(wf2x,wf2p,theta_v2,kin_p2)
       call normalize_2d(wf2x)
-      call update_energy_2d(wf2x, energy)
+      call update_energy_2d(wf2x, energy(1))
 
   case(3)
       call propag_3d(wf3x,wf3p,theta_v3,kin_p3)
       call normalize_3d(wf3x)
-      call update_energy_3d(wf3x, energy)
+      call update_energy_3d(wf3x, energy(1))
   end select
  
 !Printing
   if (modulo(time,dtwrite) .eq. 0 ) then
-    write(*,'(F8.1,a,F14.9,a)') time, ' a.u.; E=', energy, ' a.u.'
-    call printen(time, energy)
+    write(*,'(F8.1,a,F14.9,a)') time, ' a.u.; E=', energy(1), ' a.u.'
+    call printen()
     !TODO: change to case
     !TODO: delete x and v1 from printing
     if(rank .eq. 1) call printwf_1d(wfx,x,v1)

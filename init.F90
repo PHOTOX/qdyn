@@ -17,17 +17,19 @@ subroutine init()
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
   xmean=(xmax-xmin)/2.0d0+xmin
+  !jj - tobe removed
+  xmean=(xmax-xmin)/2.0d0+xmin*1.1d0
   stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
   k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
   !jj - No initial momentum set for the wavepacket
-  k_0 = 0.0d0
+  k_0 = k_0*20.0d0
   do i=1, ngrid
     select case (rank)
       case (1)
         wfx(i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
                        exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
         !>jj special wavepacket generation
-        wfx(i) = cmplx(1.0d0/dsqrt(1.0d0)*(0.2/pi)**(0.25d0)*dexp(-0.1d0*x(i)**2),0)
+        !wfx(i) = cmplx(1.0d0/dsqrt(1.0d0)*(0.2/pi)**(0.25d0)*dexp(-0.1d0*x(i)**2),0)
         !<jj
       case (2)
         do j=1, ngrid
@@ -162,22 +164,20 @@ endif
 
 !--Open file with energies
 open(101,file='energies.dat', action='WRITE', iostat=iost)
-write(101,*) "# time    energy"
+write(101,*) "#  time     total energy    potential       kinetic"
 close(101)
 open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
 
 !--Writing energies
 select case(rank)
 case(1)
-  call update_energy_1d(wfx, energy)
-  call printen(time, energy)
+  call update_energy_1d(wfx)
 case(2)
-  call update_energy_2d(wf2x, energy)
-  call printen(time, energy)
+  call update_energy_2d(wf2x, energy(1))
 case(3)
-  call update_energy_3d(wf3x, energy)
-  call printen(time, energy)
+  call update_energy_3d(wf3x, energy(1))
 end select
+call printen()
 
 ! printing beggining of the output
 write(*,*) 

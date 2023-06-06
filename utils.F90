@@ -186,27 +186,25 @@ subroutine print_chk()
 
 end subroutine
 
-subroutine printen(time,energy)
+subroutine printen()
 
-    real(DP), intent(in)     :: time, energy
-
-    write(101,'(F8.1,F15.8)') time, energy
+    write(101,'(F8.1,3(F16.9))') time, energy
     
 end subroutine
 
 !=== ENERGIES ===!
-subroutine update_energy_1d(wfx, energy)
+!TODO: I should combine all of these. With rank, I can tell which one will be used.
+subroutine update_energy_1d(wfx)
 implicit none
   complex(DP), intent(in)       :: wfx(:)
-  real(DP), intent(inout)       :: energy
-  complex(DP), allocatable      :: h_wfx(:), wfp(:), wft(:)
+  ! I probabaly do not need wfp(:)
+  complex(DP), allocatable      :: wfp(:), wft(:)
   integer                       :: i
 
-  allocate(h_wfx(ngrid))
   allocate(wfp(ngrid))
   allocate(wft(ngrid))
 
-  ! calculating T(psi)
+  ! calculating <T>
   ! FFT -> K
   call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wfx, wfp)
@@ -223,16 +221,18 @@ implicit none
   call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wfp, wft)
   call dfftw_destroy_plan(plan_backward)
-  ! heck
+
   wft = wft / dsqrt(real(ngrid, kind=DP))
 
-  ! Hamiltonian applied to the wavefunction
-  ! H(psi) = T(psi) + V*psi
-  do i=1, ngrid
-    h_wfx(i) = wft(i) + wfx(i)*v1(i)
-  end do
+  !TODO: I should not need normalization here but I do it because I'm calculating during propagation
+  ! to be deleted later
+  energy(3) = braket_1d(wfx, wft)/braket_1d(wfx, wfx)
 
-  energy = braket_1d(wfx, h_wfx)
+  ! calculating <V>
+  energy(2) = braket_1d(wfx, v1*wfx)/braket_1d(wfx, wfx)
+
+  ! calculating <E> = <V> + <T>
+  energy(1) = energy(2)+ energy(3)
 
 end subroutine
 

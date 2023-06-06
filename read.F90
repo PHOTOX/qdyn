@@ -6,7 +6,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   public
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
   real(DP), parameter   :: pi = 3.14159265358979323846
-  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite, energy
+  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite, energy(3)
   real(DP)              :: time = 0.0
   real(DP), dimension(:), allocatable    :: x,y,z,point
   complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1, kin_p1
@@ -21,7 +21,6 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
   character(len=50)             :: pot=''
-  !jj
   character(len=50)             :: file_name
   character(len=*),dimension(1),parameter :: var1 = (/'x'/)
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
@@ -130,11 +129,17 @@ end do
 select case(rank)
   case(1)
     do i=1, ngrid
-     if(i .lt. ngrid/2) then
-       px(i) = 2*pi*i/(ngrid*dx)
+     if(i .le. ngrid/2) then
+!       px(i) = 2*pi*i/(ngrid*dx)
+       !jj
+       px(i) = 2*pi*(i-1)/(ngrid*dx)
      else
-       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+!       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+       !jj
+       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
+     !jj
+     write(*,*) "px", px(i)
      if(run .eq. 0) kin_p1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
      if(run .eq. 1) kin_p1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
     end do

@@ -12,6 +12,8 @@ subroutine propag_1d(wfx,wfp,theta_v1,kin_p1)
 implicit none
   complex(DP), intent(inout)    :: wfx(:),wfp(:),theta_v1(:),kin_p1(:)
   integer                       :: i
+  !TODO: remove
+  real(DP)                      :: imag
 
   ! V(t/2)
   do i=1, ngrid
@@ -51,7 +53,6 @@ implicit none
   !>jj
 !  if (.true. .and. run.eq.1) wfx = wfx*dexp(energy*dt/2.0d0)
   !<jj
-
 
 end subroutine propag_1d
 
