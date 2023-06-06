@@ -18,6 +18,10 @@ implicit none
     wfx(i) = wfx(i)*theta_v1(i)
   end do
 
+  !>jj energy shifting, which should be used only for imaginary propagation
+!  if (.true. .and. run.eq.1) wfx = wfx*dexp(energy*dt/2.0d0)
+  !<jj
+
   ! FFT -> K
   call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wfx, wfp)
@@ -43,6 +47,11 @@ implicit none
   do i=1, ngrid
     wfx(i) = wfx(i)*theta_v1(i)
   end do
+
+  !>jj
+!  if (.true. .and. run.eq.1) wfx = wfx*dexp(energy*dt/2.0d0)
+  !<jj
+
 
 end subroutine propag_1d
 

@@ -174,6 +174,18 @@ subroutine printwf_3d(wf,x,y,z,v3)
 
 end subroutine
 
+subroutine print_chk()
+
+  open(666,file='wf.chk', action='WRITE', iostat=iost)
+  write(666,*) "#QDYN checkpoint file for reloading WF to program"
+  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",ngrid
+  if(rank .eq. 1) write(666,*) wfx
+  if(rank .eq. 2) write(666,*) wf2x
+  if(rank .eq. 3) write(666,*) wf3x
+  close(666)
+
+end subroutine
+
 subroutine printen(time,energy)
 
     real(DP), intent(in)     :: time, energy

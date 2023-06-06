@@ -19,11 +19,16 @@ if(wf .eq. 0) then                                                           ! g
   xmean=(xmax-xmin)/2.0d0+xmin
   stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
   k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
+  !jj - No initial momentum set for the wavepacket
+  k_0 = 0.0d0
   do i=1, ngrid
     select case (rank)
       case (1)
         wfx(i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
                        exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
+        !>jj special wavepacket generation
+        wfx(i) = cmplx(1.0d0/dsqrt(1.0d0)*(0.2/pi)**(0.25d0)*dexp(-0.1d0*x(i)**2),0)
+        !<jj
       case (2)
         do j=1, ngrid
           wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &

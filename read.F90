@@ -5,7 +5,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   implicit none
   public
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
-  real(DP), parameter   :: pi = 3.14159265
+  real(DP), parameter   :: pi = 3.14159265358979323846
   real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite, energy
   real(DP)              :: time = 0.0
   real(DP), dimension(:), allocatable    :: x,y,z,point
@@ -87,7 +87,7 @@ end do
         stop 1
       end if
       if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),exp(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
 
 !2D   
@@ -102,7 +102,7 @@ end do
           stop 1
         end if
         if(run .eq. 0) theta_v2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-        if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),exp(-v2(i,j)*dt/2.0d0))  
+        if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
       end do
     end do
   
@@ -119,7 +119,7 @@ end do
             stop 1
           end if
           if(run .eq. 0) theta_v3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
-          if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),exp(-v3(i,j,k)*dt/2.0d0))
+          if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
         end do
       end do
     end do 
@@ -135,8 +135,8 @@ select case(rank)
      else
        px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
      end if
-     if(run .eq. 0) kin_p1(i) = cmplx(cos(-px(i)**2*dt/(2*mass)),sin(-px(i)**2*dt/(2*mass)))
-     if(run .eq. 1) kin_p1(i) = cmplx(exp(-px(i)**2*dt/(2*mass)),exp(-px(i)**2*dt/(2*mass)))
+     if(run .eq. 0) kin_p1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
+     if(run .eq. 1) kin_p1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
     end do
   !2D
   case(2)
@@ -160,7 +160,7 @@ select case(rank)
     do i=1, ngrid
       do j=1, ngrid
         if(run .eq. 0) kin_p2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
-        if(run .eq. 1) kin_p2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),exp(-(px(i)**2+py(j)**2)*dt/(2*mass)))
+        if(run .eq. 1) kin_p2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),0)
       end do
     end do
 
@@ -196,8 +196,7 @@ select case(rank)
         do k=1, ngrid
           if(run .eq. 0) kin_p3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
                                          sin(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
-          if(run .eq. 1) kin_p3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
-                                         exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
+          if(run .eq. 1) kin_p3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),0)
         end do
       end do
     end do
@@ -275,7 +274,7 @@ if (nstates < 1) then
   write(*,*) "ERR: number of states must be 1 or more."
   stop 1
 else
-  if (run .eq. 0) then
+  if (run .eq. 0 .and. nstates > 1) then
     write(*,*) "ERR: nstates > 1 available only for imag propagation."
     stop 1
   else
