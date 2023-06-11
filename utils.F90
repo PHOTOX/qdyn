@@ -73,18 +73,39 @@ subroutine project_out_1d(phi_i,wfx)
 end subroutine
 
 !=== NORMALIZATION ===!
+subroutine update_norm() 
+
+  select case(rank)
+    case(1)
+      norm = braket_1d(wfx, wfx)
+    case(2)
+      norm = braket_2d(wf2x, wf2x)
+    case(3)
+      norm = braket_3d(wf3x, wf3x)
+  end select
+
+  !TODO: here should be norm check with some clever threshold
+  ! currenlty very simple patch
+  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
+    write(*,'(a,F10.8,a)') "WARNING! Norm (",norm,") exceeded threshold"
+    select case(rank)
+      case(1)
+        write(*,*) "Renormalization!"
+        call normalize_1d(wfx)
+        norm = braket_1d(wfx, wfx)
+      !TODO: add other dimensions or generalize normalization
+    end select
+
+  end if
+
+end subroutine update_norm
+
 subroutine normalize_1d(wf) 
 
   complex(DP), intent(inout)    :: wf(:)
   real(DP)                      :: norm
 
   norm = braket_1d(wf, wf)
-
-  !TODO: here should be norm check with some clever threshold
-  ! currenlty very simple patch
-  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
-    write(*,*) "WARNING! Norm exceeded threshold", norm
-  end if
 
   wf = wf / dsqrt(norm)
 
@@ -97,12 +118,6 @@ subroutine normalize_2d(wf)
 
   norm = braket_2d(wf, wf)
 
-  !TODO: here should be norm check with some clever threshold
-  ! currenlty very simple patch
-  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
-    write(*,*) "WARNING! Norm exceeded threshold", norm
-  end if
-
   wf = wf / dsqrt(norm)
 
 end subroutine normalize_2d
@@ -113,12 +128,6 @@ subroutine normalize_3d(wf)
   real(DP)                      :: norm
 
   norm = braket_3d(wf, wf)
-
-  !TODO: here should be norm check with some clever threshold
-  ! currenlty very simple patch
-  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
-    write(*,*) "WARNING! Norm exceeded threshold", norm
-  end if
 
   wf = wf / dsqrt(norm)
 
@@ -188,7 +197,7 @@ end subroutine
 
 subroutine printen()
 
-    write(101,'(F8.1,3(F16.9))') time, energy
+    write(101,'(F8.1,5(F16.9))') time, energy, energy_diff, norm
     
 end subroutine
 
@@ -199,6 +208,7 @@ implicit none
   complex(DP), intent(in)       :: wfx(:)
   ! I probabaly do not need wfp(:)
   complex(DP), allocatable      :: wfp(:), wft(:)
+  real(DP)                      :: old_energy
   integer                       :: i
 
   allocate(wfp(ngrid))
@@ -224,15 +234,20 @@ implicit none
 
   wft = wft / dsqrt(real(ngrid, kind=DP))
 
-  !TODO: I should not need normalization here but I do it because I'm calculating during propagation
-  ! to be deleted later
+  ! calculating <T>
   energy(3) = braket_1d(wfx, wft)/braket_1d(wfx, wfx)
 
   ! calculating <V>
   energy(2) = braket_1d(wfx, v1*wfx)/braket_1d(wfx, wfx)
 
+  ! saving old energy
+  old_energy = energy(1)
+
   ! calculating <E> = <V> + <T>
   energy(1) = energy(2)+ energy(3)
+  
+  ! energy difference from the last step
+  energy_diff = energy(1) - old_energy
 
 end subroutine
 
