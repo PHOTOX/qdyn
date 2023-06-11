@@ -12,7 +12,9 @@ CONTAINS
 subroutine init()
   implicit none
 
-!-- Initialization of WafeFunction
+!-- Initialization of Wave Function
+! initializing just for the 1. state in RT propagation
+! initializing all states for IT propagation
 
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
@@ -26,11 +28,16 @@ if(wf .eq. 0) then                                                           ! g
   do i=1, ngrid
     select case (rank)
       case (1)
-        wfx(i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
+        !jj - for imag propagation, I should loop jstate and copy the value
+        wfx(1,i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
                        exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
-        !>jj special wavepacket generation
-        !wfx(i) = cmplx(1.0d0/dsqrt(1.0d0)*(0.2/pi)**(0.25d0)*dexp(-0.1d0*x(i)**2),0)
-        !<jj
+        ! for the imag time, I create the came wave packet for all states
+        if (run.eq.1 .and. nstates.ge.2) then
+          do jstate=2,nstates
+            wfx(jstate,i) = wfx(1,i)
+          end do
+        end if
+            
       case (2)
         do j=1, ngrid
           wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &
@@ -57,40 +64,31 @@ if(rank .eq. 3) read(666,*)wf3x
 close(666)
 end if
 
-!>jj
-!Reading ground state wf
-if (nstates.eq.2) then
-open(667,file='wfgs.chk', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
-if (iost.ne.0) then
-  write(*,*)'ERROR: wf.chk file must be provided'
-  write(*,*) iost
-  stop 1
-end if
-read(667,*) !two empty lines
-read(667,*)
-if(rank .eq. 1) read(667,*)wfxgs
-close(667)
-write(*,*)"*GS wf read"
+!Normalize wf
+if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
+!>jj - normalization of the other states
+! I should do this in the normalize 
+if(run.eq.1 .and. nstates.ge.2) then
+  do jstate=2,nstates
+    call normalize_1d(wfx(jstate,:))
+  end do
 end if
 !<jj
-
-!Normalize wf
-if(rank .eq. 1) call normalize_1d(wfx) 
 if(rank .eq. 2) call normalize_2d(wf2x)
 if(rank .eq. 3) call normalize_3d(wf3x) 
 
 !-- Initialization of FFT procedures
 if(rank .eq. 1) then
 
-call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wfx, wfp)
+call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wfx(1,:), wfp)
 call dfftw_destroy_plan(plan_forward)
 wfp = wfp / dsqrt(real(ngrid, kind=DP))
 
-call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wfp, wfx)
+call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx(1,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wfp, wfx(1,:))
 call dfftw_destroy_plan(plan_backward)
-wfx = wfx / dsqrt(real(ngrid, kind=DP))
+wfx(1,:) = wfx(1,:) / dsqrt(real(ngrid, kind=DP))
 
 elseif(rank .eq. 2) then
 
@@ -121,21 +119,25 @@ end if
 !--Printing of WF
 
 if(rank .eq. 1) then
-  call normalize_1d(wfx)
+  call normalize_1d(wfx(1,:))
 
   ! creating file name
-  write(file_name,*) nstates
-  file_name='wf1d.'//trim(adjustl(file_name))//'.out'
-  write(*,*) file_name
-  open(201,file=file_name, action='WRITE', iostat=iost)
-  ! opening file unit
-  write(201,*) "#WF - QDYN output"
-  write(201,*) "#x   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
-  close(201)
-  open(201,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+  do jstate=1,nstates
 
-  call printwf_1d(wfx,x,v1)
-  write(*,*)"Outputing WF to file "//file_name
+    file_unit = 200+jstate
+    write(file_name,*) jstate
+    file_name='wf1d.'//trim(adjustl(file_name))//'.out'
+    open(file_unit,file=file_name, action='WRITE', iostat=iost)
+    ! opening file unii
+    write(file_unit,*) "#WF - QDYN output"
+    write(file_unit,*) "#x   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
+    close(file_unit)
+    open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+    call printwf_1d(jstate,x,v1)
+    write(*,*)"Outputing WF to file "//file_name
+
+  end do
 
 elseif(rank .eq. 2) then
   call normalize_2d(wf2x)
@@ -163,22 +165,47 @@ elseif(rank .eq. 3) then
 endif
 
 !--Open file with energies
-open(101,file='energies.dat', action='WRITE', iostat=iost)
-write(101,*) "#  time     total energy    potential       kinetic         energy diff     norm"
-close(101)
-open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
+select case(run)
+case(0)
+  open(101,file='energies.dat', action='WRITE', iostat=iost)
+  write(101,*) "#  time     total energy    potential       kinetic         energy diff     norm"
+  close(101)
+  open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
 
-!--Writing energies
-select case(rank)
+  !--Writing energies
+  select case(rank)
+  case(1)
+    call update_energy_1d(wfx(1,:))
+  case(2)
+    call update_energy_2d(wf2x, energy(1))
+  case(3)
+    call update_energy_3d(wf3x, energy(1))
+  end select
+  call update_norm()
+  call printen()
 case(1)
-  call update_energy_1d(wfx)
-case(2)
-  call update_energy_2d(wf2x, energy(1))
-case(3)
-  call update_energy_3d(wf3x, energy(1))
+  do jstate=1,nstates
+    file_unit=300+jstate
+    write(file_name,*) jstate
+    file_name='energies.'//trim(adjustl(file_name))//'.dat'
+    open(file_unit,file=file_name, action='WRITE', iostat=iost)
+    write(file_unit,*) "#  time     total energy    potential       kinetic         energy diff"
+    close(file_unit)
+    open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+    !--Writing energies
+    select case(rank)
+    case(1)
+      call update_energy_1d(wfx(1,:))
+    case(2)
+      call update_energy_2d(wf2x, energy(1))
+    case(3)
+      call update_energy_3d(wf3x, energy(1))
+    end select
+    
+    call printen_state(jstate)
+  end do
 end select
-call update_norm()
-call printen()
 
 ! printing beggining of the output
 write(*,*) 

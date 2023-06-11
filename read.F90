@@ -9,20 +9,23 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
   real(DP), dimension(:), allocatable    :: x,y,z,point
-  complex(DP), dimension(:), allocatable :: wfx, wfp, theta_v1, kin_p1
+  !>jj -  extending to many states
+  complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
+  complex(DP), dimension(:,:), allocatable :: wfx
+  !<jj
   !jj - add uk
   !TODO: remove later
   complex(DP), dimension(:), allocatable :: wfxgs
   complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
   complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
   integer               :: run, nstep, ngrid, wf, rank, nstates
-  integer               :: iost, i, j, k
+  integer               :: iost, i, j, k, istate, jstate, file_unit
   integer ( kind = 8 )  :: plan_forward, plan_backward
 
   real(DP), dimension(:), allocatable     :: v1, px, py, pz
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
-  character(len=50)             :: pot=''
+  character(len=100)             :: pot=''
   character(len=50)             :: file_name
   character(len=*),dimension(1),parameter :: var1 = (/'x'/)
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
@@ -57,7 +60,9 @@ if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
 if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
 if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
-if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
+!if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
+!jj
+if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
 !jj
 if(rank .eq. 1) allocate(wfxgs(ngrid))
 if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
@@ -232,6 +237,14 @@ else
   write(*,'(A,I1)') " Number of dimensions: ",rank
 end if
 
+! number of steps
+if (nstep .lt. 1) then
+  write(*,*) "ERR: Number of steps must be bigger than 1."
+  stop 1
+else
+  write(*,'(A,I8)') " Number of steps: ",rank
+end if
+
 ! params of grid
 if (xmin .gt. xmax) then
   write(*,*) "ERR: xmin must be smaller than xmax."
@@ -284,19 +297,14 @@ else
     write(*,*) "ERR: nstates > 1 available only for imag propagation."
     stop 1
   else
-    write(*,'(A,I1)') " nstates: ", nstates
+    write(*,'(A,I2)') " nstates: ", nstates
   end if
 end if
 
 !>jj because code is not ready for more states now
-if (nstates > 2) then
-  write(*,*) "Too many states!"
+if (nstates > 2 .and. rank.gt.1) then
+  write(*,*) "CODE NOT READY FOR IMAG PROP FOR 2D OR 3D WITH MORE THAN TWO STATES!"
   stop 1
-else
-  if (nstates.eq.2 .and. rank.gt.1) then
-        write(*,*) "CODE NOT READY FOR IMAG PROP WITH MORE THAN TWO STATES!"
-        stop 1
-  end if
 end if
 !<jj
 
