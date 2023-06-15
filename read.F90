@@ -13,9 +13,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
   complex(DP), dimension(:,:), allocatable :: wfx
   !<jj
-  !jj - add uk
-  !TODO: remove later
-  complex(DP), dimension(:), allocatable :: wfxgs
+  logical               :: project_rot=.true., analytic=.true.
   complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
   complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
   integer               :: run, nstep, ngrid, wf, rank, nstates
@@ -31,7 +29,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
   character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic
 
 CONTAINS
 
@@ -52,7 +50,6 @@ subroutine read_input()
   call check()
 
 !-- GRID set-up
-
 dx=(xmax-xmin)/(ngrid-1)
 
 ! allocating arrays
@@ -63,8 +60,6 @@ if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngr
 !if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
 !jj
 if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
-!jj
-if(rank .eq. 1) allocate(wfxgs(ngrid))
 if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
 if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid), kin_p3(ngrid,ngrid,ngrid))
 
@@ -79,7 +74,9 @@ do i=2, ngrid
   if(rank .gt. 2) z(i) = z(i-1) + dx
 end do
 
+!TODO: move this to init.F90
 !-- POTENTIAL energy init
+if (analytic) then
   write(*,*)"Potential: ",pot
   call initf (1)                                                     !Initialization of parser
 
@@ -95,6 +92,7 @@ end do
       if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
       if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
+
 
 !2D   
   elseif(rank .eq. 2) then
@@ -130,6 +128,24 @@ end do
       end do
     end do 
   end if
+! reading potential from file pot.dat
+else 
+  write(*,*) "Potential read from file: pot.dat"
+  !call interpolation_1d(...)
+  open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+  select case(rank)
+  case(1)
+    read(667,*)v1
+    do j=1, ngrid
+      if(run .eq. 0) theta_v1(j) = cmplx(cos(-v1(j)*dt/2.0d0),sin(-v1(j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) theta_v1(j) = cmplx(exp(-v1(j)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+    end do
+  case default
+    write(*,*) "cannot read files with rank bigger than 1."
+    stop 1
+  end select
+  close(667)
+end if 
 
 !-- KINETIC energy init        exp[-iT/h_bar tau]
 
@@ -316,6 +332,23 @@ end if
 !<jj
 
 end subroutine check
+
+!TODO: finish interpolation, currently the file is prepared in python
+! interpolation subroutine, currently not used part of the code
+subroutine interpolation_1d(xdata, potdata, x, pot)
+  real(DP), dimension(ngrid), intent(in)  :: xdata, potdata, x
+  real(DP), dimension(ngrid), intent(out) :: pot 
+  integer                                 :: i
+  
+  ! checking if the data are monotonous
+  do i=1,ngrid-1
+    if (xdata(i).le.xdata(i+1)) then
+      write(*,*) "Data in pot.dat are not monotonous. Exiting.."
+      stop 1
+    end if
+  end do
+
+end subroutine interpolation_1d
 
 end module
 

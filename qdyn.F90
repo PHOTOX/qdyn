@@ -69,13 +69,9 @@ select case(run)
         select case(rank)
           case(1)
             call propag_1d(wfx(istate,:),wfp,theta_v1,kin_p1) 
-            !jj - I should already project out in the init part
-!            if (istate.ge.2) then
               do jstate=1,istate-1
-              write(*,*) "Projecting out state:", jstate
                call project_out_1d(wfx(jstate,:),wfx(istate,:))
               end do
-!            end if
             call normalize_1d(wfx(istate,:))
             call update_energy_1d(wfx(istate,:))
 

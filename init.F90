@@ -18,9 +18,8 @@ subroutine init()
 
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
-  xmean=(xmax-xmin)/2.0d0+xmin
-  !jj - tobe removed
-  xmean=(xmax-xmin)/2.0d0+xmin*1.1d0
+  !TODO: make these variables modifiable in input
+  xmean=(xmax-xmin)/2.0d0+xmin*1.1d0 ! on purpose a bit shifted
   stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
   k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
   !jj - No initial momentum set for the wavepacket

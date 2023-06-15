@@ -71,12 +71,15 @@ subroutine project_out_1d(phi_i,wfx)
   c_i = braket_1d(phi_i, wfx)
   wfx = wfx - c_i * phi_i
 
+  !TODO: add variable called project_rot=.true.
   !>jj WARNING: numerical instability cause optimization to lower states but in imaginary space. It is purely numerical and can be
   !removed by projecting out also imaginary stationary state
   !This is only useful for real init. cond
-  rot = cmplx(0.0d0, 1.0d0)*phi_i
-  c_i = braket_1d(rot, wfx)
-  wfx = wfx - c_i * rot
+  if (project_rot) then
+    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    c_i = braket_1d(rot, wfx)
+    wfx = wfx - c_i * rot
+  end if
   !<jj
 
 end subroutine

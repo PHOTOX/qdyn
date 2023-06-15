@@ -11,8 +11,8 @@ Plotting with gnuplot:
 display output.gif 
 
 TODO:
-evaluate energy of a wavepacket
-real/imag propagation option
-calculate excited states using imag propagation
-propagation cycles for all dimensions
+1) correct grid for 2D and 3D propagation
+2) create test cases for 1D, 2D,and 3D HO and also one Morse potential
+3) run test cases and verify the propagation
+4) upload python analysis scripts
 
