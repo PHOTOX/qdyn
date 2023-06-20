@@ -13,6 +13,10 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
   complex(DP), dimension(:,:), allocatable :: wfx
   !<jj
+  !>jj adding field
+  logical               :: use_field=.false.
+  character(len=100)    :: field=''
+  !>jj adding field
   logical               :: project_rot=.true., analytic=.true.
   complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
   complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
@@ -29,7 +33,7 @@ use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
   character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic,use_field,field
 
 CONTAINS
 
@@ -229,7 +233,14 @@ select case(rank)
     end do
 end select
 
-!--Printing of WF
+!--Initialize field function
+if (use_field) then
+  call initf (2)                                                     !Initialization of parser
+  call parsef (2, field, (/'t'/))                                       !Bytcompiling function string  
+  if (EvalErrType > 0) then
+    WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+  end if
+end if
 
 end subroutine read_input
 
@@ -286,9 +297,14 @@ select case (wf)
 end select
 
 ! potential
-if (pot == "") then
-  write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
-  stop 1
+if (analytic) then
+  write(*,*) "Potential: analytic"
+  if (pot == "") then
+    write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
+    stop 1
+  end if
+else
+  write(*,*) "Potential: provided in file"
 end if
 
 ! run case (imag/real)
@@ -316,6 +332,33 @@ else
     write(*,'(A,I2)') " nstates: ", nstates
   end if
 end if
+
+!projecting out rotated wf
+if (project_rot .and. (run == 1) .and. (nstates>1)) then
+  write(*,*) "Projecting out also 90 degrees rotated wavefunctions due to numeric instabilities"
+end if
+
+!field
+if (use_field) then
+  select case(run)
+  case(0)
+    write(*,*) "Field: ON"
+    if (field == '') then
+      write(*,*) "ERR: No field function specified. Set 'field' in input.q."
+      stop 1
+    else
+      write(*,*) "|E(t)| = ", field
+    end if
+  case(1)
+    write(*,*) "ERR: Field cannot be used with imaginary time propagation."
+    stop 1
+  end select
+else 
+  if (run == 0) then
+    write(*,*) "Field: OFF"
+  end if
+end if
+
 
 !>jj because code is not ready for more states now
 if (nstates > 2 .and. rank.gt.1) then

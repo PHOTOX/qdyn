@@ -369,4 +369,16 @@ implicit none
 
 end subroutine
 
+function elmag_field(t)
+  real(DP)    :: t, elmag_field
+  real(DP)    :: point(1) !This is just a simple trick I use to create a 1D array out of t which is necessary for evalf
+
+  point(1) = t
+  elmag_field = evalf(2, point)                                       !Evaluating field at time t
+  if (EvalErrType > 0) then
+    WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+  end if
+
+end function
+
 end module

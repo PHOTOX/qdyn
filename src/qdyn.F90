@@ -11,7 +11,6 @@ program qdyn
 ! -------------------------------------------------------------------!
 
    implicit none
-   ! TODO: istate variable added
    integer     :: n
 
 !--Initialization--!
@@ -33,6 +32,9 @@ select case(run)
           call propag_1d(wfx(1,:),wfp,theta_v1,kin_p1) 
           call update_norm()
           call update_energy_1d(wfx(1,:))
+
+          !jj - field function ready for evaluation
+          !print *,elmag_field(time)
 
         case(2)
           call propag_2d(wf2x,wf2p,theta_v2,kin_p2)
