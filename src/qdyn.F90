@@ -10,17 +10,19 @@ program qdyn
 ! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2023)             !
 ! -------------------------------------------------------------------!
 
-   implicit none
-   integer     :: n
+  implicit none
+  integer     :: n
+
+  write(*,*) "====== Qdyn ====="
+
+!--Reading input--!
+  call read_input()
 
 !--Initialization--!
-
-  call read_input()
   call init()
 
 
 !--Propagation mode--!
-
 select case(run)
   ! Real time propagation
   case(0)

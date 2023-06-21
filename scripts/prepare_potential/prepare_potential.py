@@ -1,15 +1,17 @@
 # analyze wf from QDyn
 
-from os.path import exists
-
 import f90nml
 import matplotlib.pyplot as plt
 import numpy as np
+from os.path import exists
+from scipy.interpolate import CubicSpline
 
 ########## input ##########
 input_energies = ['a.u.', 'eV'][0]
 input_coordinates = ['a.u.', 'Angstrom'][1]
 input_file = 'PES.dat'
+interpolation = ['linear', 'cubic spline'][1]
+convolution = False # convolution with Gaussian to smooth functions
 plot = True
 
 ########## parameters ##########
@@ -62,15 +64,29 @@ if modified and exists('input.q'):
 ########## creating data ##########
 # xrange created
 x = np.linspace(xmin, xmax, ngrid)
-# interpolation
-pot = np.interp(x=x, xp=data[0], fp=data[1])
 
-# HERE following manipulations with potential can be performed
-pot = pot + 0
+# interpolation
+if interpolation == 'linear':
+    pot = np.interp(x=x, xp=data[0], fp=data[1])
+elif interpolation == 'cubic spline':
+    pot =  CubicSpline(data[0], data[1], bc_type='natural')(x)
+else:
+    print("Unknown interpolation technique")
+    exit(1)
+
+# convolution with Gaussian to smooth out functions
+if convolution:
+    kernel=np.exp(-(x - np.median(x)) ** 2 / np.var(x) * 1000)
+    kernel= kernel / np.trapz(kernel)
+    pot[10:-10]=np.convolve(pot, kernel, 'same')[10:-10]
+
+# HERE manipulations with potential can be performed
+pot = pot + 0.04*np.exp(20*(x-x[-1]))
+# HERE manipulations with potential can be performed
 
 if plot:
     plt.plot(data[0], data[1])
-    plt.scatter(x, pot, s=5)
+    plt.scatter(x, pot, s=5, color='black')
     plt.xlabel('x / a.u.')
     plt.ylabel('E / a.u.')
     plt.show()

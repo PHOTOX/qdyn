@@ -2,6 +2,7 @@ module mod_utils
 
 use mod_vars
 use FFTW3
+use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
 
   implicit none
 

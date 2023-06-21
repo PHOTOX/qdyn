@@ -16,6 +16,200 @@ subroutine init()
 ! initializing just for the 1. state in RT propagation
 ! initializing all states for IT propagation
 
+
+
+!!!!
+
+!-- GRID set-up
+dx=(xmax-xmin)/(ngrid-1)
+
+! allocating arrays
+if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
+if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
+if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
+
+!if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
+!jj
+if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
+if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid), kin_p3(ngrid,ngrid,ngrid))
+
+! setting up grid poitns
+x(1)=xmin
+if(rank .gt. 1) y(1)=xmin
+if(rank .gt. 2) z(1)=xmin
+
+do i=2, ngrid
+  x(i) = x(i-1) + dx
+  if(rank .gt. 1) y(i) = y(i-1) + dx
+  if(rank .gt. 2) z(i) = z(i-1) + dx
+end do
+
+!TODO: move this to init.F90
+!-- POTENTIAL energy init
+if (analytic) then
+  write(*,*)"Potential: ",pot
+  call initf (1)                                                     !Initialization of parser
+
+  if(rank .eq. 1) then
+    call parsef (1, pot, var1)                                       !Bytcompiling function string  
+    do i=1, ngrid
+      point = x(i)
+      v1(i) = evalf (1, point)                                       !Evaluating potential for grid
+      if (EvalErrType > 0) then
+        WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+        stop 1
+      end if
+      if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+    end do
+
+
+!2D   
+  elseif(rank .eq. 2) then
+    call parsef (1, pot, var2)                                      
+    do i=1, ngrid
+      do j=1, ngrid
+        point = (/x(i),y(j)/)
+        v2(i,j) = evalf (1, point) 
+        if (EvalErrType > 0) then
+          WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+          stop 1
+        end if
+        if(run .eq. 0) theta_v2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+        if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
+      end do
+    end do
+  
+!3D
+  elseif(rank .eq. 3) then
+    call parsef (1, pot, var3)
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          point = (/x(i),y(j),z(k)/)
+          v3(i,j,k) = evalf (1, point)
+          if (EvalErrType > 0) then
+            WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+            stop 1
+          end if
+          if(run .eq. 0) theta_v3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+          if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+        end do
+      end do
+    end do 
+  end if
+! reading potential from file pot.dat
+else 
+  write(*,*) "Potential read from file: pot.dat"
+  !call interpolation_1d(...)
+  open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+  select case(rank)
+  case(1)
+    read(667,*)v1
+    do j=1, ngrid
+      if(run .eq. 0) theta_v1(j) = cmplx(cos(-v1(j)*dt/2.0d0),sin(-v1(j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) theta_v1(j) = cmplx(exp(-v1(j)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+    end do
+  case default
+    write(*,*) "cannot read files with rank bigger than 1."
+    stop 1
+  end select
+  close(667)
+end if 
+
+!-- KINETIC energy init        exp[-iT/h_bar tau]
+
+select case(rank)
+  case(1)
+    do i=1, ngrid
+!     if(i .lt. ngrid/2) then
+     if(i .le. ngrid/2) then
+!       px(i) = 2*pi*i/(ngrid*dx)
+       !jj
+       px(i) = 2*pi*(i-1)/(ngrid*dx)
+     else
+!       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+       !jj
+       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
+     end if
+     if(run .eq. 0) kin_p1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
+     if(run .eq. 1) kin_p1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
+    end do
+  !2D
+  case(2)
+
+   do i=1, ngrid
+     if(i .lt. ngrid/2) then
+       px(i) = 2*pi*i/(ngrid*dx)
+     else
+       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+   do j=1, ngrid
+     if(j .lt. ngrid/2) then
+       py(j) = 2*pi*j/(ngrid*dx)
+     else
+       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+    do i=1, ngrid
+      do j=1, ngrid
+        if(run .eq. 0) kin_p2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
+        if(run .eq. 1) kin_p2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),0)
+      end do
+    end do
+
+  !3D
+  case(3)
+
+   do i=1, ngrid
+     if(i .lt. ngrid/2) then
+       px(i) = 2*pi*i/(ngrid*dx)
+     else
+       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+   do j=1, ngrid
+     if(j .lt. ngrid/2) then
+       py(j) = 2*pi*j/(ngrid*dx)
+     else
+       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+     end if
+   end do
+
+   do k=1, ngrid
+     if(k .lt. ngrid/2) then
+       pz(k) = 2*pi*k/(ngrid*dx)
+     else
+       pz(k) = 2*pi*(k-ngrid)/(ngrid*dx)
+     end if
+   end do
+ 
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          if(run .eq. 0) kin_p3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
+                                         sin(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
+          if(run .eq. 1) kin_p3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),0)
+        end do
+      end do
+    end do
+end select
+
+!--Initialize field function
+if (use_field) then
+  call initf (2)                                                     !Initialization of parser
+  call parsef (2, field, (/'t'/))                                       !Bytcompiling function string  
+  if (EvalErrType > 0) then
+    WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+  end if
+end if
+
+!--Generating wavepacket
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
   !TODO: make these variables modifiable in input

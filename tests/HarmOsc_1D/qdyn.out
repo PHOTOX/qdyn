@@ -1,4 +1,5 @@
  ====== Qdyn =====
+ ### Reading input ###
  Grid size:   512
  Number of dimensions: 1
  Number of steps:        1
