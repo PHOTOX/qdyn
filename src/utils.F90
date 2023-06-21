@@ -72,16 +72,13 @@ subroutine project_out_1d(phi_i,wfx)
   c_i = braket_1d(phi_i, wfx)
   wfx = wfx - c_i * phi_i
 
-  !TODO: add variable called project_rot=.true.
-  !>jj WARNING: numerical instability cause optimization to lower states but in imaginary space. It is purely numerical and can be
-  !removed by projecting out also imaginary stationary state
-  !This is only useful for real init. cond
+  ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
+  !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
   if (project_rot) then
     rot = cmplx(0.0d0, 1.0d0)*phi_i
     c_i = braket_1d(rot, wfx)
     wfx = wfx - c_i * rot
   end if
-  !<jj
 
 end subroutine
 
@@ -162,7 +159,6 @@ subroutine printwf_1d(state,x,v1)
   write(file_unit,*)
 
 end subroutine
-
 
 subroutine printwf_2d(wf,x,y,v2)
 
@@ -274,14 +270,13 @@ implicit none
 
 end subroutine
 
-subroutine update_energy_2d(wf2x, energy)
+subroutine update_energy_2d(wf2x)
 implicit none
   complex(DP), intent(in)       :: wf2x(:, :)
-  real(DP), intent(inout)       :: energy
-  complex(DP), allocatable      :: h_wf2x(:, :), wf2p(:, :), wf2t(:, :)
+  real(DP)                      :: old_energy
+  complex(DP), allocatable      :: wf2p(:, :), wf2t(:, :)
   integer                       :: i, j
 
-  allocate(h_wf2x(ngrid, ngrid))
   allocate(wf2p(ngrid, ngrid))
   allocate(wf2t(ngrid, ngrid))
 
@@ -308,15 +303,20 @@ implicit none
 
   wf2t = wf2t / ngrid
 
-  ! Hamiltonian applied to the wavefunction
-  ! H(psi) = T(psi) + V*psi
-  do i=1, ngrid
-   do j=1, ngrid
-    h_wf2x(i,j) = wf2t(i,j) + wf2x(i,j)*v2(i,j)
-   end do
-  end do
+  ! calculating <T>
+  energy(3) = braket_2d(wf2x, wf2t)/braket_2d(wf2x, wf2x)
 
-  energy = braket_2d(wf2x, h_wf2x)
+  ! calculating <V>
+  energy(2) = braket_2d(wf2x, v2*wf2x)/braket_2d(wf2x, wf2x)
+
+  ! saving old energy
+  old_energy = energy(1)
+
+  ! calculating <E> = <V> + <T>
+  energy(1) = energy(2)+ energy(3)
+  
+  ! energy difference from the last step
+  energy_diff = energy(1) - old_energy
 
 end subroutine
 

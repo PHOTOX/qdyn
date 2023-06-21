@@ -38,6 +38,7 @@ CONTAINS
 subroutine read_input()
   implicit none
 
+  write(*,*)
   write(*,*) "### Reading input ###"
 
 !-- Reading input file
@@ -57,6 +58,17 @@ subroutine read_input()
 end subroutine read_input
 
 subroutine check()
+
+! run case (imag/real)
+select case(run)
+  case(0)
+    write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
+  case(1)
+    write(*,*) "RUN: 1 - IMAGINARY TIME PROPAGATION"
+  case default
+    write(*,*) "ERR: Unrecongnized run option. Exiting"
+    stop 1
+end select
 
 ! ngrid is power of 2
 if ((ngrid .ne. 0) .and. (IAND(ngrid, ngrid-1) .eq. 0))  then
@@ -116,20 +128,7 @@ if (analytic) then
 else
   write(*,*) "Potential: provided in file"
 end if
-
-! run case (imag/real)
-select case(run)
-  ! CLASSICAL REAL TIME PROPAGATION
-  case(0)
-    write(*,*) "Propagation: REAL TIME"
-  ! CLASSICAL IMAGINARY TIME PROPAGATION
-  case(1)
-    write(*,*) "Propagation: IMAGINARY TIME"
-  case default
-    write(*,*) "ERR: Unrecongnized run option. Exiting"
-    stop 1
-end select
-
+               
 ! number of states
 if (nstates < 1) then
   write(*,*) "ERR: number of states must be 1 or more."
@@ -178,7 +177,8 @@ end if
 !<jj
 
 !>jj because code is not ready for more states now
-if (rank .gt. 1) then
+!TODO: Modifying this part now
+if (rank .gt. 2) then
   write(*,*) "Fourier transform not corrected for 2D and 3D!"
   stop 1
 end if
@@ -186,22 +186,4 @@ end if
 
 end subroutine check
 
-!TODO: finish interpolation, currently the file is prepared in python
-! interpolation subroutine, currently not used part of the code
-subroutine interpolation_1d(xdata, potdata, x, pot)
-  real(DP), dimension(ngrid), intent(in)  :: xdata, potdata, x
-  real(DP), dimension(ngrid), intent(out) :: pot 
-  integer                                 :: i
-  
-  ! checking if the data are monotonous
-  do i=1,ngrid-1
-    if (xdata(i).le.xdata(i+1)) then
-      write(*,*) "Data in pot.dat are not monotonous. Exiting.."
-      stop 1
-    end if
-  end do
-
-end subroutine interpolation_1d
-
 end module
-

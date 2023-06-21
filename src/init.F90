@@ -12,13 +12,12 @@ CONTAINS
 subroutine init()
   implicit none
 
+write(*,*)
+write(*,*) "### Initialization ###"
+
 !-- Initialization of Wave Function
 ! initializing just for the 1. state in RT propagation
 ! initializing all states for IT propagation
-
-
-
-!!!!
 
 !-- GRID set-up
 dx=(xmax-xmin)/(ngrid-1)
@@ -45,7 +44,6 @@ do i=2, ngrid
   if(rank .gt. 2) z(i) = z(i-1) + dx
 end do
 
-!TODO: move this to init.F90
 !-- POTENTIAL energy init
 if (analytic) then
   write(*,*)"Potential: ",pot
@@ -140,18 +138,18 @@ select case(rank)
   case(2)
 
    do i=1, ngrid
-     if(i .lt. ngrid/2) then
-       px(i) = 2*pi*i/(ngrid*dx)
+     if(i .le. ngrid/2) then
+       px(i) = 2*pi*(i-1)/(ngrid*dx)
      else
-       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
    end do
 
    do j=1, ngrid
-     if(j .lt. ngrid/2) then
-       py(j) = 2*pi*j/(ngrid*dx)
+     if(j .le. ngrid/2) then
+       py(j) = 2*pi*(j-1)/(ngrid*dx)
      else
-       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dx)
      end if
    end do
 
@@ -166,26 +164,26 @@ select case(rank)
   case(3)
 
    do i=1, ngrid
-     if(i .lt. ngrid/2) then
-       px(i) = 2*pi*i/(ngrid*dx)
+     if(i .le. ngrid/2) then
+       px(i) = 2*pi*(i-1)/(ngrid*dx)
      else
-       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
+       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
    end do
 
    do j=1, ngrid
-     if(j .lt. ngrid/2) then
-       py(j) = 2*pi*j/(ngrid*dx)
+     if(j .le. ngrid/2) then
+       py(j) = 2*pi*(j-1)/(ngrid*dx)
      else
-       py(j) = 2*pi*(j-ngrid)/(ngrid*dx)
+       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dx)
      end if
    end do
 
    do k=1, ngrid
-     if(k .lt. ngrid/2) then
-       pz(k) = 2*pi*k/(ngrid*dx)
+     if(k .le. ngrid/2) then
+       pz(k) = 2*pi*(k-1)/(ngrid*dx)
      else
-       pz(k) = 2*pi*(k-ngrid)/(ngrid*dx)
+       pz(k) = 2*pi*(k-1-ngrid)/(ngrid*dx)
      end if
    end do
  
@@ -370,7 +368,7 @@ case(0)
   case(1)
     call update_energy_1d(wfx(1,:))
   case(2)
-    call update_energy_2d(wf2x, energy(1))
+    call update_energy_2d(wf2x)
   case(3)
     call update_energy_3d(wf3x, energy(1))
   end select
@@ -391,7 +389,7 @@ case(1)
     case(1)
       call update_energy_1d(wfx(1,:))
     case(2)
-      call update_energy_2d(wf2x, energy(1))
+      call update_energy_2d(wf2x)
     case(3)
       call update_energy_3d(wf3x, energy(1))
     end select
@@ -402,18 +400,6 @@ end select
 
 ! printing beggining of the output
 write(*,*) 
-
-select case(run)
-  case(0)
-    write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
-  case(1)
-    write(*,*) "RUN: 1 - IMAGINARY TIME PROPAGATION"
-  case default
-    stop 1
-end select
-
-write(*,*)
-write(*,*) "------ time -----"
 
 end subroutine init
 
