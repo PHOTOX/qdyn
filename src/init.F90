@@ -27,10 +27,10 @@ if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
 if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
 if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
-!if(rank .eq. 1) allocate(wfx(ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
-!jj
 if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
-if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
+!if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
+!jj
+if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
 if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid), kin_p3(ngrid,ngrid,ngrid))
 
 ! setting up grid poitns
@@ -211,7 +211,7 @@ end if
 if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
   write(*,*) "Generating gaussian wave packet at the center of the grid."
   !TODO: make these variables modifiable in input
-  xmean=(xmax-xmin)/2.0d0+xmin*1.1d0 ! on purpose a bit shifted
+  xmean=(xmax-xmin)/2.0d0+xmin*1.2d0 ! on purpose a bit shifted
   stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
   k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
   !jj - No initial momentum set for the wavepacket
@@ -231,9 +231,18 @@ if(wf .eq. 0) then                                                           ! g
             
       case (2)
         do j=1, ngrid
-          wf2x(i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &
+          wf2x(1,i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &
                              exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * sin(k_0*x(i)) )
+
+        ! for the imag time, I create the came wave packet for all states
+        if (run.eq.1 .and. nstates.ge.2) then
+          do jstate=2,nstates
+            wf2x(jstate,i,j) = wf2x(1,i,j)
+          end do
+        end if
+
         end do
+            
       case (3)
         do j=1, ngrid
           do k=1, ngrid
@@ -259,13 +268,14 @@ end if
 if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
 !>jj - normalization of the other states
 ! I should do this in the normalize 
+if(rank .eq. 2) call normalize_2d(wf2x(1,:,:))
 if(run.eq.1 .and. nstates.ge.2) then
   do jstate=2,nstates
-    call normalize_1d(wfx(jstate,:))
+    if(rank .eq. 1) call normalize_1d(wfx(jstate,:))
+    if(rank .eq. 2) call normalize_2d(wf2x(jstate,:,:))
   end do
 end if
 !<jj
-if(rank .eq. 2) call normalize_2d(wf2x)
 if(rank .eq. 3) call normalize_3d(wf3x) 
 
 !-- Initialization of FFT procedures
@@ -283,15 +293,15 @@ wfx(1,:) = wfx(1,:) / dsqrt(real(ngrid, kind=DP))
 
 elseif(rank .eq. 2) then
 
-call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wf2x, wf2p)
+call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x(1,:,:), wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wf2x(1,:,:), wf2p)
 call dfftw_destroy_plan(plan_forward)
 wf2p = wf2p / dsqrt(real(ngrid, kind=DP)**2)
 
-call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wf2p, wf2x)
+call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x(1,:,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wf2p, wf2x(1,:,:))
 call dfftw_destroy_plan(plan_backward)
-wf2x = wf2x / dsqrt(real(ngrid, kind=DP)**2)
+wf2x(1,:,:) = wf2x(1,:,:) / dsqrt(real(ngrid, kind=DP)**2)
 
 elseif(rank .eq. 3) then
 
@@ -308,7 +318,7 @@ wf3x = wf3x / dsqrt(real(ngrid, kind=DP)**3)
 end if
 
 !--Printing of WF
-
+if (print_wf) then
 if(rank .eq. 1) then
   call normalize_1d(wfx(1,:))
 
@@ -319,9 +329,9 @@ if(rank .eq. 1) then
     write(file_name,*) jstate
     file_name='wf1d.'//trim(adjustl(file_name))//'.out'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
-    ! opening file unii
+    ! opening file unit
     write(file_unit,*) "#WF - QDYN output"
-    write(file_unit,*) "#x   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
+    write(file_unit,*) "#x   REAL   IMAG   NORM    POTENTIAL"
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
@@ -331,16 +341,25 @@ if(rank .eq. 1) then
   end do
 
 elseif(rank .eq. 2) then
-  call normalize_2d(wf2x)
+  call normalize_2d(wf2x(1,:,:))
 
-  open(202,file='wf2d.out', action='WRITE', iostat=iost)
-  write(202,*) "#WF - QDYN output"
-  write(202,*) "#x  y   REAL   IMAG   PROBABILITY-DENSITY  POTENTIAL"
-  close(202)
-  open(202,file='wf2d.out', status='old', position='append', action='WRITE', iostat=iost)
+  ! creating file name
+  do jstate=1,nstates
 
-  call printwf_2d(wf2x,x,y,v2)
-  write(*,*)"Outputing WF to file wf2d.out"
+    file_unit = 200+jstate
+    write(file_name,*) jstate
+    file_name='wf2d.'//trim(adjustl(file_name))//'.out'
+    open(file_unit,file=file_name, action='WRITE', iostat=iost)
+    ! opening file unit
+    write(file_unit,*) "#WF - QDYN output"
+    write(file_unit,*) "#x  y   REAL   IMAG   NORM    POTENTIAL"
+    close(file_unit)
+    open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+    call printwf_2d(jstate,x,y,v2)
+    write(*,*)"Outputing WF to file "//file_name
+
+  end do
 
 elseif(rank .eq. 3) then
   call normalize_3d(wf3x)
@@ -354,6 +373,7 @@ elseif(rank .eq. 3) then
   call printwf_3d(wf3x,x,y,z,v3)
   write(*,*)"Outputing WF to file wf3d.out"
 endif
+end if
 
 !--Open file with energies
 select case(run)
@@ -368,7 +388,7 @@ case(0)
   case(1)
     call update_energy_1d(wfx(1,:))
   case(2)
-    call update_energy_2d(wf2x)
+    call update_energy_2d(wf2x(1,:,:))
   case(3)
     call update_energy_3d(wf3x, energy(1))
   end select
@@ -389,7 +409,7 @@ case(1)
     case(1)
       call update_energy_1d(wfx(1,:))
     case(2)
-      call update_energy_2d(wf2x)
+      call update_energy_2d(wf2x(1,:,:))
     case(3)
       call update_energy_3d(wf3x, energy(1))
     end select

@@ -82,6 +82,26 @@ subroutine project_out_1d(phi_i,wfx)
 
 end subroutine
 
+subroutine project_out_2d(phi_i,wf2x)
+
+  complex(DP), intent(inout)    :: wf2x(:,:)
+  complex(DP), intent(in)       :: phi_i(:,:)
+  complex(DP)                   :: rot(ngrid,ngrid)
+  real(DP)                      :: c_i
+
+  c_i = braket_2d(phi_i, wf2x)
+  wf2x = wf2x - c_i * phi_i
+
+  ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
+  !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
+  if (project_rot) then
+    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    c_i = braket_2d(rot, wf2x)
+    wf2x = wf2x - c_i * rot
+  end if
+
+end subroutine
+
 !=== NORMALIZATION ===!
 subroutine update_norm() 
 
@@ -89,7 +109,7 @@ subroutine update_norm()
     case(1)
       norm = braket_1d(wfx(1,:), wfx(1,:))
     case(2)
-      norm = braket_2d(wf2x, wf2x)
+      norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
     case(3)
       norm = braket_3d(wf3x, wf3x)
   end select
@@ -104,6 +124,10 @@ subroutine update_norm()
         call normalize_1d(wfx(1,:))
         norm = braket_1d(wfx(1,:), wfx(1,:))
       !TODO: add other dimensions or generalize normalization
+      case(2)
+        write(*,*) "Renormalization!"
+        call normalize_2d(wf2x(1,:,:))
+        norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
     end select
 
   end if
@@ -160,19 +184,22 @@ subroutine printwf_1d(state,x,v1)
 
 end subroutine
 
-subroutine printwf_2d(wf,x,y,v2)
+subroutine printwf_2d(state,x,y,v2)
 
-  complex(DP), intent(in)    :: wf(:,:)
   real(DP), intent(in)       :: x(:),y(:),v2(:,:)
+  integer, intent(in)        :: state
   integer                    :: i,j
+
+  file_unit=200+state
 
   do i=1, size(x)
     do j=1, size(y)
-      write(202,*) x(i), y(j), real(wf(i,j)), aimag(wf(i,j)), real(wf(i,j))**2+aimag(wf(i,j))**2, v2(i,j)
+      write(file_unit,*) x(i), y(j), real(wf2x(state,i,j)), aimag(wf2x(state,i,j)), real(conjg(wf2x(state,i,j))*wf2x(state,i,j)),&
+      v2(i,j)
     end do
   end do
-  write(202,*)
-  write(202,*)
+  write(file_unit,*)
+  write(file_unit,*)
 
 end subroutine
 
@@ -217,7 +244,7 @@ subroutine printen_state(state)
   integer, intent(in)           :: state
   file_unit = 300+state
     write(file_unit,'(F8.1,5(F16.9))') time, energy, energy_diff
-    
+
 end subroutine
 
 !=== ENERGIES ===!

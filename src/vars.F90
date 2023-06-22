@@ -10,13 +10,14 @@ module mod_vars
   !>jj -  extending to many states
   complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
   complex(DP), dimension(:,:), allocatable :: wfx
+  complex(DP), dimension(:,:), allocatable :: wf2p, theta_v2, kin_p2
+  complex(DP), dimension(:,:,:), allocatable :: wf2x
   !<jj
   !>jj adding field
   logical               :: use_field=.false.
   character(len=100)    :: field=''
   !>jj adding field
-  logical               :: project_rot=.true., analytic=.true.
-  complex(DP), dimension(:,:), allocatable :: wf2x, wf2p, theta_v2, kin_p2
+  logical               :: project_rot=.true., analytic=.true., print_wf=.true.
   complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
   integer               :: run, nstep, ngrid, wf, rank, nstates
   integer               :: iost, i, j, k, istate, jstate, file_unit
@@ -31,7 +32,7 @@ module mod_vars
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
   character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic,use_field,field
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic,use_field,field,print_wf
 
 CONTAINS
 
@@ -168,9 +169,15 @@ else
   end if
 end if
 
+if (print_wf) then
+  write(*,*) "Printing WF: ON"
+else
+  write(*,*) "Printing WF: OFF"
+end if
+
 
 !>jj because code is not ready for more states now
-if (nstates > 2 .and. rank.gt.1) then
+if (nstates .ge. 2 .and. rank.eq.3) then
   write(*,*) "CODE NOT READY FOR IMAG PROP FOR 2D OR 3D WITH MORE THAN TWO STATES!"
   stop 1
 end if

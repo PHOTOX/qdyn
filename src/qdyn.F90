@@ -42,9 +42,9 @@ select case(run)
           !print *,elmag_field(time)
 
         case(2)
-          call propag_2d(wf2x,wf2p,theta_v2,kin_p2)
+          call propag_2d(wf2x(1,:,:),wf2p,theta_v2,kin_p2)
           call update_norm()
-          call update_energy_2d(wf2x)
+          call update_energy_2d(wf2x(1,:,:))
 
         case(3)
           call propag_3d(wf3x,wf3p,theta_v3,kin_p3)
@@ -56,12 +56,18 @@ select case(run)
       if (modulo(time,dtwrite) .eq. 0 ) then
         write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
         call printen()
-        !TODO: use modifications from IT prop
         !TODO: delete x and v1 from printing
+        if (print_wf) then
+          select case(rank)
+          case(1)
+           call printwf_1d(1,x,v1)
+          case(2)
+            call printwf_2d(1,x,y,v2)
+          case(3)
+            call printwf_3d(wf3x,x,y,z,v3)
+          end select
+        end if
         if(rank .eq. 1) call printwf_1d(1,x,v1)
-        !TODO: slower writing of wf.. for 2 and 3 dim it is too much data
-      !    if(rank .eq. 2) call printwf_2d(wf2x,x,y,v2)
-      !    if(rank .eq. 3) call printwf_3d(wf3x,x,y,z,v3)
       end if
     end do
 
@@ -82,9 +88,12 @@ select case(run)
             call update_energy_1d(wfx(istate,:))
 
           case(2)
-            call propag_2d(wf2x,wf2p,theta_v2,kin_p2)
-            call normalize_2d(wf2x)
-            call update_energy_2d(wf2x)
+            call propag_2d(wf2x(istate,:,:),wf2p,theta_v2,kin_p2)
+              do jstate=1,istate-1
+               call project_out_2d(wf2x(jstate,:,:),wf2x(istate,:,:))
+              end do
+            call normalize_2d(wf2x(istate,:,:))
+            call update_energy_2d(wf2x(istate,:,:))
 
           case(3)
             call propag_3d(wf3x,wf3p,theta_v3,kin_p3)
@@ -96,17 +105,18 @@ select case(run)
         if (modulo(time,dtwrite) .eq. 0 ) then
           write(*,'(F8.1,a,F14.9,a,F14.9,a)') time, ' a.u.; E=', energy(1), ' a.u.; dE=', energy_diff, ' a.u.'
           call printen_state(istate)
-          !TODO: use this modification also in real time
           !TODO: delete x and v1 from printing
-          select case(rank)
-          case(1)
-            call printwf_1d(istate,x,v1)
-          !TODO: slower writing of wf.. for 2 and 3 dim it is too much data
-          case(2)
-            call printwf_2d(wf2x,x,y,v2)
-          case(3)
-            call printwf_3d(wf3x,x,y,z,v3)
-          end select
+          if (print_wf) then
+            select case(rank)
+            case(1)
+             call printwf_1d(istate,x,v1)
+            case(2)
+              call printwf_2d(istate,x,y,v2)
+            !jj modify case(3)
+            case(3)
+              call printwf_3d(wf3x,x,y,z,v3)
+            end select
+          end if
         end if
       end do
     end do
