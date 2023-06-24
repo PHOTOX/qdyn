@@ -102,6 +102,26 @@ subroutine project_out_2d(phi_i,wf2x)
 
 end subroutine
 
+subroutine project_out_3d(phi_i,wf3x)
+
+  complex(DP), intent(inout)    :: wf3x(:,:,:)
+  complex(DP), intent(in)       :: phi_i(:,:,:)
+  complex(DP)                   :: rot(ngrid,ngrid,ngrid)
+  real(DP)                      :: c_i
+
+  c_i = braket_3d(phi_i, wf3x)
+  wf3x = wf3x - c_i * phi_i
+
+  ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
+  !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
+  if (project_rot) then
+    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    c_i = braket_3d(rot, wf3x)
+    wf3x = wf3x - c_i * rot
+  end if
+
+end subroutine
+
 !=== NORMALIZATION ===!
 subroutine update_norm() 
 
@@ -111,7 +131,7 @@ subroutine update_norm()
     case(2)
       norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
     case(3)
-      norm = braket_3d(wf3x, wf3x)
+      norm = braket_3d(wf3x(1,:,:,:), wf3x(1,:,:,:))
   end select
 
   !TODO: here should be norm check with some clever threshold
@@ -123,11 +143,14 @@ subroutine update_norm()
         write(*,*) "Renormalization!"
         call normalize_1d(wfx(1,:))
         norm = braket_1d(wfx(1,:), wfx(1,:))
-      !TODO: add other dimensions or generalize normalization
       case(2)
         write(*,*) "Renormalization!"
         call normalize_2d(wf2x(1,:,:))
         norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
+      case(3)
+        write(*,*) "Renormalization!"
+        call normalize_3d(wf3x(1,:,:,:))
+        norm = braket_3d(wf3x(1,:,:,:), wf3x(1,:,:,:))
     end select
 
   end if
@@ -203,16 +226,17 @@ subroutine printwf_2d(state,x,y,v2)
 
 end subroutine
 
-subroutine printwf_3d(wf,x,y,z,v3)
+subroutine printwf_3d(state,x,y,z,v3)
 
-  complex(DP), intent(in)    :: wf(:,:,:)
   real(DP), intent(in)       :: x(:),y(:),z(:),v3(:,:,:)
+  integer, intent(in)        :: state
   integer                    :: i,j,k
 
   do i=1, size(x)
     do j=1, size(y)
       do k=1, size(z)
-        write(203,*) x(i), y(j), z(k), real(wf(i,j,k)), aimag(wf(i,j,k)), real(wf(i,j,k))**2+aimag(wf(i,j,k))**2, v3(i,j,k)
+        write(203,*) x(i), y(j), z(k), real(wf3x(state,i,j,k)), aimag(wf3x(state,i,j,k)), &
+          real(conjg(wf3x(state,i,j,k))*wf3x(state,i,j,k)), v3(i,j,k)
       end do
      end do
   end do
@@ -304,6 +328,7 @@ implicit none
   complex(DP), allocatable      :: wf2p(:, :), wf2t(:, :)
   integer                       :: i, j
 
+  !TODO: allocate this in the specification section
   allocate(wf2p(ngrid, ngrid))
   allocate(wf2t(ngrid, ngrid))
 
@@ -347,14 +372,14 @@ implicit none
 
 end subroutine
 
-subroutine update_energy_3d(wf3x, energy)
+subroutine update_energy_3d(wf3x)
 implicit none
   complex(DP), intent(in)       :: wf3x(:, :, :)
-  real(DP), intent(inout)       :: energy
-  complex(DP), allocatable      :: h_wf3x(:, :, :), wf3p(:, :, :), wf3t(:, :, :)
+  real(DP)                      :: old_energy
+  complex(DP), allocatable      :: wf3p(:, :, :), wf3t(:, :, :)
   integer                       :: i, j, k
 
-  allocate(h_wf3x(ngrid, ngrid, ngrid))
+  !TODO: allocate this in the specification section
   allocate(wf3p(ngrid, ngrid, ngrid))
   allocate(wf3t(ngrid, ngrid, ngrid))
 
@@ -383,17 +408,20 @@ implicit none
 
   wf3t = wf3t / dsqrt(real(ngrid, kind=DP)**3)
 
-  ! Hamiltonian applied to the wavefunction
-  ! H(psi) = T(psi) + V*psi
-  do i=1, ngrid
-   do j=1, ngrid
-     do k=1, ngrid
-       h_wf3x(i,j,k) = wf3t(i,j,k) + wf3x(i,j,k)*v3(i,j,k)
-     end do
-    end do
-  end do
+  ! calculating <T>
+  energy(3) = braket_3d(wf3x, wf3t)/braket_3d(wf3x, wf3x)
 
-  energy = braket_3d(wf3x, h_wf3x)
+  ! calculating <V>
+  energy(2) = braket_3d(wf3x, v3*wf3x)/braket_3d(wf3x, wf3x)
+
+  ! saving old energy
+  old_energy = energy(1)
+
+  ! calculating <E> = <V> + <T>
+  energy(1) = energy(2)+ energy(3)
+  
+  ! energy difference from the last step
+  energy_diff = energy(1) - old_energy
 
 end subroutine
 

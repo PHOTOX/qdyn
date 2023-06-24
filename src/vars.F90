@@ -12,13 +12,15 @@ module mod_vars
   complex(DP), dimension(:,:), allocatable :: wfx
   complex(DP), dimension(:,:), allocatable :: wf2p, theta_v2, kin_p2
   complex(DP), dimension(:,:,:), allocatable :: wf2x
+  !jj - 
+  complex(DP), dimension(:,:,:), allocatable :: wf3p, theta_v3, kin_p3
+  complex(DP), dimension(:,:,:,:), allocatable :: wf3x
   !<jj
   !>jj adding field
   logical               :: use_field=.false.
   character(len=100)    :: field=''
   !>jj adding field
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
-  complex(DP), dimension(:,:,:), allocatable :: wf3x, wf3p, theta_v3, kin_p3
   integer               :: run, nstep, ngrid, wf, rank, nstates
   integer               :: iost, i, j, k, istate, jstate, file_unit
   integer ( kind = 8 )  :: plan_forward, plan_backward
@@ -169,27 +171,12 @@ else
   end if
 end if
 
+!printing wavefunction
 if (print_wf) then
   write(*,*) "Printing WF: ON"
 else
   write(*,*) "Printing WF: OFF"
 end if
-
-
-!>jj because code is not ready for more states now
-if (nstates .ge. 2 .and. rank.eq.3) then
-  write(*,*) "CODE NOT READY FOR IMAG PROP FOR 2D OR 3D WITH MORE THAN TWO STATES!"
-  stop 1
-end if
-!<jj
-
-!>jj because code is not ready for more states now
-!TODO: Modifying this part now
-if (rank .gt. 2) then
-  write(*,*) "Fourier transform not corrected for 2D and 3D!"
-  stop 1
-end if
-!<jj
 
 end subroutine check
 

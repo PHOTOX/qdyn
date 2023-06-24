@@ -11,8 +11,7 @@ Plotting with gnuplot:
 display output.gif 
 
 TODO:
-1) correct grid for 2D and 3D propagation
-2) create test cases for 1D, 2D,and 3D HO and also one Morse potential
-3) run test cases and verify the propagation
-4) upload python analysis scripts
+1) benchmark 3D IM propagation and do it for more states
+2) create test cases for 3D HO 
+3) upload python analysis scripts
 

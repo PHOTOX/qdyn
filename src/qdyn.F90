@@ -47,9 +47,9 @@ select case(run)
           call update_energy_2d(wf2x(1,:,:))
 
         case(3)
-          call propag_3d(wf3x,wf3p,theta_v3,kin_p3)
+          call propag_3d(wf3x(1,:,:,:),wf3p,theta_v3,kin_p3)
           call update_norm()
-          call update_energy_3d(wf3x, energy(1))
+          call update_energy_3d(wf3x(1,:,:,:))
       end select
 
       !print information
@@ -64,7 +64,7 @@ select case(run)
           case(2)
             call printwf_2d(1,x,y,v2)
           case(3)
-            call printwf_3d(wf3x,x,y,z,v3)
+            call printwf_3d(1,x,y,z,v3)
           end select
         end if
         if(rank .eq. 1) call printwf_1d(1,x,v1)
@@ -96,9 +96,12 @@ select case(run)
             call update_energy_2d(wf2x(istate,:,:))
 
           case(3)
-            call propag_3d(wf3x,wf3p,theta_v3,kin_p3)
-            call normalize_3d(wf3x)
-            call update_energy_3d(wf3x, energy(1))
+            call propag_3d(wf3x(istate,:,:,:),wf3p,theta_v3,kin_p3)
+              do jstate=1,istate-1
+               call project_out_3d(wf3x(jstate,:,:,:),wf3x(istate,:,:,:))
+              end do
+            call normalize_3d(wf3x(istate,:,:,:))
+            call update_energy_3d(wf3x(istate,:,:,:))
         end select
 
         !print information
@@ -112,9 +115,8 @@ select case(run)
              call printwf_1d(istate,x,v1)
             case(2)
               call printwf_2d(istate,x,y,v2)
-            !jj modify case(3)
             case(3)
-              call printwf_3d(wf3x,x,y,z,v3)
+              call printwf_3d(istate,x,y,z,v3)
             end select
           end if
         end if

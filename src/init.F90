@@ -28,10 +28,9 @@ if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),p
 if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
 if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
-!if(rank .eq. 2) allocate(wf2x(ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
-!jj
 if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid), kin_p3(ngrid,ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid),&
+  kin_p3(ngrid,ngrid,ngrid))
 
 ! setting up grid poitns
 x(1)=xmin
@@ -121,14 +120,9 @@ end if
 select case(rank)
   case(1)
     do i=1, ngrid
-!     if(i .lt. ngrid/2) then
      if(i .le. ngrid/2) then
-!       px(i) = 2*pi*i/(ngrid*dx)
-       !jj
        px(i) = 2*pi*(i-1)/(ngrid*dx)
      else
-!       px(i) = 2*pi*(i-ngrid)/(ngrid*dx)
-       !jj
        px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
      if(run .eq. 0) kin_p1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
@@ -246,10 +240,18 @@ if(wf .eq. 0) then                                                           ! g
       case (3)
         do j=1, ngrid
           do k=1, ngrid
-            wf3x(i,j,k) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
+            wf3x(1,i,j,k) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
                            - (((z(k)-xmean)**2)/(2*stddev**2))), &
                            exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
                            - (((z(k)-xmean)**2)/(2*stddev**2))))
+
+          ! for the imag time, I create the came wave packet for all states
+          if (run.eq.1 .and. nstates.ge.2) then
+            do jstate=2,nstates
+              wf3x(jstate,i,j,k) = wf3x(1,i,j,k)
+            end do
+          end if
+
           end do
         end do
     end select
@@ -266,17 +268,15 @@ end if
 
 !Normalize wf
 if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
-!>jj - normalization of the other states
-! I should do this in the normalize 
 if(rank .eq. 2) call normalize_2d(wf2x(1,:,:))
+if(rank .eq. 3) call normalize_3d(wf3x(1,:,:,:)) 
 if(run.eq.1 .and. nstates.ge.2) then
   do jstate=2,nstates
     if(rank .eq. 1) call normalize_1d(wfx(jstate,:))
     if(rank .eq. 2) call normalize_2d(wf2x(jstate,:,:))
+    if(rank .eq. 3) call normalize_3d(wf3x(jstate,:,:,:)) 
   end do
 end if
-!<jj
-if(rank .eq. 3) call normalize_3d(wf3x) 
 
 !-- Initialization of FFT procedures
 if(rank .eq. 1) then
@@ -305,15 +305,15 @@ wf2x(1,:,:) = wf2x(1,:,:) / dsqrt(real(ngrid, kind=DP)**2)
 
 elseif(rank .eq. 3) then
 
-call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wf3x, wf3p)
+call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x(1,:,:,:), wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_forward, wf3x(1,:,:,:), wf3p)
 call dfftw_destroy_plan(plan_forward)
 wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
 
-call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wf3p, wf3x)
+call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x(1,:,:,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+call dfftw_execute_dft(plan_backward, wf3p, wf3x(1,:,:,:))
 call dfftw_destroy_plan(plan_backward)
-wf3x = wf3x / dsqrt(real(ngrid, kind=DP)**3)
+wf3x(1,:,:,:) = wf3x(1,:,:,:) / dsqrt(real(ngrid, kind=DP)**3)
 
 end if
 
@@ -362,17 +362,26 @@ elseif(rank .eq. 2) then
   end do
 
 elseif(rank .eq. 3) then
-  call normalize_3d(wf3x)
+  call normalize_3d(wf3x(1,:,:,:))
 
-  open(203,file='wf3d.out', action='WRITE', iostat=iost)
-  write(203,*) "#WF - QDYN output"
-  write(203,*) "#x  y  z   REAL   IMAG   PROBABILITY-DENSITY POTENTIAL"
-  close(203)
-  open(203,file='wf3d.out', status='old', position='append', action='WRITE', iostat=iost)
+  ! creating file name
+  do jstate=1,nstates
 
-  call printwf_3d(wf3x,x,y,z,v3)
-  write(*,*)"Outputing WF to file wf3d.out"
-endif
+    file_unit = 200+jstate
+    write(file_name,*) jstate
+    file_name='wf3d.'//trim(adjustl(file_name))//'.out'
+    open(file_unit,file=file_name, action='WRITE', iostat=iost)
+    ! opening file unit
+    write(file_unit,*) "#WF - QDYN output"
+    write(file_unit,*) "#x  y   z   REAL   IMAG   NORM    POTENTIAL"
+    close(file_unit)
+    open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+    call printwf_3d(jstate,x,y,z,v3)
+    write(*,*)"Outputing WF to file wf3d.out"
+  end do
+
+end if
 end if
 
 !--Open file with energies
@@ -390,7 +399,7 @@ case(0)
   case(2)
     call update_energy_2d(wf2x(1,:,:))
   case(3)
-    call update_energy_3d(wf3x, energy(1))
+    call update_energy_3d(wf3x(1,:,:,:))
   end select
   call update_norm()
   call printen()
@@ -411,7 +420,7 @@ case(1)
     case(2)
       call update_energy_2d(wf2x(1,:,:))
     case(3)
-      call update_energy_3d(wf3x, energy(1))
+      call update_energy_3d(wf3x(1,:,:,:))
     end select
     
     call printen_state(jstate)
