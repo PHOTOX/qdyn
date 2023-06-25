@@ -6,7 +6,7 @@ module mod_init
 
   implicit none
   public
-
+  
 CONTAINS
 
 subroutine init()
@@ -202,69 +202,7 @@ if (use_field) then
 end if
 
 !--Generating wavepacket
-if(wf .eq. 0) then                                                           ! generating gaussian wavepacket
-  write(*,*) "Generating gaussian wave packet at the center of the grid."
-  !TODO: make these variables modifiable in input
-  xmean=(xmax-xmin)/2.0d0+xmin*1.2d0 ! on purpose a bit shifted
-  stddev=(xmax-xmean)/20.0d0                                                  ! 5sigma - 96% of gaussian is on the grid 
-  k_0 = sqrt(2*mass*0.5)                                                   ! sqrt(2*m*E)/h = k0
-  !jj - No initial momentum set for the wavepacket
-  k_0 = k_0*0.0d0
-  do i=1, ngrid
-    select case (rank)
-      case (1)
-        !jj - for imag propagation, I should loop jstate and copy the value
-        wfx(1,i) = cmplx(exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * cos(k_0 * x(i)), &
-                       exp((-1.0d0*(x(i)-xmean)**2)/(2*stddev**2)) * sin(k_0 * x(i)) )  
-        ! for the imag time, I create the came wave packet for all states
-        if (run.eq.1 .and. nstates.ge.2) then
-          do jstate=2,nstates
-            wfx(jstate,i) = wfx(1,i)
-          end do
-        end if
-            
-      case (2)
-        do j=1, ngrid
-          wf2x(1,i,j) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * cos(k_0*x(i)), &
-                             exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2))) * sin(k_0*x(i)) )
-
-        ! for the imag time, I create the came wave packet for all states
-        if (run.eq.1 .and. nstates.ge.2) then
-          do jstate=2,nstates
-            wf2x(jstate,i,j) = wf2x(1,i,j)
-          end do
-        end if
-
-        end do
-            
-      case (3)
-        do j=1, ngrid
-          do k=1, ngrid
-            wf3x(1,i,j,k) =  cmplx(exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
-                           - (((z(k)-xmean)**2)/(2*stddev**2))), &
-                           exp(- (((x(i)-xmean)**2)/(2*stddev**2)) - (((y(j)-xmean)**2)/(2*stddev**2)) &
-                           - (((z(k)-xmean)**2)/(2*stddev**2))))
-
-          ! for the imag time, I create the came wave packet for all states
-          if (run.eq.1 .and. nstates.ge.2) then
-            do jstate=2,nstates
-              wf3x(jstate,i,j,k) = wf3x(1,i,j,k)
-            end do
-          end if
-
-          end do
-        end do
-    end select
-  end do
-elseif(wf .eq. 1) then
-!Procedure for loading WF from file
-read(666,*) !two empty lines
-read(666,*)
-if(rank .eq. 1) read(666,*)wfx
-if(rank .eq. 2) read(666,*)wf2x
-if(rank .eq. 3) read(666,*)wf3x
-close(666)
-end if
+call init_wavepacket()
 
 !Normalize wf
 if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
@@ -437,9 +375,109 @@ if (use_field) then
 
 end if
 
+!closing input.q
+close(100)
+
 write(*,*) 
 
 end subroutine init
+
+subroutine init_wavepacket()
+
+  real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, k0
+
+  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,k0
+
+if(wf .eq. 0) then                                           
+  write(*,*) "Generating initial gaussian wave packet using section &init_wf."
+
+  ! Default values
+  x0 = (xmax-xmin)/2.0d0+xmin*1.2d0 ! on purpose a bit shifted
+  y0 = x0
+  z0 = x0
+  xsigma = (xmax-x0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
+  ysigma = xsigma                                                 ! 5sigma - 96% of gaussian is on the grid 
+  zsigma = xsigma                                                 ! 5sigma - 96% of gaussian is on the grid 
+  k0 = 0.0d0
+
+  ! reading init_wf section in the input.q
+  rewind(100)
+  read(100, init_wf, iostat=iost)
+  if (iost.ne.0) then
+    write(*,*)'ERROR: &init_wf section must be provided in input.q'
+    write(*,*) iost
+    stop 1
+  end if
+  close(100)
+
+  write(*,'(A,F10.5)') " x0 = ", x0
+  write(*,'(A,F10.5)') " y0 = ", y0
+  write(*,'(A,F10.5)') " z0 = ", z0
+  write(*,'(A,F10.5)') " xsigma = ", xsigma
+  write(*,'(A,F10.5)') " ysigma = ", ysigma
+  write(*,'(A,F10.5)') " zsigma = ", zsigma
+  write(*,'(A,F10.5)') " k0 = ", k0
+  
+  write(*,*) "WARNING! k0 currently not set correctly - to be corrected soon."
+  !TODO: correct initial wave packet generation - it should be normalized
+  !TODO: correct initial momentum. Currently only in x direction
+  do i=1, ngrid
+    select case (rank)
+      case (1)
+        !jj - for imag propagation, I should loop jstate and copy the value
+        wfx(1,i) = cmplx(exp((-1.0d0*(x(i)-x0)**2)/(2*xsigma**2)) * cos(k0 * x(i)), &
+                       exp((-1.0d0*(x(i)-x0)**2)/(2*xsigma**2)) * sin(k0 * x(i)) )  
+        ! for the imag time, I create the came wave packet for all states
+        if (run.eq.1 .and. nstates.ge.2) then
+          do jstate=2,nstates
+            wfx(jstate,i) = wfx(1,i)
+          end do
+        end if
+            
+      case (2)
+        do j=1, ngrid
+          wf2x(1,i,j) =  cmplx(exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2))) * cos(k0*x(i)), &
+                             exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2))) * sin(k0*x(i)) )
+
+        ! for the imag time, I create the came wave packet for all states
+        if (run.eq.1 .and. nstates.ge.2) then
+          do jstate=2,nstates
+            wf2x(jstate,i,j) = wf2x(1,i,j)
+          end do
+        end if
+
+        end do
+            
+      case (3)
+        do j=1, ngrid
+          do k=1, ngrid
+            wf3x(1,i,j,k) =  cmplx(exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2)) &
+                           - (((z(k)-z0)**2)/(2*zsigma**2))), &
+                           exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2)) &
+                           - (((z(k)-z0)**2)/(2*zsigma**2))))
+
+          ! for the imag time, I create the came wave packet for all states
+          if (run.eq.1 .and. nstates.ge.2) then
+            do jstate=2,nstates
+              wf3x(jstate,i,j,k) = wf3x(1,i,j,k)
+            end do
+          end if
+
+          end do
+        end do
+    end select
+  end do
+elseif(wf .eq. 1) then
+  !Procedure for loading WF from file
+  read(666,*) !two empty lines
+  read(666,*)
+  if(rank .eq. 1) read(666,*)wfx
+  if(rank .eq. 2) read(666,*)wf2x
+  if(rank .eq. 3) read(666,*)wf3x
+  close(666)
+end if
+
+end subroutine
 
 end module
 

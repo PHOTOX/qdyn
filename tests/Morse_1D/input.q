@@ -16,6 +16,7 @@
 
   rank=1,                      ! Dimensionality
   pot='-0.364 + 0.364 *(1 - exp(-1.51*(-2.041 + x)))^2'  ! Potential
-
 /
 
+&init_wf
+/

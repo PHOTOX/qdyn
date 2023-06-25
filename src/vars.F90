@@ -4,24 +4,21 @@ module mod_vars
   public
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
   real(DP), parameter   :: pi = 3.14159265358979323846
-  real(DP)              :: dt, xmin, xmax, xmean, stddev, dx, k_0, mass, dtwrite
+  real(DP)              :: dt, xmin, xmax, dx, mass, dtwrite
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
   real(DP), dimension(:), allocatable    :: x,y,z,point
-  !>jj -  extending to many states
   complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
   complex(DP), dimension(:,:), allocatable :: wfx
   complex(DP), dimension(:,:), allocatable :: wf2p, theta_v2, kin_p2
   complex(DP), dimension(:,:,:), allocatable :: wf2x
-  !jj - 
   complex(DP), dimension(:,:,:), allocatable :: wf3p, theta_v3, kin_p3
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
-  !<jj
   !>jj adding field
   logical               :: use_field=.false.
   character(len=100)    :: field=''
   !>jj adding field
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
-  integer               :: run, nstep, ngrid, wf, rank, nstates
+  integer               :: run, nstep, ngrid, wf, rank, nstates=1
   integer               :: iost, i, j, k, istate, jstate, file_unit
   integer ( kind = 8 )  :: plan_forward, plan_backward
 
@@ -52,7 +49,7 @@ subroutine read_input()
     write(*,*) iost
     stop 1
   end if
-  close(100)
+  ! file is closed at the end of init() subroutine because some more input is read. 
 
 !-- Input check
   call check()

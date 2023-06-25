@@ -56,7 +56,7 @@ select case(run)
         case(3)
           call update_energy_3d(wf3x(1,:,:,:))
         end select
-        call printen_state(istate)
+        call printen()
 
         write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
         !TODO: delete x and v1 from printing
