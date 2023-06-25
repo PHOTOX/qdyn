@@ -155,6 +155,8 @@ if (use_field) then
   select case(run)
   case(0)
     write(*,*) "Field: ON"
+    !jj
+    write(*,*) "WARNING! Field was not tested and is not fully implemented"
     if (field == '') then
       write(*,*) "ERR: No field function specified. Set 'field' in input.q."
       stop 1

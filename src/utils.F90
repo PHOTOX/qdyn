@@ -199,10 +199,12 @@ subroutine printwf_1d(state,x,v1)
 
   file_unit=200+state
 
+  write(file_unit,'(A,F10.3,A)') "#time ", time, " a.u."
+
   do i=1, size(x)
     write(file_unit,*) x(i), real(wfx(state,i)), aimag(wfx(state,i)), real(conjg(wfx(state,i))*wfx(state,i)), v1(i)
   end do
-  write(file_unit,*)
+
   write(file_unit,*)
 
 end subroutine
@@ -215,13 +217,15 @@ subroutine printwf_2d(state,x,y,v2)
 
   file_unit=200+state
 
+  write(file_unit,'(A,F10.3,A)') "#time ", time, " a.u."
+
   do i=1, size(x)
     do j=1, size(y)
       write(file_unit,*) x(i), y(j), real(wf2x(state,i,j)), aimag(wf2x(state,i,j)), real(conjg(wf2x(state,i,j))*wf2x(state,i,j)),&
       v2(i,j)
     end do
   end do
-  write(file_unit,*)
+
   write(file_unit,*)
 
 end subroutine
@@ -232,16 +236,20 @@ subroutine printwf_3d(state,x,y,z,v3)
   integer, intent(in)        :: state
   integer                    :: i,j,k
 
+  file_unit=200+state
+
+  write(file_unit,'(A,F10.3,A)') "#time ", time, " a.u."
+
   do i=1, size(x)
     do j=1, size(y)
       do k=1, size(z)
-        write(203,*) x(i), y(j), z(k), real(wf3x(state,i,j,k)), aimag(wf3x(state,i,j,k)), &
+        write(file_unit,*) x(i), y(j), z(k), real(wf3x(state,i,j,k)), aimag(wf3x(state,i,j,k)), &
           real(conjg(wf3x(state,i,j,k))*wf3x(state,i,j,k)), v3(i,j,k)
       end do
      end do
   end do
-  write(203,*)
-  write(203,*)
+
+  write(file_unit,*)
 
 end subroutine
 
@@ -269,6 +277,12 @@ subroutine printen_state(state)
   file_unit = 300+state
     write(file_unit,'(F8.1,5(F16.9))') time, energy, energy_diff
 
+end subroutine
+
+subroutine print_field()
+
+    write(102,'(F10.3,F14.9)') time, elmag_field(time)
+    
 end subroutine
 
 !=== ENERGIES ===!

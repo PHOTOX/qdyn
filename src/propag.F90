@@ -7,21 +7,25 @@ implicit none
 
 CONTAINS
 
+!TODO: split imag and real time propagation 
 subroutine propag_1d(wfx,wfp,theta_v1,kin_p1)
 
 implicit none
   complex(DP), intent(inout)    :: wfx(:),wfp(:),theta_v1(:),kin_p1(:)
   integer                       :: i
-  !TODO: remove
-  real(DP)                      :: imag
 
+  !TODO: half steps are demanding.. full steps would be better
   ! V(t/2)
   do i=1, ngrid
     wfx(i) = wfx(i)*theta_v1(i)
   end do
 
-  !>jj energy shifting, which should be used only for imaginary propagation
-!  if (.true. .and. run.eq.1) wfx = wfx*dexp(energy*dt/2.0d0)
+  !>jj
+  ! Field propagation here
+  if (use_field) then
+ !  wfx = wfx*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
+    wfx = wfx*cmplx(cos(x*elmag_field(time)*dt/2.0d0),sin(x*elmag_field(time)*dt/2.0d0))
+  end if
   !<jj
 
   ! FFT -> K
@@ -51,7 +55,10 @@ implicit none
   end do
 
   !>jj
-!  if (.true. .and. run.eq.1) wfx = wfx*dexp(energy*dt/2.0d0)
+  ! Field propagation here
+  if (use_field) then
+    wfx = wfx*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
+  end if
   !<jj
 
 end subroutine propag_1d

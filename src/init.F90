@@ -330,7 +330,6 @@ if(rank .eq. 1) then
     file_name='wf1d.'//trim(adjustl(file_name))//'.out'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
-    write(file_unit,*) "#WF - QDYN output"
     write(file_unit,*) "#x   REAL   IMAG   NORM    POTENTIAL"
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
@@ -351,7 +350,6 @@ elseif(rank .eq. 2) then
     file_name='wf2d.'//trim(adjustl(file_name))//'.out'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
-    write(file_unit,*) "#WF - QDYN output"
     write(file_unit,*) "#x  y   REAL   IMAG   NORM    POTENTIAL"
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
@@ -372,7 +370,6 @@ elseif(rank .eq. 3) then
     file_name='wf3d.'//trim(adjustl(file_name))//'.out'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
-    write(file_unit,*) "#WF - QDYN output"
     write(file_unit,*) "#x  y   z   REAL   IMAG   NORM    POTENTIAL"
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
@@ -427,7 +424,19 @@ case(1)
   end do
 end select
 
-! printing beggining of the output
+!--Open file with field
+if (use_field) then
+  file_unit = 102
+  file_name = 'field.dat'
+  open(file_unit,file=file_name, action='WRITE', iostat=iost)
+  write(file_unit,*) "#  time     field amplitude"
+  close(file_unit)
+  open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+  call print_field()
+
+end if
+
 write(*,*) 
 
 end subroutine init
