@@ -27,10 +27,10 @@ if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
 if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
 if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
-if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), theta_v1(ngrid), kin_p1(ngrid))
-if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid), theta_v2(ngrid,ngrid), kin_p2(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), theta_v3(ngrid,ngrid,ngrid),&
-  kin_p3(ngrid,ngrid,ngrid))
+if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), expV1(ngrid), expT1(ngrid))
+if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid), expV2(ngrid,ngrid), expT2(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), expV3(ngrid,ngrid,ngrid),&
+  expT3(ngrid,ngrid,ngrid))
 
 ! setting up grid poitns
 x(1)=xmin
@@ -52,7 +52,7 @@ if (analytic) then
 
   select case(rank)
   case(1)
-    call parsef (1, pot, var1)                                       !Bytcompiling function string  
+    call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
     do i=1, ngrid
       point = x(i)
       v1(i) = evalf (1, point)                                       !Evaluating potential for grid
@@ -63,7 +63,7 @@ if (analytic) then
     end do
 
   case(2)
-    call parsef (1, pot, var2)                                      
+    call parsef (1, pot, (/'x','y'/))                                      
     do i=1, ngrid
       do j=1, ngrid
         point = (/x(i),y(j)/)
@@ -76,7 +76,7 @@ if (analytic) then
     end do
 
   case(3)
-    call parsef (1, pot, var3)
+    call parsef (1, pot, (/'x','y','z'/))
     do i=1, ngrid
       do j=1, ngrid
         do k=1, ngrid
@@ -108,22 +108,22 @@ end if
 ! creating operator
 if(rank .eq. 1) then
   do i=1, ngrid
-    if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-    if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+    if(run .eq. 0) expV1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+    if(run .eq. 1) expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
   end do
 elseif(rank .eq. 2) then
   do i=1, ngrid
     do j=1, ngrid
-      if(run .eq. 0) theta_v2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
+      if(run .eq. 0) expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) expV2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
     end do
   end do
 elseif(rank .eq. 3) then
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        if(run .eq. 0) theta_v3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
-        if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+        if(run .eq. 0) expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+        if(run .eq. 1) expV3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
       end do
     end do
   end do 
@@ -139,8 +139,8 @@ select case(rank)
      else
        px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
-     if(run .eq. 0) kin_p1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
-     if(run .eq. 1) kin_p1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
+     if(run .eq. 0) expT1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
+     if(run .eq. 1) expT1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
     end do
   !2D
   case(2)
@@ -163,8 +163,8 @@ select case(rank)
 
     do i=1, ngrid
       do j=1, ngrid
-        if(run .eq. 0) kin_p2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
-        if(run .eq. 1) kin_p2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),0)
+        if(run .eq. 0) expT2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
+        if(run .eq. 1) expT2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),0)
       end do
     end do
 
@@ -198,9 +198,9 @@ select case(rank)
     do i=1, ngrid
       do j=1, ngrid
         do k=1, ngrid
-          if(run .eq. 0) kin_p3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
+          if(run .eq. 0) expT3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
                                          sin(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
-          if(run .eq. 1) kin_p3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),0)
+          if(run .eq. 1) expT3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),0)
         end do
       end do
     end do

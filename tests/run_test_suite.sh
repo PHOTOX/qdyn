@@ -1,13 +1,13 @@
 #!/bin/bash
 
-tests="HarmOsc_1D Morse_1D HarmOsc_2D_sym HarmOsc_2D_asym HarmOsc_3D_sym HarmOsc_3D_asym"
+tests="IT_HarmOsc_1D IT_Morse_1D IT_HarmOsc_2D_sym IT_HarmOsc_2D_asym IT_HarmOsc_3D_sym IT_HarmOsc_3D_asym RT_HarmOsc_1D"
 
 echo -e "\nRunning test suite"
 
 for i in $tests;
 do
   cd $i
-  echo -e "\n*********************\n  $i\n*********************\n"
+  echo -e "\n**********************\n  $i\n**********************\n"
   ./test.sh
   cd ../
 done

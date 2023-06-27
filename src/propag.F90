@@ -17,7 +17,7 @@ implicit none
   !TODO: half steps are demanding.. full steps would be better
   ! V(t/2)
   do i=1, ngrid
-    wfx(i) = wfx(i)*theta_v1(i)
+    wfx(i) = wfx(i)*expV1(i)
   end do
 
   !>jj
@@ -39,7 +39,7 @@ implicit none
 
   ! p(t)
   do i=1, ngrid
-    wfp(i) = wfp(i)*kin_p1(i)
+    wfp(i) = wfp(i)*expT1(i)
   end do
 
   ! FFT -> x
@@ -51,7 +51,7 @@ implicit none
 
   ! V(t/2)
   do i=1, ngrid
-    wfx(i) = wfx(i)*theta_v1(i)
+    wfx(i) = wfx(i)*expV1(i)
   end do
 
   !>jj
@@ -72,7 +72,7 @@ implicit none
   ! V(t/2)
   do i=1, ngrid
    do j=1, ngrid
-    wf2x(i,j) = wf2x(i,j)*theta_v2(i,j)
+    wf2x(i,j) = wf2x(i,j)*expV2(i,j)
    end do
   end do
 
@@ -86,7 +86,7 @@ implicit none
   ! p(t)
   do i=1, ngrid
     do j=1, ngrid
-      wf2p(i,j) = wf2p(i,j)*kin_p2(i,j)
+      wf2p(i,j) = wf2p(i,j)*expT2(i,j)
     end do
   end do
 
@@ -100,7 +100,7 @@ implicit none
   ! V(t/2)
   do i=1, ngrid
     do j=1, ngrid
-      wf2x(i,j) = wf2x(i,j)*theta_v2(i,j)
+      wf2x(i,j) = wf2x(i,j)*expV2(i,j)
     end do
   end do
 
@@ -116,7 +116,7 @@ implicit none
   do i=1, ngrid
    do j=1, ngrid
      do k=1, ngrid
-       wf3x(i,j,k) = wf3x(i,j,k)*theta_v3(i,j,k)
+       wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
      end do
     end do
   end do
@@ -132,7 +132,7 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3p(i,j,k) = wf3p(i,j,k)*kin_p3(i,j,k)
+        wf3p(i,j,k) = wf3p(i,j,k)*expT3(i,j,k)
       end do
     end do
   end do
@@ -148,7 +148,7 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3x(i,j,k) = wf3x(i,j,k)*theta_v3(i,j,k)
+        wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
       end do
     end do
   end do
@@ -166,7 +166,7 @@ implicit none
   !TODO: half steps are demanding.. full steps would be better
   ! V(t/2)
   do i=1, ngrid
-    wfx(i) = wfx(i)*theta_v1(i)
+    wfx(i) = wfx(i)*expV1(i)
   end do
 
   ! FFT -> K
@@ -178,7 +178,7 @@ implicit none
 
   ! p(t)
   do i=1, ngrid
-    wfp(i) = wfp(i)*kin_p1(i)
+    wfp(i) = wfp(i)*expT1(i)
   end do
 
   ! FFT -> x
@@ -190,7 +190,7 @@ implicit none
 
   ! V(t/2)
   do i=1, ngrid
-    wfx(i) = wfx(i)*theta_v1(i)
+    wfx(i) = wfx(i)*expV1(i)
   end do
 
 end subroutine propag_it_1d
@@ -204,7 +204,7 @@ implicit none
   ! V(t/2)
   do i=1, ngrid
    do j=1, ngrid
-    wf2x(i,j) = wf2x(i,j)*theta_v2(i,j)
+    wf2x(i,j) = wf2x(i,j)*expV2(i,j)
    end do
   end do
 
@@ -218,7 +218,7 @@ implicit none
   ! p(t)
   do i=1, ngrid
     do j=1, ngrid
-      wf2p(i,j) = wf2p(i,j)*kin_p2(i,j)
+      wf2p(i,j) = wf2p(i,j)*expT2(i,j)
     end do
   end do
 
@@ -232,7 +232,7 @@ implicit none
   ! V(t/2)
   do i=1, ngrid
     do j=1, ngrid
-      wf2x(i,j) = wf2x(i,j)*theta_v2(i,j)
+      wf2x(i,j) = wf2x(i,j)*expV2(i,j)
     end do
   end do
 
@@ -248,7 +248,7 @@ implicit none
   do i=1, ngrid
    do j=1, ngrid
      do k=1, ngrid
-       wf3x(i,j,k) = wf3x(i,j,k)*theta_v3(i,j,k)
+       wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
      end do
     end do
   end do
@@ -264,7 +264,7 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3p(i,j,k) = wf3p(i,j,k)*kin_p3(i,j,k)
+        wf3p(i,j,k) = wf3p(i,j,k)*expT3(i,j,k)
       end do
     end do
   end do
@@ -280,7 +280,7 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3x(i,j,k) = wf3x(i,j,k)*theta_v3(i,j,k)
+        wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
       end do
     end do
   end do

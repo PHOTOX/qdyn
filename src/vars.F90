@@ -23,19 +23,25 @@ module mod_vars
   integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
   character(len=100)             :: pot=''
-  !-imaginary propagation operators
+  !-exp(T) operator
+  complex(DP), dimension(:), allocatable :: expT1
+  complex(DP), dimension(:,:), allocatable :: expT2
+  complex(DP), dimension(:,:,:), allocatable :: expT3
+  !-imaginary time V operators
   real(DP), dimension(:), allocatable     :: v1
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
-  complex(DP), dimension(:), allocatable :: theta_v1, kin_p1 !exp(V) and exp (T)
-  complex(DP), dimension(:,:), allocatable :: theta_v2, kin_p2
-  complex(DP), dimension(:,:,:), allocatable :: theta_v3, kin_p3
-
-
-  !-parser variables (TODO: these can be probabaly inserted in the parser and not used any more)
-  character(len=*),dimension(1),parameter :: var1 = (/'x'/)
-  character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
-  character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
+  complex(DP), dimension(:), allocatable :: expV1 !exp(V)
+  complex(DP), dimension(:,:), allocatable :: expV2
+  complex(DP), dimension(:,:,:), allocatable :: expV3
+  !-real time V operators
+  ! TODO: these are prepared variables for RT propagation, not allocated yet in the init()
+! real(DP), dimension(:,:), allocatable     :: v1_vector
+! real(DP), dimension(:,:,:), allocatable   :: v2_vector
+! real(DP), dimension(:,:,:,:), allocatable :: v3_vector
+! complex(DP), dimension(:), allocatable :: expV1_matrix 
+! complex(DP), dimension(:,:), allocatable :: expV2_matrix
+! complex(DP), dimension(:,:,:), allocatable :: expV3_matrix
 
   namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic,use_field,field,print_wf
 

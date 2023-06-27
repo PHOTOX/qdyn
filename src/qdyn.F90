@@ -59,7 +59,6 @@ select case(run)
         call printen()
 
         write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
-        !TODO: delete x and v1 from printing
         if (print_wf) then
           select case(rank)
           case(1)
@@ -136,11 +135,7 @@ select case(run)
 end select
  
 !--Finalization--!
-
-!TODO: this should be also subroutine
 write(*,*) "JOB DONE."
-
 call print_chk()
 
 end program qdyn
-
