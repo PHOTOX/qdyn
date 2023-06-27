@@ -44,11 +44,14 @@ do i=2, ngrid
 end do
 
 !-- POTENTIAL energy init
+
+! creating potential
 if (analytic) then
   write(*,*)"Potential: ",pot
   call initf (1)                                                     !Initialization of parser
 
-  if(rank .eq. 1) then
+  select case(rank)
+  case(1)
     call parsef (1, pot, var1)                                       !Bytcompiling function string  
     do i=1, ngrid
       point = x(i)
@@ -57,13 +60,9 @@ if (analytic) then
         WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
         stop 1
       end if
-      if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
 
-
-!2D   
-  elseif(rank .eq. 2) then
+  case(2)
     call parsef (1, pot, var2)                                      
     do i=1, ngrid
       do j=1, ngrid
@@ -73,13 +72,10 @@ if (analytic) then
           WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
           stop 1
         end if
-        if(run .eq. 0) theta_v2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-        if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
       end do
     end do
-  
-!3D
-  elseif(rank .eq. 3) then
+
+  case(3)
     call parsef (1, pot, var3)
     do i=1, ngrid
       do j=1, ngrid
@@ -90,30 +86,48 @@ if (analytic) then
             WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
             stop 1
           end if
-          if(run .eq. 0) theta_v3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
-          if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
         end do
       end do
     end do 
-  end if
+  end select
 ! reading potential from file pot.dat
 else 
   write(*,*) "Potential read from file: pot.dat"
-  !call interpolation_1d(...)
   open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
   select case(rank)
   case(1)
     read(667,*)v1
-    do j=1, ngrid
-      if(run .eq. 0) theta_v1(j) = cmplx(cos(-v1(j)*dt/2.0d0),sin(-v1(j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) theta_v1(j) = cmplx(exp(-v1(j)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
-    end do
-  case default
-    write(*,*) "cannot read files with rank bigger than 1."
-    stop 1
+  case(2)
+    read(667,*)v2
+  case(3)
+    read(667,*)v3
   end select
   close(667)
 end if 
+
+! creating operator
+if(rank .eq. 1) then
+  do i=1, ngrid
+    if(run .eq. 0) theta_v1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+    if(run .eq. 1) theta_v1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+  end do
+elseif(rank .eq. 2) then
+  do i=1, ngrid
+    do j=1, ngrid
+      if(run .eq. 0) theta_v2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      if(run .eq. 1) theta_v2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
+    end do
+  end do
+elseif(rank .eq. 3) then
+  do i=1, ngrid
+    do j=1, ngrid
+      do k=1, ngrid
+        if(run .eq. 0) theta_v3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+        if(run .eq. 1) theta_v3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+      end do
+    end do
+  end do 
+end if
 
 !-- KINETIC energy init        exp[-iT/h_bar tau]
 

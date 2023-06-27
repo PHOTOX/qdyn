@@ -2,11 +2,11 @@
 
 &general
   run=1,                       ! Type of job (0 - real time propagation, 1 - imaginary time propagation)
-  nstep=5000,                  ! Number of steps
+  nstep=2500,                  ! Number of steps
   dt=0.5,                      ! Timestep [a.u.]
   dtwrite=10.0,                ! Printing every time unit (modulo)
 
-  ngrid=512,                   ! Number of grid points (power of 2 for FFT)
+  ngrid=256,                   ! Number of grid points (power of 2 for FFT)
   xmin=1.0,                  ! Grid xmin, xmax same for all dimensions
   xmax=6.0,
   mass=51352.0,                    ! Reduced mass of system [a.u.]

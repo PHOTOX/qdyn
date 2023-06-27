@@ -47,7 +47,7 @@ select case(run)
       end select
 
       !print information
-      if (modulo(time,dtwrite) .eq. 0 ) then
+      if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
         select case(rank)
         case(1)
           call update_energy_1d(wfx(1,:))
@@ -107,7 +107,7 @@ select case(run)
         end select
 
         !print information
-        if (modulo(time,dtwrite) .eq. 0 ) then
+        if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
           select case(rank)
           case(1)
             call update_energy_1d(wfx(istate,:))
