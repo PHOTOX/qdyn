@@ -191,9 +191,8 @@ subroutine normalize_3d(wf)
 end subroutine normalize_3d
 
 !=== PRINTING ===!
-subroutine printwf_1d(state,x,v1)
+subroutine printwf_1d(state)
 
-  real(DP), intent(in)       :: x(:),v1(:)
   integer, intent(in)        :: state
   integer                    :: i
 
@@ -209,9 +208,8 @@ subroutine printwf_1d(state,x,v1)
 
 end subroutine
 
-subroutine printwf_2d(state,x,y,v2)
+subroutine printwf_2d(state)
 
-  real(DP), intent(in)       :: x(:),y(:),v2(:,:)
   integer, intent(in)        :: state
   integer                    :: i,j
 
@@ -230,9 +228,8 @@ subroutine printwf_2d(state,x,y,v2)
 
 end subroutine
 
-subroutine printwf_3d(state,x,y,z,v3)
+subroutine printwf_3d(state)
 
-  real(DP), intent(in)       :: x(:),y(:),z(:),v3(:,:,:)
   integer, intent(in)        :: state
   integer                    :: i,j,k
 

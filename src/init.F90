@@ -286,7 +286,7 @@ if(rank .eq. 1) then
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
-    call printwf_1d(jstate,x,v1)
+    call printwf_1d(jstate)
     write(*,*)"Outputing WF to file "//file_name
 
   end do
@@ -306,7 +306,7 @@ elseif(rank .eq. 2) then
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
-    call printwf_2d(jstate,x,y,v2)
+    call printwf_2d(jstate)
     write(*,*)"Outputing WF to file "//file_name
 
   end do
@@ -326,7 +326,7 @@ elseif(rank .eq. 3) then
     close(file_unit)
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
-    call printwf_3d(jstate,x,y,z,v3)
+    call printwf_3d(jstate)
     write(*,*)"Outputing WF to file wf3d.out"
   end do
 

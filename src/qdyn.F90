@@ -34,15 +34,15 @@ select case(run)
 
       select case(rank)
         case(1)
-          call propag_1d(wfx(1,:),wfp,theta_v1,kin_p1) 
+          call propag_rt_1d(wfx(1,:)) 
           call update_norm()
 
         case(2)
-          call propag_2d(wf2x(1,:,:),wf2p,theta_v2,kin_p2)
+          call propag_rt_2d(wf2x(1,:,:))
           call update_norm()
 
         case(3)
-          call propag_3d(wf3x(1,:,:,:),wf3p,theta_v3,kin_p3)
+          call propag_rt_3d(wf3x(1,:,:,:))
           call update_norm()
       end select
 
@@ -63,11 +63,11 @@ select case(run)
         if (print_wf) then
           select case(rank)
           case(1)
-           call printwf_1d(1,x,v1)
+           call printwf_1d(1)
           case(2)
-            call printwf_2d(1,x,y,v2)
+            call printwf_2d(1)
           case(3)
-            call printwf_3d(1,x,y,z,v3)
+            call printwf_3d(1)
           end select
         end if
 
@@ -82,24 +82,24 @@ select case(run)
       write(*,'(a,I2)') "* Optimizing state ",istate
       do n=1, nstep
         time = n*dt
-        !select dimension to propagate
+
         select case(rank)
           case(1)
-            call propag_1d(wfx(istate,:),wfp,theta_v1,kin_p1) 
+            call propag_it_1d(wfx(istate,:)) 
               do jstate=1,istate-1
                call project_out_1d(wfx(jstate,:),wfx(istate,:))
               end do
             call normalize_1d(wfx(istate,:))
 
           case(2)
-            call propag_2d(wf2x(istate,:,:),wf2p,theta_v2,kin_p2)
+            call propag_it_2d(wf2x(istate,:,:))
               do jstate=1,istate-1
                call project_out_2d(wf2x(jstate,:,:),wf2x(istate,:,:))
               end do
             call normalize_2d(wf2x(istate,:,:))
 
           case(3)
-            call propag_3d(wf3x(istate,:,:,:),wf3p,theta_v3,kin_p3)
+            call propag_it_3d(wf3x(istate,:,:,:))
               do jstate=1,istate-1
                call project_out_3d(wf3x(jstate,:,:,:),wf3x(istate,:,:,:))
               end do
@@ -119,15 +119,14 @@ select case(run)
           call printen_state(istate)
 
           write(*,'(F8.1,a,F14.9,a,F14.9,a)') time, ' a.u.; E=', energy(1), ' a.u.; dE=', energy_diff, ' a.u.'
-          !TODO: delete x and v1 from printing
           if (print_wf) then
             select case(rank)
             case(1)
-             call printwf_1d(istate,x,v1)
+             call printwf_1d(istate)
             case(2)
-              call printwf_2d(istate,x,y,v2)
+              call printwf_2d(istate)
             case(3)
-              call printwf_3d(istate,x,y,z,v3)
+              call printwf_3d(istate)
             end select
           end if
         end if
