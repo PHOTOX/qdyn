@@ -5,6 +5,7 @@ use FFTW3
 use fparser,    ONLY: initf, parsef, evalf, EvalErrType, EvalErrMsg
 
   implicit none
+  integer,private     :: file_unit
 
 CONTAINS
 

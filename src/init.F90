@@ -5,12 +5,12 @@ module mod_init
   use mod_utils
 
   implicit none
-  public
+  integer,private     :: file_unit, jstate
+  character(len=50)   :: file_name
   
 CONTAINS
 
 subroutine init()
-  implicit none
 
 write(*,*)
 write(*,*) "### Initialization ###"
@@ -230,50 +230,9 @@ if(run.eq.1 .and. nstates.ge.2) then
   end do
 end if
 
-!-- Initialization of FFT procedures
-if(rank .eq. 1) then
-
-call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wfx(1,:), wfp)
-call dfftw_destroy_plan(plan_forward)
-wfp = wfp / dsqrt(real(ngrid, kind=DP))
-
-call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx(1,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wfp, wfx(1,:))
-call dfftw_destroy_plan(plan_backward)
-wfx(1,:) = wfx(1,:) / dsqrt(real(ngrid, kind=DP))
-
-elseif(rank .eq. 2) then
-
-call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x(1,:,:), wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wf2x(1,:,:), wf2p)
-call dfftw_destroy_plan(plan_forward)
-wf2p = wf2p / dsqrt(real(ngrid, kind=DP)**2)
-
-call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x(1,:,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wf2p, wf2x(1,:,:))
-call dfftw_destroy_plan(plan_backward)
-wf2x(1,:,:) = wf2x(1,:,:) / dsqrt(real(ngrid, kind=DP)**2)
-
-elseif(rank .eq. 3) then
-
-call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x(1,:,:,:), wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_forward, wf3x(1,:,:,:), wf3p)
-call dfftw_destroy_plan(plan_forward)
-wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
-
-call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x(1,:,:,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-call dfftw_execute_dft(plan_backward, wf3p, wf3x(1,:,:,:))
-call dfftw_destroy_plan(plan_backward)
-wf3x(1,:,:,:) = wf3x(1,:,:,:) / dsqrt(real(ngrid, kind=DP)**3)
-
-end if
-
 !--Printing of WF
 if (print_wf) then
 if(rank .eq. 1) then
-  call normalize_1d(wfx(1,:))
-
   ! creating file name
   do jstate=1,nstates
 
@@ -292,8 +251,6 @@ if(rank .eq. 1) then
   end do
 
 elseif(rank .eq. 2) then
-  call normalize_2d(wf2x(1,:,:))
-
   ! creating file name
   do jstate=1,nstates
 
@@ -312,8 +269,6 @@ elseif(rank .eq. 2) then
   end do
 
 elseif(rank .eq. 3) then
-  call normalize_3d(wf3x(1,:,:,:))
-
   ! creating file name
   do jstate=1,nstates
 

@@ -11,7 +11,7 @@ program qdyn
 ! -------------------------------------------------------------------!
 
   implicit none
-  integer     :: n
+  integer     :: n, istate, jstate
 
   write(*,*) "====== Qdyn ====="
 

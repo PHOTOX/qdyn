@@ -2,31 +2,37 @@ module mod_vars
 
   implicit none
   public
+  !-parameters
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
   real(DP), parameter   :: pi = 3.14159265358979323846
+  !-propagation data
+  integer               :: run, nstep, ngrid, wf, rank, nstates=1
   real(DP)              :: dt, xmin, xmax, dx, mass, dtwrite
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
-  real(DP), dimension(:), allocatable    :: x,y,z,point
-  complex(DP), dimension(:), allocatable :: wfp, theta_v1, kin_p1
-  complex(DP), dimension(:,:), allocatable :: wfx
-  complex(DP), dimension(:,:), allocatable :: wf2p, theta_v2, kin_p2
-  complex(DP), dimension(:,:,:), allocatable :: wf2x
-  complex(DP), dimension(:,:,:), allocatable :: wf3p, theta_v3, kin_p3
+  real(DP), dimension(:), allocatable    :: x, y, z, point, px, py, pz
+  logical               :: project_rot=.true., analytic=.true., print_wf=.true.
+  !-wave function
+  complex(DP), dimension(:), allocatable :: wfp
+  complex(DP), dimension(:,:), allocatable :: wfx, wf2p
+  complex(DP), dimension(:,:,:), allocatable :: wf2x, wf3p
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
-  !>jj adding field
+  !-field
   logical               :: use_field=.false.
   character(len=100)    :: field=''
-  !>jj adding field
-  logical               :: project_rot=.true., analytic=.true., print_wf=.true.
-  integer               :: run, nstep, ngrid, wf, rank, nstates=1
-  integer               :: iost, i, j, k, istate, jstate, file_unit
+  !-auxiliary variables
+  integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
-
-  real(DP), dimension(:), allocatable     :: v1, px, py, pz
+  character(len=100)             :: pot=''
+  !-imaginary propagation operators
+  real(DP), dimension(:), allocatable     :: v1
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
-  character(len=100)             :: pot=''
-  character(len=50)             :: file_name
+  complex(DP), dimension(:), allocatable :: theta_v1, kin_p1 !exp(V) and exp (T)
+  complex(DP), dimension(:,:), allocatable :: theta_v2, kin_p2
+  complex(DP), dimension(:,:,:), allocatable :: theta_v3, kin_p3
+
+
+  !-parser variables (TODO: these can be probabaly inserted in the parser and not used any more)
   character(len=*),dimension(1),parameter :: var1 = (/'x'/)
   character(len=*),dimension(2),parameter :: var2 = (/'x','y'/)
   character(len=*),dimension(3),parameter :: var3 = (/'x','y','z'/)
