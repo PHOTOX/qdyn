@@ -27,9 +27,10 @@ implicit none
 
         !>jj
         ! Field propagation here
-        if (use_field) then
+        if (field_coupling) then
           ! TODO: I need to add the dipole moment
-          wfx(istate,:) = wfx(istate,:)*cmplx(cos(x*elmag_field(time)*dt/2.0d0),sin(x*elmag_field(time)*dt/2.0d0))
+          wfx(istate,:) = wfx(istate,:)*cmplx(cos(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0),&
+            sin(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0))
         end if
         !<jj
       end if
@@ -72,8 +73,9 @@ implicit none
 
         !>jj
         ! Field propagation here
-        if (use_field) then
-          wfx(istate,:) = wfx(istate,:)*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
+        if (field_coupling) then
+          wfx(istate,:) = wfx(istate,:)*cmplx(cos(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0),&
+            sin(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0))
         end if
         !<jj
       end if

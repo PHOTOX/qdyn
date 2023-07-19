@@ -50,7 +50,7 @@ select case(run)
       if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
         select case(rank)
         case(1)
-          call update_energy_1d(wfx(1,:))
+          call update_energy_1d_rt()
         case(2)
           call update_energy_2d(wf2x(1,:,:))
         case(3)
@@ -70,7 +70,7 @@ select case(run)
           end select
         end if
 
-        if (use_field) call print_field()
+        if (field_coupling) call print_field()
 
       end if
     end do

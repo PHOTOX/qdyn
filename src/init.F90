@@ -22,17 +22,37 @@ write(*,*) "### Initialization ###"
 !-- GRID set-up
 dx=(xmax-xmin)/(ngrid-1)
 
-! allocating arrays
-if(rank .eq. 1) allocate(x(ngrid),v1(ngrid),px(ngrid),point(1))
-if(rank .eq. 2) allocate(x(ngrid),y(ngrid),v2(ngrid,ngrid),px(ngrid),py(ngrid),point(2))
-if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),v3(ngrid,ngrid,ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
+!-- Allocating arrays
+! grid
+if(rank .eq. 1) allocate(x(ngrid),px(ngrid),point(1))
+if(rank .eq. 2) allocate(x(ngrid),y(ngrid),px(ngrid),py(ngrid),point(2))
+if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
 
-if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid), expV1(ngrid), expT1(ngrid))
-if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid), expV2(ngrid,ngrid), expT2(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid), expV3(ngrid,ngrid,ngrid),&
-  expT3(ngrid,ngrid,ngrid))
+! wf
+if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid))
+if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid))
+if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid))
 
-! setting up grid poitns
+! Hamiltonian
+if(run .eq. 0) then
+  if(rank .eq. 1) allocate(expV1(ngrid),v1_matrix(1,1,ngrid))
+  if(rank .eq. 2) allocate(expV2(ngrid,ngrid),v2(ngrid,ngrid))
+  if(rank .eq. 3) allocate(expV3(ngrid,ngrid,ngrid),v3(ngrid,ngrid,ngrid))
+
+  if(field_coupling) then
+    if(rank .eq. 1) allocate(dipole_coupling(nstates,nstates,ngrid))
+  end if
+else if (run .eq. 1) then
+  if(rank .eq. 1) allocate(expV1(ngrid),v1(ngrid))
+  if(rank .eq. 2) allocate(expV2(ngrid,ngrid),v2(ngrid,ngrid))
+  if(rank .eq. 3) allocate(expV3(ngrid,ngrid,ngrid),v3(ngrid,ngrid,ngrid))
+end if
+
+if(rank .eq. 1) allocate(expT1(ngrid))
+if(rank .eq. 2) allocate(expT2(ngrid,ngrid))
+if(rank .eq. 3) allocate(expT3(ngrid,ngrid,ngrid))
+
+!-- Setting up grid poitns
 x(1)=xmin
 if(rank .gt. 1) y(1)=xmin
 if(rank .gt. 2) z(1)=xmin
@@ -45,89 +65,173 @@ end do
 
 !-- POTENTIAL energy init
 
-! creating potential
-if (analytic) then
-  write(*,*)"Potential: ",pot
-  call initf (1)                                                     !Initialization of parser
+if (run.eq.1) then
+  ! creating potential
+  if (analytic) then
+    write(*,*)"Potential: ",pot
+    call initf (1)                                                     !Initialization of parser
 
-  select case(rank)
-  case(1)
-    call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
-    do i=1, ngrid
-      point = x(i)
-      v1(i) = evalf (1, point)                                       !Evaluating potential for grid
-      if (EvalErrType > 0) then
-        WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
-        stop 1
-      end if
-    end do
-
-  case(2)
-    call parsef (1, pot, (/'x','y'/))                                      
-    do i=1, ngrid
-      do j=1, ngrid
-        point = (/x(i),y(j)/)
-        v2(i,j) = evalf (1, point) 
+    select case(rank)
+    case(1)
+      call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
+      do i=1, ngrid
+        point = x(i)
+        v1(i) = evalf (1, point)                                       !Evaluating potential for grid
         if (EvalErrType > 0) then
           WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
           stop 1
         end if
       end do
-    end do
 
-  case(3)
-    call parsef (1, pot, (/'x','y','z'/))
-    do i=1, ngrid
-      do j=1, ngrid
-        do k=1, ngrid
-          point = (/x(i),y(j),z(k)/)
-          v3(i,j,k) = evalf (1, point)
+    case(2)
+      call parsef (1, pot, (/'x','y'/))                                      
+      do i=1, ngrid
+        do j=1, ngrid
+          point = (/x(i),y(j)/)
+          v2(i,j) = evalf (1, point) 
           if (EvalErrType > 0) then
             WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
             stop 1
           end if
         end do
       end do
-    end do 
-  end select
-! reading potential from file pot.dat
-else 
-  write(*,*) "Potential read from file: pot.dat"
-  open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
-  select case(rank)
-  case(1)
-    read(667,*)v1
-  case(2)
-    read(667,*)v2
-  case(3)
-    read(667,*)v3
-  end select
-  close(667)
-end if 
 
-! creating operator
-if(rank .eq. 1) then
-  do i=1, ngrid
-    if(run .eq. 0) expV1(i) = cmplx(cos(-v1(i)*dt/2.0d0),sin(-v1(i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-    if(run .eq. 1) expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
-  end do
-elseif(rank .eq. 2) then
-  do i=1, ngrid
-    do j=1, ngrid
-      if(run .eq. 0) expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      if(run .eq. 1) expV2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
+    case(3)
+      call parsef (1, pot, (/'x','y','z'/))
+      do i=1, ngrid
+        do j=1, ngrid
+          do k=1, ngrid
+            point = (/x(i),y(j),z(k)/)
+            v3(i,j,k) = evalf (1, point)
+            if (EvalErrType > 0) then
+              WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+              stop 1
+            end if
+          end do
+        end do
+      end do 
+    end select
+  ! reading potential from file pot.dat
+  else 
+    write(*,*) "Potential read from file: pot.dat"
+    open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+    select case(rank)
+    case(1)
+      read(667,*)v1
+    case(2)
+      read(667,*)v2
+    case(3)
+      read(667,*)v3
+    end select
+    close(667)
+  end if 
+
+! IT: creating operator
+  if(rank .eq. 1) then
+    do i=1, ngrid
+      expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
-  end do
-elseif(rank .eq. 3) then
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
-        if(run .eq. 0) expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
-        if(run .eq. 1) expV3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+  elseif(rank .eq. 2) then
+    do i=1, ngrid
+      do j=1, ngrid
+        expV2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
       end do
     end do
-  end do 
+  elseif(rank .eq. 3) then
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          expV3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+        end do
+      end do
+    end do 
+  end if
+
+else if (run.eq.0) then
+  ! creating potential
+  if (analytic) then
+    write(*,*)"Potential: ",pot
+    call initf (1)                                                     !Initialization of parser
+
+    select case(rank)
+    case(1)
+      call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
+      do i=1, ngrid
+        point = x(i)
+        v1_matrix(1,1,i) = evalf (1, point)                                       !Evaluating potential for grid
+        if (EvalErrType > 0) then
+          WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+          stop 1
+        end if
+      end do
+
+    case(2)
+      call parsef (1, pot, (/'x','y'/))                                      
+      do i=1, ngrid
+        do j=1, ngrid
+          point = (/x(i),y(j)/)
+          v2(i,j) = evalf (1, point) 
+          if (EvalErrType > 0) then
+            WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+            stop 1
+          end if
+        end do
+      end do
+
+    case(3)
+      call parsef (1, pot, (/'x','y','z'/))
+      do i=1, ngrid
+        do j=1, ngrid
+          do k=1, ngrid
+            point = (/x(i),y(j),z(k)/)
+            v3(i,j,k) = evalf (1, point)
+            if (EvalErrType > 0) then
+              WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+              stop 1
+            end if
+          end do
+        end do
+      end do 
+    end select
+  ! reading potential from file pot.dat
+  else 
+    write(*,*) "Potential read from file: pot.dat"
+    open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+    select case(rank)
+    case(1)
+      read(667,*)v1_matrix(1,1,:)
+    case(2)
+      read(667,*)v2
+    case(3)
+      read(667,*)v3
+    end select
+    close(667)
+  end if 
+
+  ! RT: creating operator
+  if(rank .eq. 1) then
+    do i=1, ngrid
+      expV1(i) = cmplx(cos(-v1_matrix(1,1,i)*dt/2.0d0),sin(-v1_matrix(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+    end do
+  elseif(rank .eq. 2) then
+    do i=1, ngrid
+      do j=1, ngrid
+        expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      end do
+    end do
+  elseif(rank .eq. 3) then
+    do i=1, ngrid
+      do j=1, ngrid
+        do k=1, ngrid
+          expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+        end do
+      end do
+    end do 
+  end if
 end if
+
+! RT pot energy
+
 
 !-- KINETIC energy init        exp[-iT/h_bar tau]
 
@@ -206,14 +310,21 @@ select case(rank)
     end do
 end select
 
-!--Initialize field function
-if (use_field) then
+!-- Field preparations
+if (field_coupling) then
+  ! Initialize field function
+  write(*,*) "Parsing field"
   call initf (2)                                                     !Initialization of parser
   call parsef (2, field, (/'t'/))                                       !Bytcompiling function string  
   if (EvalErrType > 0) then
-    WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+    WRITE(*,*)'*** Error parsing field: ',EvalErrMsg ()
   end if
+
+  ! Read dipole couplings
+  write(*,*) "Reading dipole couplings (file names expected to be dipole_coup.$i.$j.dat)"
+  call read_dipole_coupling()
 end if
+
 
 !--Generating wavepacket
 call init_wavepacket()
@@ -299,7 +410,7 @@ case(0)
   !--Writing energies
   select case(rank)
   case(1)
-    call update_energy_1d(wfx(1,:))
+    call update_energy_1d_rt()
   case(2)
     call update_energy_2d(wf2x(1,:,:))
   case(3)
@@ -332,7 +443,7 @@ case(1)
 end select
 
 !--Open file with field
-if (use_field) then
+if (field_coupling) then
   file_unit = 102
   file_name = 'field.dat'
   open(file_unit,file=file_name, action='WRITE', iostat=iost)
@@ -445,6 +556,38 @@ elseif(wf .eq. 1) then
   if(rank .eq. 3) read(666,*)wf3x
   close(666)
 end if
+
+end subroutine
+
+subroutine read_dipole_coupling()
+
+  integer     :: istate, jstate
+  logical     :: file_exists
+
+  do istate=1,nstates
+    do jstate=1,nstates
+
+      write(file_name,'(I1,A,I1)') istate,".",jstate
+      file_name='dipole_coup.'//trim(adjustl(file_name))//'.dat'
+      inquire(file=file_name, exist=file_exists)
+
+      if (file_exists) then
+        file_unit = 400
+        open(file_unit,file=file_name, status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+        read(file_unit,*) dipole_coupling(istate,jstate,:)
+        close(file_unit)
+
+        write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|mu|psi_", jstate,"> = read from file"
+        print *, dipole_coupling(istate,jstate,:)
+        !TODO: save data to file
+      else
+        write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|mu|psi_", jstate,"> = 0"
+        !TODO: equal it zero
+        dipole_coupling(istate,jstate,:) = 0.0d0
+        print *, dipole_coupling(istate,jstate,:)
+      end if
+    end do
+  end do
 
 end subroutine
 

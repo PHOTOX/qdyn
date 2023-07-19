@@ -196,13 +196,21 @@ subroutine printwf_1d(state)
 
   integer, intent(in)        :: state
   integer                    :: i
+  real(DP)                   :: v
 
   file_unit=200+state
 
   write(file_unit,'(A,F10.3,A)') "#time ", time, " a.u."
 
   do i=1, size(x)
-    write(file_unit,*) x(i), real(wfx(state,i)), aimag(wfx(state,i)), real(conjg(wfx(state,i))*wfx(state,i)), v1(i)
+    select case(run)
+    case(0)
+      v = v1_matrix(state,state,i)
+    case(1)
+      v = v1(i)
+    end select
+
+    write(file_unit,*) x(i), real(wfx(state,i)), aimag(wfx(state,i)), real(conjg(wfx(state,i))*wfx(state,i)), v
   end do
 
   write(file_unit,*)
@@ -288,12 +296,10 @@ end subroutine
 subroutine update_energy_1d(wfx)
 implicit none
   complex(DP), intent(in)       :: wfx(:)
-  ! I probabaly do not need wfp(:)
-  complex(DP), allocatable      :: wfp(:), wft(:)
+  complex(DP), allocatable      :: wft(:)
   real(DP)                      :: old_energy
   integer                       :: i
 
-  allocate(wfp(ngrid))
   allocate(wft(ngrid))
 
   ! calculating <T>
@@ -337,11 +343,9 @@ subroutine update_energy_2d(wf2x)
 implicit none
   complex(DP), intent(in)       :: wf2x(:, :)
   real(DP)                      :: old_energy
-  complex(DP), allocatable      :: wf2p(:, :), wf2t(:, :)
+  complex(DP), allocatable      :: wf2t(:, :)
   integer                       :: i, j
 
-  !TODO: allocate this in the specification section
-  allocate(wf2p(ngrid, ngrid))
   allocate(wf2t(ngrid, ngrid))
 
 
@@ -388,11 +392,9 @@ subroutine update_energy_3d(wf3x)
 implicit none
   complex(DP), intent(in)       :: wf3x(:, :, :)
   real(DP)                      :: old_energy
-  complex(DP), allocatable      :: wf3p(:, :, :), wf3t(:, :, :)
+  complex(DP), allocatable      :: wf3t(:, :, :)
   integer                       :: i, j, k
 
-  !TODO: allocate this in the specification section
-  allocate(wf3p(ngrid, ngrid, ngrid))
   allocate(wf3t(ngrid, ngrid, ngrid))
 
 
@@ -425,6 +427,51 @@ implicit none
 
   ! calculating <V>
   energy(2) = braket_3d(wf3x, v3*wf3x)/braket_3d(wf3x, wf3x)
+
+  ! saving old energy
+  old_energy = energy(1)
+
+  ! calculating <E> = <V> + <T>
+  energy(1) = energy(2)+ energy(3)
+  
+  ! energy difference from the last step
+  energy_diff = energy(1) - old_energy
+
+end subroutine
+
+subroutine update_energy_1d_rt()
+implicit none
+  complex(DP), allocatable      :: wft(:)
+  real(DP)                      :: old_energy
+  integer                       :: i
+
+  allocate(wft(ngrid))
+
+  ! calculating <T>
+  ! FFT -> K
+  call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wfx(1,:), wfp)
+  call dfftw_destroy_plan(plan_forward)
+
+  wfp = wfp / dsqrt(real(ngrid, kind=DP))
+
+  ! p(t)
+  do i=1, ngrid
+    wfp(i) = wfp(i)*px(i)**2/(2*mass)
+  end do
+
+  ! FFT -> x
+  call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wfp, wft)
+  call dfftw_destroy_plan(plan_backward)
+
+  wft = wft / dsqrt(real(ngrid, kind=DP))
+
+  ! calculating <T>
+  energy(3) = braket_1d(wfx(1,:), wft)/braket_1d(wfx(1,:), wfx(1,:))
+
+  ! calculating <V>
+  energy(2) = braket_1d(wfx(1,:), v1_matrix(1,1,:)*wfx(1,:))/braket_1d(wfx(1,:), wfx(1,:))
 
   ! saving old energy
   old_energy = energy(1)

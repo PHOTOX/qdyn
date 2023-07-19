@@ -17,9 +17,11 @@
 /
 
 &init_wf
-  x0 = 2.0d0
+  x0 = 0.0d0
 /
 
 &rt
   pot='0.005*(x)**2'  ! Potential
+  field_coupling=.true.
+  field='0.001*cos(0.01*t)'
 /

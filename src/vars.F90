@@ -17,12 +17,12 @@ module mod_vars
   complex(DP), dimension(:,:,:), allocatable :: wf2x, wf3p
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
   !-field
-  logical               :: use_field=.false.
+  logical               :: field_coupling=.false.
   character(len=100)    :: field=''
   !-auxiliary variables
   integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
-  character(len=100)             :: pot=''
+  character(len=100)    :: pot=''
   !-exp(T) operator
   complex(DP), dimension(:), allocatable :: expT1
   complex(DP), dimension(:,:), allocatable :: expT2
@@ -36,16 +36,17 @@ module mod_vars
   complex(DP), dimension(:,:,:), allocatable :: expV3
   !-real time V operators
   ! TODO: these are prepared variables for RT propagation, not allocated yet in the init()
-! real(DP), dimension(:,:), allocatable     :: v1_vector
+  real(DP), dimension(:,:,:), allocatable     :: v1_matrix, dipole_coupling
 ! real(DP), dimension(:,:,:), allocatable   :: v2_vector
 ! real(DP), dimension(:,:,:,:), allocatable :: v3_vector
-! complex(DP), dimension(:), allocatable :: expV1_matrix 
-! complex(DP), dimension(:,:), allocatable :: expV2_matrix
-! complex(DP), dimension(:,:,:), allocatable :: expV3_matrix
+! complex(DP), dimension(:,:,:), allocatable      :: expV1_matrix
+! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
+! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
 
   namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,nstates,print_wf
   namelist /it/pot,analytic,project_rot
-  namelist /rt/pot,analytic,use_field,field
+  namelist /rt/pot,analytic,field_coupling,field
+  !TODO: rt analytic will not be use probably
 
 CONTAINS
 
@@ -187,7 +188,7 @@ if (project_rot .and. (run == 1) .and. (nstates>1)) then
 end if
 
 !field
-if (use_field) then
+if (field_coupling) then
   select case(run)
   case(0)
     write(*,*) "Field: ON"
