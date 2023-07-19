@@ -14,9 +14,12 @@
   nstates=1
   print_wf=.false.
   rank=1,                      ! Dimensionality
-  pot='0.005*(x)**2'  ! Potential
 /
 
 &init_wf
-x0 = 2.0d0
+  x0 = 2.0d0
+/
+
+&rt
+  pot='0.005*(x)**2'  ! Potential
 /

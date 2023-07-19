@@ -8,58 +8,77 @@ implicit none
 CONTAINS
 
 !--REAL TIME PROPAGATION
-subroutine propag_rt_1d(wfx)
+subroutine propag_rt_1d()
 
 implicit none
-  complex(DP), intent(inout)    :: wfx(:)
-  integer                       :: i
+  integer                       :: i, istate, jstate
+  !TODO: Can I modify the previous wavefunciton? I probably cannot do that for the offdiagonal elements
 
-  !TODO: half steps are demanding.. full steps would be better
-  ! V(t/2)
-  do i=1, ngrid
-    wfx(i) = wfx(i)*expV1(i)
+  do istate=1,nstates
+    do jstate=1,nstates
+      ! Diagonal elements in the V matrix: half step
+      if (istate.eq.jstate) then
+        !TODO: half steps are demanding.. full steps would be better
+        ! V(t/2)
+        do i=1, ngrid
+        !TODO: expV1 must have index of state too
+          wfx(istate,i) = wfx(istate,i)*expV1(i)
+        end do
+
+        !>jj
+        ! Field propagation here
+        if (use_field) then
+          ! TODO: I need to add the dipole moment
+          wfx(istate,:) = wfx(istate,:)*cmplx(cos(x*elmag_field(time)*dt/2.0d0),sin(x*elmag_field(time)*dt/2.0d0))
+        end if
+        !<jj
+      end if
+
+      !if (istate.not.jstate) then
+        !OFFdiagonal elements here
+        !wfx(istate,:) = wfx(istate,:) + wfx(jstate,:)*coupling
+      !end if
+
+      ! Diagonal elements in the T matrix: full step
+      if (istate.eq.jstate) then
+        ! FFT -> K
+        call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+        call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
+        call dfftw_destroy_plan(plan_forward)
+
+        ! AFTER FFT, divide by sqrt(ngrid). This was found empirically to work, but checking the package would be desirable.
+        ! Using this, energy and norm are conserved. Applied throughout the whole code.
+        wfp = wfp / dsqrt(real(ngrid, kind=DP))
+
+        ! p(t)
+        do i=1, ngrid
+          wfp(i) = wfp(i)*expT1(i)
+        end do
+
+        ! FFT -> x
+        call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+        call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
+        call dfftw_destroy_plan(plan_backward)
+
+        wfx(istate,:) = wfx(istate,:) / dsqrt(real(ngrid, kind=DP))
+      end if
+
+      ! Diagonal elements in the V matrix: half step
+      if (istate.eq.jstate) then
+        ! V(t/2)
+        do i=1, ngrid
+          wfx(istate,i) = wfx(istate,i)*expV1(i)
+        end do
+
+        !>jj
+        ! Field propagation here
+        if (use_field) then
+          wfx(istate,:) = wfx(istate,:)*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
+        end if
+        !<jj
+      end if
+    end do
   end do
-
-  !>jj
-  ! Field propagation here
-  if (use_field) then
- !  wfx = wfx*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
-    wfx = wfx*cmplx(cos(x*elmag_field(time)*dt/2.0d0),sin(x*elmag_field(time)*dt/2.0d0))
-  end if
-  !<jj
-
-  ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wfx, wfp)
-  call dfftw_destroy_plan(plan_forward)
-
-  ! AFTER FFT, divide by sqrt(ngrid). This was found empirically to work, but checking the package would be desirable.
-  ! Using this, energy and norm are conserved. Applied throughout the whole code.
-  wfp = wfp / dsqrt(real(ngrid, kind=DP))
-
-  ! p(t)
-  do i=1, ngrid
-    wfp(i) = wfp(i)*expT1(i)
-  end do
-
-  ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wfp, wfx)
-  call dfftw_destroy_plan(plan_backward)
-
-  wfx = wfx / dsqrt(real(ngrid, kind=DP))
-
-  ! V(t/2)
-  do i=1, ngrid
-    wfx(i) = wfx(i)*expV1(i)
-  end do
-
-  !>jj
-  ! Field propagation here
-  if (use_field) then
-    wfx = wfx*cmplx(cos(elmag_field(time)*dt/2.0d0),sin(elmag_field(time)*dt/2.0d0))
-  end if
-  !<jj
 
 end subroutine propag_rt_1d
 

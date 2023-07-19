@@ -43,7 +43,9 @@ module mod_vars
 ! complex(DP), dimension(:,:), allocatable :: expV2_matrix
 ! complex(DP), dimension(:,:,:), allocatable :: expV3_matrix
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,pot,nstates,project_rot,analytic,use_field,field,print_wf
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,nstates,print_wf
+  namelist /it/pot,analytic,project_rot
+  namelist /rt/pot,analytic,use_field,field
 
 CONTAINS
 
@@ -55,12 +57,37 @@ subroutine read_input()
 
 !-- Reading input file
   open(100,file='input.q', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
-  read(100, general, iostat=iost)
   if (iost.ne.0) then
     write(*,*)'ERROR: input.q file must be provided'
     write(*,*) iost
     stop 1
   end if
+
+  read(100, general, iostat=iost)
+  if (iost.ne.0) then
+    write(*,*)'ERROR: &general section missing or problematic'
+    write(*,*) iost
+    stop 1
+  end if
+
+  rewind(100)
+  select case(run)
+  case(0)
+    read(100, rt, iostat=iost)
+    if (iost.ne.0) then
+      write(*,*)'ERROR: &rt section missing or problematic'
+      write(*,*) iost
+      stop 1
+    end if
+  case(1)
+    read(100, it, iostat=iost)
+    if (iost.ne.0) then
+      write(*,*)'ERROR: &it section missing or problematic'
+      write(*,*) iost
+      stop 1
+    end if
+  end select
+
   ! file is closed at the end of init() subroutine because some more input is read. 
 
 !-- Input check

@@ -15,8 +15,10 @@
 
   rank=3,                      ! Dimensionality
   nstates=10,
-  pot='0.005*x**2 + 0.00245*y**2 + 0.00845*z**2'  ! Potential
+/
 
+&it
+  pot='0.005*x**2 + 0.00245*y**2 + 0.00845*z**2'  ! Potential
 /
 
 &init_wf

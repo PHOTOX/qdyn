@@ -34,7 +34,7 @@ select case(run)
 
       select case(rank)
         case(1)
-          call propag_rt_1d(wfx(1,:)) 
+          call propag_rt_1d() 
           call update_norm()
 
         case(2)
@@ -121,7 +121,7 @@ select case(run)
           if (print_wf) then
             select case(rank)
             case(1)
-             call printwf_1d(istate)
+              call printwf_1d(istate)
             case(2)
               call printwf_2d(istate)
             case(3)

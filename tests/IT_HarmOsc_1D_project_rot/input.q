@@ -2,7 +2,7 @@
 
 &general
   run=1,                       ! Type of job (0 - real time propagation, 1 - imaginary time propagation)
-  nstep=200,                  ! Number of steps
+  nstep=1000,                  ! Number of steps
   dt=0.5,                      ! Timestep [a.u.]
   dtwrite=10.0,                ! Printing every time unit (modulo)
 
@@ -19,7 +19,7 @@
 
 &it
   pot='0.005*(x)**2'  ! Potential
-  project_rot=.true.
+  project_rot=.false.
 /
 
 &init_wf

@@ -30,4 +30,5 @@ if [[ ! -z $(grep no results.dat) ]]
 then
   echo "ERROR: test failed!!"
   touch ERROR
+  touch ../ERROR
 fi
