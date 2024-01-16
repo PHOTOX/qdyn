@@ -1,14 +1,32 @@
 #!/bin/bash
 
-if [[ -z $(which python3) ]]
-then
-  echo -e "\npython3 command not evailable! Skipping!\n"
-  exit
-fi
-
+# removing SKIP and ERROR files
 if [[ -f ERROR ]]
 then
   rm ERROR
+fi
+
+if [[ -f SKIP ]]
+then
+  rm SKIP
+fi
+
+# checking python3
+if [[ -z $(which python3) ]]
+then
+  echo -e "\nERROR: python3 command not evailable! Skipping!\n"
+  touch ../SKIP
+  touch SKIP
+  exit
+fi
+
+# checking scipy
+if [[ -z $(pip3 list | grep scipy) ]]
+then
+  echo -e "\nERROR: scipy package in python 3 not found.\nAvailable packagaes are: \n$(pip3 list)"
+  touch ../SKIP
+  touch SKIP
+  exit
 fi
 
 echo "Time:"

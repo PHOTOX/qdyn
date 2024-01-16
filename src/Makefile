@@ -5,7 +5,7 @@ FC = gfortran
 FFLAGS =
 #FFTW library needed
 # LIBS = -L/home/janos/Programs/fftw/fftw-3.3.6/lib -lfftw3 -lm 
-LIBS = -L/home/janos/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm 
+LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm
 LDLIBS = -lfftw3
 #FFLAGS = -I/home/suchanj/programs/fftw-3.3.6/include/
 

@@ -8,7 +8,7 @@ echo -e "\nRunning test suite"
 # checking if qdyn is in PATH and trying to add it if necessary
 if [[ -z $(which qdyn) ]];
 then
-    echo "WARNING: qdyn is not set in your path. Trying to export qdyn to path from ../src."
+    echo -e "\nWARNING: qdyn is not set in your path. Trying to export qdyn to path from ../src."
     # checking if test are in the same folder as src with qdyn
     if [[ -z $(ls ../src/qdyn) ]]
     then
@@ -30,6 +30,18 @@ do
   cd ../
 done
 
+# looking for skipped tests due to lacking python or others
+if [[ -e SKIP ]];
+then
+  echo
+  for i in $(find */SKIP) 
+  do 
+    echo -e "\033[0;33mSKIP found: $i"
+  done
+  rm SKIP
+fi
+
+# looking for errors
 if [[ -e ERROR ]];
 then
   echo 
@@ -39,7 +51,5 @@ then
   done
   rm ERROR
 else
-  echo -e "\n\033[0;32mAll tests passed!"
+  echo -e "\n\033[0;32mAll tests passed!\n"
 fi
-
-echo
