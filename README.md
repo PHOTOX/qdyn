@@ -66,9 +66,9 @@ Inputs can be prepared with the help of python scripts.
 A series of python scripts is prepared for plotting the data.
 
 ## TODO
-Imaginary-time propagation is finished and tested. Real-time propagation is now needed to be tested. Extension to multiple states is currently under progress.
+Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension to multiple states is currently under progress.
 1) Dipole coupling with field
  - read dipoles
 2) Transition dipole couplings
 3) Diabatic couplings
-
+4) Add autocorrelation function

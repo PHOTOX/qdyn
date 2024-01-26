@@ -21,6 +21,17 @@ then
     fi
 fi
 
+# removing ERROR and SKIP from previous runs
+if [[ -e ERROR ]];
+then
+  rm ERROR
+fi
+
+if [[ -e SKIP ]];
+then
+  rm SKIP
+fi
+
 # tests
 for i in $tests;
 do
@@ -36,7 +47,16 @@ then
   echo
   for i in $(find */SKIP) 
   do 
-    echo -e "\033[0;33mSKIP found: $i"
+    # coloured printing for different systems
+    if [ "$(uname)" == "Darwin" ] # MacOS
+    then 
+      echo -e "\033[0;31mSKIP found: $i"
+    elif [ "$(uname)" == "Linux" ] # Linux
+    then
+      echo -e "\e[0;31mSKIP found: $i"
+    else
+      echo -e "SKIP found: $i"
+    fi
   done
   rm SKIP
 fi
@@ -47,7 +67,16 @@ then
   echo 
   for i in $(find */ERROR) 
   do 
-    echo -e "\033[0;31mERROR found: $i"
+    # coloured printing for different systems
+    if [ "$(uname)" == "Darwin" ] # MacOS
+    then 
+      echo -e "\033[0;31mERROR found: $i"
+    elif [ "$(uname)" == "Linux" ] # Linux
+    then
+      echo -e "\e[0;31mERROR found: $i"
+    else
+      echo -e "ERROR found: $i"
+    fi
   done
   rm ERROR
 else

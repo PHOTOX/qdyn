@@ -7,7 +7,8 @@ program qdyn
 ! -------------------------------------------------------------------!
 !                               / Qdyn \                             !
 ! Program for N-dimensional numerical quantum propagation on a grid. !
-! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2023)             !
+! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2024)             !
+! Copyright PHOTOX group                                             !
 ! -------------------------------------------------------------------!
 
   implicit none
