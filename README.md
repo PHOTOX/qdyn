@@ -13,8 +13,7 @@ Program for one to three-dimensional numerical quantum propagation on a grid in 
    - `make clean && make` for compilation
    - Ideally, add the `\src` folder to your path so that you can call Qdyn by just `$ qdyn` in the command line
  3) Run tests
-    - `cd tests`
-    - `./run_test_suite.sh` (python3 with scipy library is necessary for some tests, otherwise they will be skipped)  
+    - `make test` - it runs `tests/run_test_suite.sh` which can be accessed separately (python3 with numpy library is necessary for some tests, otherwise they will be skipped)  
 
 To run qdyn, input.q file must be in the folder
 

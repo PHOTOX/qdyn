@@ -6,8 +6,8 @@ FFLAGS =
 #FFTW library needed
 # LIBS = -L/home/janos/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm 
 LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm
-LDLIBS = -lfftw3
-#FFLAGS = -I/home/suchanj/programs/fftw-3.3.6/include/
+#LDLIBS = -lfftw3 # This was uncommented in the original make file by JS
+#FFLAGS = -I/home/suchanj/programs/fftw-3.3.6/include/ # This was uncommented in the original make file by JS
 
 # Name of program
 OUT = qdyn
@@ -20,8 +20,11 @@ OBJS = vars.o fparser.o fftw.o utils.o init.o propag.o qdyn.o
 myprogram: $(OBJS) 
 	   $(FC) -o $(OUT) ${LIBS} ${FFLAGS} $(OBJS) ${LDLIBS}
 
-clean :
+clean:
 	/bin/rm -f *.o *.mod $(OUT)
+
+test:
+	cd ../tests; /bin/bash run_test_suite.sh
 
 
 .PHONY: clean 
