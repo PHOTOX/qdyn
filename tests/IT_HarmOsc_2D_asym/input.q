@@ -2,8 +2,8 @@
 
 &general
   dynamics='it',               ! Type of job ('rt' - real time propagation, 'it' - imaginary time propagation)
-  nstep=450,                   ! Number of steps
-  dt=0.60,                      ! Timestep [a.u.]
+  nstep=350,                   ! Number of steps
+  dt=0.75,                      ! Timestep [a.u.]
   dtwrite=10.0,                 ! Printing every time unit (modulo)
 
   ngrid=64,                   ! Number of grid points (power of 2 for FFT)
@@ -23,4 +23,13 @@
 /
 
 &init_wf
+x0=4.0
+y0=4.0
+z0=4.0
+xsigma=0.5
+ysigma=0.5
+zsigma=0.5
+px0=0.0
+py0=0.0
+pz0=0.0
 /

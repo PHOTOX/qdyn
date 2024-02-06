@@ -467,23 +467,25 @@ end subroutine init
 
 subroutine init_wavepacket()
 
-  ! TODO: add kx, ky, kz
-  real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, k0
+  real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0
+  real(DP)    :: prefactor, gauss, momenta, norm
 
-  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,k0
+  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0
 
 if(wf .eq. 0) then                                           
   write(*,*) "Generating initial gaussian wave packet using section &init_wf."
 
   ! Default values
-  !TODO: this shift should be smarter and for all using ymin, ymax
-  x0 = (xmax-xmin)/2.0d0+xmin*1.2d0 ! on purpose a bit shifted
-  y0 = x0
-  z0 = x0
+  !TODO: this shift should be using ymin, ymax once implemented
+  x0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
+  y0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
+  z0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
   xsigma = (xmax-x0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
-  ysigma = xsigma                                                 ! 5sigma - 96% of gaussian is on the grid 
-  zsigma = xsigma                                                 ! 5sigma - 96% of gaussian is on the grid 
-  k0 = 0.0d0
+  ysigma = (xmax-y0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
+  zsigma = (xmax-z0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
+  px0 = 0.0d0
+  py0 = 0.0d0
+  pz0 = 0.0d0
 
   ! reading init_wf section in the input.q
   rewind(100)
@@ -501,17 +503,29 @@ if(wf .eq. 0) then
   write(*,'(A,F10.5)') " xsigma = ", xsigma
   write(*,'(A,F10.5)') " ysigma = ", ysigma
   write(*,'(A,F10.5)') " zsigma = ", zsigma
-  write(*,'(A,F10.5)') " k0 = ", k0
+  write(*,'(A,F10.5)') " px0 = ", px0
+  write(*,'(A,F10.5)') " py0 = ", py0
+  write(*,'(A,F10.5)') " pz0 = ", pz0
   
-  write(*,*) "WARNING! k0 currently not set correctly - to be corrected soon."
-  !TODO: correct initial wave packet generation - it should be normalized
-  !TODO: correct initial momentum. Currently only in x direction
+  ! normalization prefactor of the gaussian, same value for the whole grid
+  select case (rank)
+  case (1)
+    prefactor = xsigma**(-0.5)*pi**(-0.25)
+  case (2)
+    prefactor = (xsigma*ysigma)**(-0.5)*pi**(-0.5)
+  case (3)
+    prefactor = (xsigma*ysigma*zsigma)**(-0.5)*pi**(-0.75)
+  end select
+
   do i=1, ngrid
     select case (rank)
       case (1)
-        !jj - for imag propagation, I should loop jstate and copy the value
-        wfx(1,i) = cmplx(exp((-1.0d0*(x(i)-x0)**2)/(2*xsigma**2)) * cos(k0 * x(i)), &
-                       exp((-1.0d0*(x(i)-x0)**2)/(2*xsigma**2)) * sin(k0 * x(i)) )  
+        ! Gaussian part of the wave packet depending only on positions
+        gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2))
+        ! momentum calculation p0*(x-x0)
+        momenta = px0*(x(i)-x0)
+        ! whole imaginary wf
+        wfx(1,i) = cmplx(gauss * cos(momenta), gauss * sin(momenta))  
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
           do jstate=2,nstates
@@ -521,8 +535,12 @@ if(wf .eq. 0) then
             
       case (2)
         do j=1, ngrid
-          wf2x(1,i,j) =  cmplx(exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2))) * cos(k0*x(i)), &
-                             exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2))) * sin(k0*x(i)) )
+          ! Gaussian part of the wave packet depending only on positions
+          gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2) -(y(j)-y0)**2/(2*ysigma**2))
+          ! momentum calculation p0*(x-x0)
+          momenta = px0*(x(i)-x0) + py0*(y(j)-y0)
+          ! whole imaginary wf
+          wf2x(1,i,j) = cmplx(gauss * cos(momenta), gauss * sin(momenta))
 
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
@@ -536,10 +554,12 @@ if(wf .eq. 0) then
       case (3)
         do j=1, ngrid
           do k=1, ngrid
-            wf3x(1,i,j,k) =  cmplx(exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2)) &
-                           - (((z(k)-z0)**2)/(2*zsigma**2))), &
-                           exp(- (((x(i)-x0)**2)/(2*xsigma**2)) - (((y(j)-y0)**2)/(2*ysigma**2)) &
-                           - (((z(k)-z0)**2)/(2*zsigma**2))))
+            ! Gaussian part of the wave packet depending only on positions
+            gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2)-(y(j)-y0)**2/(2*ysigma**2)-(z(k)-z0)**2/(2*zsigma**2))
+            ! momentum calculation p0*(x-x0)
+            momenta = px0*(x(i)-x0) + py0*(y(j)-y0) + pz0*(z(k)-z0)
+            ! whole imaginary wf
+            wf3x(1,i,j,k) = cmplx(gauss * cos(momenta), gauss * sin(momenta)) 
 
           ! for the imag time, I create the came wave packet for all states
           if (run.eq.1 .and. nstates.ge.2) then
@@ -552,6 +572,19 @@ if(wf .eq. 0) then
         end do
     end select
   end do
+
+  ! printing norm of generated wf, it is probably point less since I normalize later
+  ! but just to check we have a correct initial guess
+  select case(rank)
+  case(1)
+    norm = braket_1d(wfx(1,:), wfx(1,:))
+  case(2)
+    norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
+  case(3)
+    norm = braket_3d(wf3x(1,:,:,:), wf3x(1,:,:,:))
+  end select
+  write(*,'(A,F10.5)') " norm = ", norm 
+
 elseif(wf .eq. 1) then
   !Procedure for loading WF from file
   read(666,*) !two empty lines

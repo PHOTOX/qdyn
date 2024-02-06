@@ -75,4 +75,4 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 
 ## small TODO list
 1) create ymin, ymax atd.
-2) modify init_wf so that it generates a real wavepacket
+2) adpat analyze programs to changes in dynamics
