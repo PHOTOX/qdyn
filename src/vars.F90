@@ -12,6 +12,7 @@ module mod_vars
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
   real(DP), dimension(:), allocatable    :: x, y, z, point, px, py, pz
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
+  character(len=10)     :: dynamics=''
   !-wave function
   complex(DP), dimension(:), allocatable :: wfp
   complex(DP), dimension(:,:), allocatable :: wfx, wf2p
@@ -44,7 +45,7 @@ module mod_vars
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass_x,mass_y,mass_z,wf,nstates,print_wf
+  namelist /general/dynamics,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass_x,mass_y,mass_z,wf,nstates,print_wf
   namelist /it/pot,analytic,project_rot
   namelist /rt/pot,analytic,field_coupling,field
   !TODO: rt analytic will not be use probably
@@ -73,15 +74,15 @@ subroutine read_input()
   end if
 
   rewind(100)
-  select case(run)
-  case(0)
+  select case(dynamics)
+  case('rt')
     read(100, rt, iostat=iost)
     if (iost.ne.0) then
       write(*,*)'ERROR: &rt section missing or problematic'
       write(*,*) iost
       stop 1
     end if
-  case(1)
+  case('it')
     read(100, it, iostat=iost)
     if (iost.ne.0) then
       write(*,*)'ERROR: &it section missing or problematic'
@@ -101,14 +102,15 @@ end subroutine read_input
 subroutine check()
 
 ! run case (imag/real)
-! TODO: use 'rt' and 'it' instead and here then set run=0 and run=1
-select case(run)
-  case(0)
+select case(dynamics)
+  case('rt')
     write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
-  case(1)
+    run = 0
+  case('it')
     write(*,*) "RUN: 1 - IMAGINARY TIME PROPAGATION"
+    run = 1
   case default
-    write(*,*) "ERR: Unrecongnized run option. Exiting"
+    write(*,*) "ERR: Unrecongnized 'dynamics' option. Choose either 'rt' or 'it'. Exiting"
     stop 1
 end select
 

@@ -22,7 +22,7 @@ To run qdyn, input.q file must be in the folder
 Sample input for imaginary time propagation is provided below.
 ```
 &general
-  run=1,                       ! Type of job (0 - real time propagation, 1 - imaginary time propagation)
+  dynamics='it',               ! Type of job ('rt' - real time propagation, 'it' - imaginary time propagation)
   nstep=200,                   ! Number of steps
   dt=0.5,                      ! Timestep [a.u.]
   dtwrite=10.0,                ! Printing every time unit (modulo)
@@ -76,4 +76,3 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 ## small TODO list
 1) create ymin, ymax atd.
 2) modify init_wf so that it generates a real wavepacket
-3) modify 'run' with dynamics='rt' or 'it'

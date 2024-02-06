@@ -1,7 +1,7 @@
 ! Input file for program Qdyn
 
 &general
-  run=0,                       ! Type of job (0 - real time propagation, 1 - imaginary time propagation)
+  dynamics='rt',               ! Type of job ('rt' - real time propagation, 'it' - imaginary time propagation)
   nstep=4000,                  ! Number of steps
   dt=0.1,                      ! Timestep [a.u.]
   dtwrite=1.0,                ! Printing every time unit (modulo)

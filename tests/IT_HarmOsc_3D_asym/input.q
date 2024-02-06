@@ -1,10 +1,10 @@
 ! Input file for program Qdyn
 
 &general
-  run=1,                       ! Type of job (0 - real time propagation, 1 - imaginary time propagation)
-  nstep=800,                   ! Number of steps
-  dt=1.00,                      ! Timestep [a.u.]
-  dtwrite=5.0,                 ! Printing every time unit (modulo)
+  dynamics='it',               ! Type of job ('rt' - real time propagation, 'it' - imaginary time propagation)
+  nstep=700,                   ! Number of steps
+  dt=1.0,                      ! Timestep [a.u.]
+  dtwrite=50.0,                ! Printing every time unit (modulo)
 
   ngrid=32,                   ! Number of grid points (power of 2 for FFT)
   xmin=-17.0,                  ! Grid xmin, xmax same for all dimensions
