@@ -312,20 +312,14 @@ implicit none
 
   ! p(t)
   do i=1, ngrid
-    wfp(i) = wfp(i)*px(i)**2/(2*mass_x)
+    wft(i) = wfp(i)*px(i)**2/(2*mass_x)
   end do
 
-  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
-
-  ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wfp, wft)
-  call dfftw_destroy_plan(plan_backward)
-
-  wft = wft / dsqrt(real(ngrid, kind=DP))
-
-  ! calculating <T>
-  energy(3) = braket_1d(wfx, wft)/braket_1d(wfx, wfx)
+  ! calculating <T> in the momentum representation, back FFT to coordinate represetation was skipped
+  energy(3) = braket_1d(wfp, wft)/braket_1d(wfp, wfp)
+  ! Note that the braket_1d uses dx for the integration instead of dp, which is not correct
+  ! but in the fraction, the dx/dx will cancel out so it works. For more complex stuff, a 
+  ! problem can appear here!
 
   ! calculating <V>
   energy(2) = braket_1d(wfx, v1*wfx)/braket_1d(wfx, wfx)
@@ -350,7 +344,6 @@ implicit none
 
   allocate(wf2t(ngrid, ngrid))
 
-
   ! calculating T(psi)
   ! FFT -> K
   call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
@@ -362,21 +355,15 @@ implicit none
   ! p(t)
   do i=1, ngrid
     do j=1, ngrid
-      wf2p(i,j) = wf2p(i,j)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y))
+      wf2t(i,j) = wf2p(i,j)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y))
     end do
   end do
 
-  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
-
-  ! FFT -> x
-  call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2t, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf2p, wf2t)
-  call dfftw_destroy_plan(plan_backward)
-
-  wf2t = wf2t / ngrid
-
-  ! calculating <T>
-  energy(3) = braket_2d(wf2x, wf2t)/braket_2d(wf2x, wf2x)
+  ! calculating <T> in the momentum representation, back FFT to coordinate represetation was skipped
+  energy(3) = braket_2d(wf2p, wf2t)/braket_2d(wf2p, wf2p)
+  ! Note that the braket_1d uses dx for the integration instead of dp, which is not correct
+  ! but in the fraction, the dx/dx will cancel out so it works. For more complex stuff, a 
+  ! problem can appear here!
 
   ! calculating <V>
   energy(2) = braket_2d(wf2x, v2*wf2x)/braket_2d(wf2x, wf2x)
@@ -414,22 +401,16 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3p(i,j,k) = wf3p(i,j,k)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y) + pz(k)**2/(2*mass_z))
+        wf3t(i,j,k) = wf3p(i,j,k)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y) + pz(k)**2/(2*mass_z))
       end do
     end do
   end do
 
-  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
-
-  ! FFT -> x
-  call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3t, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf3p, wf3t)
-  call dfftw_destroy_plan(plan_backward)
-
-  wf3t = wf3t / dsqrt(real(ngrid, kind=DP)**3)
-
-  ! calculating <T>
-  energy(3) = braket_3d(wf3x, wf3t)/braket_3d(wf3x, wf3x)
+  ! calculating <T> in the momentum representation, back FFT to coordinate represetation was skipped
+  energy(3) = braket_3d(wf3p, wf3t)/braket_3d(wf3p, wf3p)
+  ! Note that the braket_1d uses dx for the integration instead of dp, which is not correct
+  ! but in the fraction, the dx/dx will cancel out so it works. For more complex stuff, a 
+  ! problem can appear here!
 
   ! calculating <V>
   energy(2) = braket_3d(wf3x, v3*wf3x)/braket_3d(wf3x, wf3x)

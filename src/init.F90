@@ -334,6 +334,8 @@ call init_wavepacket()
 if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
 if(rank .eq. 2) call normalize_2d(wf2x(1,:,:))
 if(rank .eq. 3) call normalize_3d(wf3x(1,:,:,:)) 
+
+!TODO: this is normalization just for the IT, where all initial states are normalized. I need to split initialization of RT and IT
 if(run.eq.1 .and. nstates.ge.2) then
   do jstate=2,nstates
     if(rank .eq. 1) call normalize_1d(wfx(jstate,:))
@@ -465,6 +467,7 @@ end subroutine init
 
 subroutine init_wavepacket()
 
+  ! TODO: add kx, ky, kz
   real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, k0
 
   namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,k0
@@ -473,6 +476,7 @@ if(wf .eq. 0) then
   write(*,*) "Generating initial gaussian wave packet using section &init_wf."
 
   ! Default values
+  !TODO: this shift should be smarter and for all using ymin, ymax
   x0 = (xmax-xmin)/2.0d0+xmin*1.2d0 ! on purpose a bit shifted
   y0 = x0
   z0 = x0

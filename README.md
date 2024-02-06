@@ -71,7 +71,9 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 2) Transition dipole couplings
 3) Diabatic couplings
 4) Add autocorrelation function
+5) Add imaginary absorption potential
 
 ## small TODO list
 1) create ymin, ymax atd.
-2) energy functions don't need back FFT
+2) modify init_wf so that it generates a real wavepacket
+3) modify 'run' with dynamics='rt' or 'it'
