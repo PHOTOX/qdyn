@@ -312,8 +312,10 @@ implicit none
 
   ! p(t)
   do i=1, ngrid
-    wfp(i) = wfp(i)*px(i)**2/(2*mass)
+    wfp(i) = wfp(i)*px(i)**2/(2*mass_x)
   end do
+
+  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
 
   ! FFT -> x
   call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
@@ -360,9 +362,11 @@ implicit none
   ! p(t)
   do i=1, ngrid
     do j=1, ngrid
-      wf2p(i,j) = wf2p(i,j)*(px(i)**2 + py(j)**2)/(2*mass)
+      wf2p(i,j) = wf2p(i,j)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y))
     end do
   end do
+
+  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
 
   ! FFT -> x
   call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2t, FFTW_BACKWARD, FFTW_ESTIMATE )
@@ -410,10 +414,12 @@ implicit none
   do i=1, ngrid
     do j=1, ngrid
       do k=1, ngrid
-        wf3p(i,j,k) = wf3p(i,j,k)*(px(i)**2 + py(j)**2 + pz(k)**2)/(2*mass)
+        wf3p(i,j,k) = wf3p(i,j,k)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y) + pz(k)**2/(2*mass_z))
       end do
     end do
   end do
+
+  ! TODO: I should calculate <T> here with wf3p and don't waste effor with back FFT!
 
   ! FFT -> x
   call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3t, FFTW_BACKWARD, FFTW_ESTIMATE )
@@ -457,9 +463,10 @@ implicit none
 
   ! p(t)
   do i=1, ngrid
-    wfp(i) = wfp(i)*px(i)**2/(2*mass)
+    wfp(i) = wfp(i)*px(i)**2/(2*mass_x)
   end do
 
+  !TODO: this back FFT is not necessary since I still have the wf. It should be removed.
   ! FFT -> x
   call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wfp, wft)

@@ -7,7 +7,8 @@ module mod_vars
   real(DP), parameter   :: pi = 3.14159265358979323846
   !-propagation data
   integer               :: run, nstep, ngrid, wf, rank, nstates=1
-  real(DP)              :: dt, xmin, xmax, dx, mass, dtwrite
+  real(DP)              :: dt, xmin, xmax, dx, dtwrite
+  real(DP)              :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
   real(DP), dimension(:), allocatable    :: x, y, z, point, px, py, pz
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
@@ -43,7 +44,7 @@ module mod_vars
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
 
-  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass,wf,nstates,print_wf
+  namelist /general/run,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass_x,mass_y,mass_z,wf,nstates,print_wf
   namelist /it/pot,analytic,project_rot
   namelist /rt/pot,analytic,field_coupling,field
   !TODO: rt analytic will not be use probably
@@ -100,6 +101,7 @@ end subroutine read_input
 subroutine check()
 
 ! run case (imag/real)
+! TODO: use 'rt' and 'it' instead and here then set run=0 and run=1
 select case(run)
   case(0)
     write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
@@ -132,6 +134,22 @@ if (nstep .lt. 1) then
   stop 1
 else
   write(*,'(A,I8)') " Number of steps: ",rank
+end if
+
+! masses
+if (mass_x .le. 0.0) then
+  write(*,*) "ERR: mass_x was either not set or set negative."
+  stop 1
+end if
+
+if ((rank .ge. 2) .and. (mass_y .le. 0.0)) then
+  write(*,*) "ERR: mass_y was either not set or set negative."
+  stop 1
+end if
+
+if ((rank .ge. 3) .and. (mass_z .le. 0.0)) then
+  write(*,*) "ERR: mass_z was either not set or set negative."
+  stop 1
 end if
 
 ! params of grid

@@ -243,8 +243,8 @@ select case(rank)
      else
        px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
      end if
-     if(run .eq. 0) expT1(i) = cmplx(dcos(-px(i)**2*dt/(2*mass)),dsin(-px(i)**2*dt/(2*mass)))
-     if(run .eq. 1) expT1(i) = cmplx(dexp(-px(i)**2*dt/(2*mass)),0)
+     if(run .eq. 0) expT1(i) = cmplx(dcos(-px(i)**2/(2*mass_x)*dt),dsin(-px(i)**2/(2*mass_x)*dt))
+     if(run .eq. 1) expT1(i) = cmplx(dexp(-px(i)**2/(2*mass_x)*dt),0)
     end do
   !2D
   case(2)
@@ -267,8 +267,9 @@ select case(rank)
 
     do i=1, ngrid
       do j=1, ngrid
-        if(run .eq. 0) expT2(i,j) = cmplx(cos(-(px(i)**2+py(j)**2)*dt/(2*mass)),sin(-(px(i)**2+py(j)**2)*dt/(2*mass)))
-        if(run .eq. 1) expT2(i,j) = cmplx(exp(-(px(i)**2+py(j)**2)*dt/(2*mass)),0)
+        if(run .eq. 0) expT2(i,j) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),&
+                                      sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt))
+        if(run .eq. 1) expT2(i,j) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),0)
       end do
     end do
 
@@ -302,9 +303,9 @@ select case(rank)
     do i=1, ngrid
       do j=1, ngrid
         do k=1, ngrid
-          if(run .eq. 0) expT3(i,j,k) = cmplx(cos(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),&
-                                         sin(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)))
-          if(run .eq. 1) expT3(i,j,k) = cmplx(exp(-(px(i)**2+py(j)**2+pz(k)**2)*dt/(2*mass)),0)
+          if(run .eq. 0) expT3(i,j,k) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),&
+                                         sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt))
+          if(run .eq. 1) expT3(i,j,k) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),0)
         end do
       end do
     end do
