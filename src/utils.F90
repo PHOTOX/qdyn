@@ -35,7 +35,7 @@ function braket_2d(bra, ket )
 
   do i=1,ngrid
     do j=1, ngrid
-      braket_2d = braket_2d + dx**2 * conjg(bra(i,j))*ket(i,j)
+      braket_2d = braket_2d + dx * dy * conjg(bra(i,j))*ket(i,j)
     end do
   end do
 
@@ -52,7 +52,7 @@ function braket_3d(bra, ket )
   do i=1,ngrid
     do j=1, ngrid
       do k=1, ngrid
-        braket_3d = braket_3d + dx**3 * conjg(bra(i,j,k))*ket(i,j,k)
+        braket_3d = braket_3d + dx * dy * dz * conjg(bra(i,j,k))*ket(i,j,k)
       end do
     end do
   end do

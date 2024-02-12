@@ -7,10 +7,10 @@ module mod_vars
   real(DP), parameter   :: pi = 3.14159265358979323846
   !-propagation data
   integer               :: run, nstep, ngrid, wf, rank, nstates=1
-  real(DP)              :: dt, xmin, xmax, dx, dtwrite
+  real(DP)              :: xmin, xmax, dx, ymin, ymax, dy, zmin, zmax, dz, dtwrite, dt 
   real(DP)              :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
-  real(DP), dimension(:), allocatable    :: x, y, z, point, px, py, pz
+  real(DP), dimension(:), allocatable    :: x, y, z, px, py, pz 
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
   character(len=10)     :: dynamics=''
   !-wave function
@@ -45,9 +45,10 @@ module mod_vars
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
 
-  namelist /general/dynamics,nstep,dt,dtwrite,ngrid,rank,xmin,xmax,mass_x,mass_y,mass_z,wf,nstates,print_wf
-  namelist /it/pot,analytic,project_rot
-  namelist /rt/pot,analytic,field_coupling,field
+  namelist /general/ dynamics, nstep, dt, dtwrite, ngrid, rank, xmin, xmax, ymin, ymax, zmin, zmax, &
+    mass_x, mass_y, mass_z, wf, nstates, print_wf
+  namelist /it/ pot, analytic, project_rot
+  namelist /rt/ pot, analytic, field_coupling, field
   !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -155,11 +156,26 @@ if ((rank .ge. 3) .and. (mass_z .le. 0.0)) then
 end if
 
 ! params of grid
-if (xmin .gt. xmax) then
+write(*,'(A,F8.4,F8.4)') " xmin, xmax: ", xmin, xmax
+if (xmin .ge. xmax) then
   write(*,*) "ERR: xmin must be smaller than xmax."
   stop 1
-else
-  write(*,'(A,F8.4,F8.4)') " xmin, xmax: ", xmin, xmax
+end if
+
+if (rank .ge. 2) then
+write(*,'(A,F8.4,F8.4)') " ymin, ymax: ", ymin, ymax
+  if (ymin .ge. ymax) then
+    write(*,*) "ERR: ymin must be smaller than ymax."
+    stop 1
+  end if
+end if
+
+if (rank .ge. 3) then
+write(*,'(A,F8.4,F8.4)') " zmin, zmax: ", zmin, zmax
+  if (zmin .ge. zmax) then
+    write(*,*) "ERR: zmin must be smaller than zmax."
+    stop 1
+  end if
 end if
 
 ! initial wf selection

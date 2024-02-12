@@ -7,6 +7,7 @@ module mod_init
   implicit none
   integer,private     :: file_unit, jstate
   character(len=50)   :: file_name
+  real(DP), dimension(:), allocatable    :: point
   
 CONTAINS
 
@@ -21,6 +22,8 @@ write(*,*) "### Initialization ###"
 
 !-- GRID set-up
 dx=(xmax-xmin)/(ngrid-1)
+dy=(ymax-ymin)/(ngrid-1)
+dz=(zmax-zmin)/(ngrid-1)
 
 !-- Allocating arrays
 ! grid
@@ -54,13 +57,13 @@ if(rank .eq. 3) allocate(expT3(ngrid,ngrid,ngrid))
 
 !-- Setting up grid poitns
 x(1)=xmin
-if(rank .gt. 1) y(1)=xmin
-if(rank .gt. 2) z(1)=xmin
+if(rank .gt. 1) y(1)=ymin
+if(rank .gt. 2) z(1)=zmin
 
 do i=2, ngrid
   x(i) = x(i-1) + dx
-  if(rank .gt. 1) y(i) = y(i-1) + dx
-  if(rank .gt. 2) z(i) = z(i-1) + dx
+  if(rank .gt. 1) y(i) = y(i-1) + dy
+  if(rank .gt. 2) z(i) = z(i-1) + dy
 end do
 
 !-- POTENTIAL energy init
@@ -259,9 +262,9 @@ select case(rank)
 
    do j=1, ngrid
      if(j .le. ngrid/2) then
-       py(j) = 2*pi*(j-1)/(ngrid*dx)
+       py(j) = 2*pi*(j-1)/(ngrid*dy)
      else
-       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dx)
+       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dy)
      end if
    end do
 
@@ -286,17 +289,17 @@ select case(rank)
 
    do j=1, ngrid
      if(j .le. ngrid/2) then
-       py(j) = 2*pi*(j-1)/(ngrid*dx)
+       py(j) = 2*pi*(j-1)/(ngrid*dy)
      else
-       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dx)
+       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dy)
      end if
    end do
 
    do k=1, ngrid
      if(k .le. ngrid/2) then
-       pz(k) = 2*pi*(k-1)/(ngrid*dx)
+       pz(k) = 2*pi*(k-1)/(ngrid*dz)
      else
-       pz(k) = 2*pi*(k-1-ngrid)/(ngrid*dx)
+       pz(k) = 2*pi*(k-1-ngrid)/(ngrid*dz)
      end if
    end do
  
@@ -476,13 +479,12 @@ if(wf .eq. 0) then
   write(*,*) "Generating initial gaussian wave packet using section &init_wf."
 
   ! Default values
-  !TODO: this shift should be using ymin, ymax once implemented
   x0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
-  y0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
-  z0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
+  y0 = (ymax-ymin)/2.0d0+ymin+(ymax-ymin)/10                      ! shifted a little bit so that the wave packet is not symmetric
+  z0 = (zmax-zmin)/2.0d0+zmin+(zmax-zmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
   xsigma = (xmax-x0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
-  ysigma = (xmax-y0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
-  zsigma = (xmax-z0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
+  ysigma = (ymax-y0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
+  zsigma = (zmax-z0)/20.0d0                                       ! 5sigma - 96% of gaussian is on the grid 
   px0 = 0.0d0
   py0 = 0.0d0
   pz0 = 0.0d0

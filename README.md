@@ -74,5 +74,5 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 5) Add imaginary absorption potential
 
 ## small TODO list
-1) create ymin, ymax atd.
+1) create ngridx, ngridy, ngridz
 2) adpat analyze programs to changes in dynamics

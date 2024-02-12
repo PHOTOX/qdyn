@@ -7,8 +7,14 @@
   dtwrite=100.0,                 ! Printing every time unit (modulo)
 
   ngrid=32,                   ! Number of grid points (power of 2 for FFT)
-  xmin=-13.0,                  ! Grid xmin, xmax same for all dimensions
+  xmin=-13.0,                  
   xmax=13.0,
+  ymin=-13.0,                  
+  ymax=13.0,
+  zmin=-13.0,                  
+  zmax=13.0,
+  mass_x=1.0,                  ! Reduced mass of system [a.u.]
+  mass_x=1.0,                  ! Reduced mass of system [a.u.]
   mass_x=1.0,                  ! Reduced mass of system [a.u.]
   mass_y=1.0,                  ! Reduced mass of system [a.u.]
   mass_z=1.0,                  ! Reduced mass of system [a.u.]
