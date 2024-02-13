@@ -20,7 +20,7 @@ implicit none
       if (istate.eq.jstate) then
         !TODO: half steps are demanding.. full steps would be better
         ! V(t/2)
-        do i=1, ngrid
+        do i=1, xngrid
         !TODO: expV1 must have index of state too
           wfx(istate,i) = wfx(istate,i)*expV1(i)
         end do
@@ -43,31 +43,31 @@ implicit none
       ! Diagonal elements in the T matrix: full step
       if (istate.eq.jstate) then
         ! FFT -> K
-        call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+        call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
         call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
         call dfftw_destroy_plan(plan_forward)
 
-        ! AFTER FFT, divide by sqrt(ngrid). This was found empirically to work, but checking the package would be desirable.
+        ! AFTER FFT, divide by sqrt(xngrid). This was found empirically to work, but checking the package would be desirable.
         ! Using this, energy and norm are conserved. Applied throughout the whole code.
-        wfp = wfp / dsqrt(real(ngrid, kind=DP))
+        wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
         ! p(t)
-        do i=1, ngrid
+        do i=1, xngrid
           wfp(i) = wfp(i)*expT1(i)
         end do
 
         ! FFT -> x
-        call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+        call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
         call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
         call dfftw_destroy_plan(plan_backward)
 
-        wfx(istate,:) = wfx(istate,:) / dsqrt(real(ngrid, kind=DP))
+        wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
       end if
 
       ! Diagonal elements in the V matrix: half step
       if (istate.eq.jstate) then
         ! V(t/2)
-        do i=1, ngrid
+        do i=1, xngrid
           wfx(istate,i) = wfx(istate,i)*expV1(i)
         end do
 
@@ -91,36 +91,36 @@ implicit none
   integer                       :: i,j
 
   ! V(t/2)
-  do i=1, ngrid
-   do j=1, ngrid
+  do i=1, xngrid
+   do j=1, yngrid
     wf2x(i,j) = wf2x(i,j)*expV2(i,j)
    end do
   end do
 
   ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf2x, wf2p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf2p = wf2p / real(ngrid, kind=DP)
+  wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       wf2p(i,j) = wf2p(i,j)*expT2(i,j)
     end do
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wf2p, wf2x)
   call dfftw_destroy_plan(plan_backward)
 
-  wf2x = wf2x / real(ngrid, kind=DP)
+  wf2x = wf2x / dsqrt(real(xngrid*yngrid, kind=DP))
 
   ! V(t/2)
-  do i=1, ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       wf2x(i,j) = wf2x(i,j)*expV2(i,j)
     end do
   end do
@@ -134,41 +134,41 @@ implicit none
   integer                       :: i,j,k
 
   ! V(t/2)
-  do i=1, ngrid
-   do j=1, ngrid
-     do k=1, ngrid
+  do i=1, xngrid
+   do j=1, yngrid
+     do k=1, zngrid
        wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
      end do
     end do
   end do
 
   ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf3x, wf3p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
+  wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         wf3p(i,j,k) = wf3p(i,j,k)*expT3(i,j,k)
       end do
     end do
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wf3p, wf3x)
   call dfftw_destroy_plan(plan_backward)
 
-  wf3x = wf3x / dsqrt(real(ngrid, kind=DP)**3)
+  wf3x = wf3x / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
   ! V(t/2)
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
       end do
     end do
@@ -186,31 +186,31 @@ implicit none
 
   !TODO: half steps are demanding.. full steps would be better
   ! V(t/2)
-  do i=1, ngrid
+  do i=1, xngrid
     wfx(i) = wfx(i)*expV1(i)
   end do
 
   ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wfx, wfp)
   call dfftw_destroy_plan(plan_forward)
 
-  wfp = wfp / dsqrt(real(ngrid, kind=DP))
+  wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
+  do i=1, xngrid
     wfp(i) = wfp(i)*expT1(i)
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wfp, wfx)
   call dfftw_destroy_plan(plan_backward)
 
-  wfx = wfx / dsqrt(real(ngrid, kind=DP))
+  wfx = wfx / dsqrt(real(xngrid, kind=DP))
 
   ! V(t/2)
-  do i=1, ngrid
+  do i=1, xngrid
     wfx(i) = wfx(i)*expV1(i)
   end do
 
@@ -223,36 +223,36 @@ implicit none
   integer                       :: i,j
 
   ! V(t/2)
-  do i=1, ngrid
-   do j=1, ngrid
+  do i=1, xngrid
+   do j=1, yngrid
     wf2x(i,j) = wf2x(i,j)*expV2(i,j)
    end do
   end do
 
   ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf2x, wf2p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf2p = wf2p / real(ngrid, kind=DP)
+  wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       wf2p(i,j) = wf2p(i,j)*expT2(i,j)
     end do
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_2d(plan_backward, ngrid, ngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wf2p, wf2x)
   call dfftw_destroy_plan(plan_backward)
 
-  wf2x = wf2x / real(ngrid, kind=DP)
+  wf2x = wf2x / dsqrt(real(xngrid*yngrid, kind=DP))
 
   ! V(t/2)
-  do i=1, ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       wf2x(i,j) = wf2x(i,j)*expV2(i,j)
     end do
   end do
@@ -266,41 +266,41 @@ implicit none
   integer                       :: i,j,k
 
   ! V(t/2)
-  do i=1, ngrid
-   do j=1, ngrid
-     do k=1, ngrid
+  do i=1, xngrid
+   do j=1, yngrid
+     do k=1, zngrid
        wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
      end do
     end do
   end do
 
   ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf3x, wf3p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
+  wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         wf3p(i,j,k) = wf3p(i,j,k)*expT3(i,j,k)
       end do
     end do
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_3d(plan_backward, ngrid, ngrid, ngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wf3p, wf3x)
   call dfftw_destroy_plan(plan_backward)
 
-  wf3x = wf3x / dsqrt(real(ngrid, kind=DP)**3)
+  wf3x = wf3x / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
   ! V(t/2)
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         wf3x(i,j,k) = wf3x(i,j,k)*expV3(i,j,k)
       end do
     end do

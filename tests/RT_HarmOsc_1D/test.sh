@@ -34,11 +34,11 @@ time qdyn > qdyn.out
 
 echo
 
-test_result=$(python3 oscillation.py)
+test_result=$(python3 check_mean_x.py)
 
 if [[ $test_result == "True" ]]
 then
-  echo "Test passed." > results.dat
+  echo "Test passed - time evolution of <x> matches the analytic result." > results.dat
 elif [[ $test_result == "False" ]]
 then
   echo "Test failed - mean position does not correspond to the exact result." > results.dat

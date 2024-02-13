@@ -19,7 +19,7 @@ function braket_1d(bra, ket)
 
   braket_1d=0.0d0
 
-  do i=1,ngrid
+  do i=1, xngrid
     braket_1d = braket_1d + dx * conjg(bra(i))*ket(i)
   end do
 
@@ -33,8 +33,8 @@ function braket_2d(bra, ket )
 
   braket_2d=0.0d0
 
-  do i=1,ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       braket_2d = braket_2d + dx * dy * conjg(bra(i,j))*ket(i,j)
     end do
   end do
@@ -49,9 +49,9 @@ function braket_3d(bra, ket )
 
   braket_3d=0.0d0
   
-  do i=1,ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         braket_3d = braket_3d + dx * dy * dz * conjg(bra(i,j,k))*ket(i,j,k)
       end do
     end do
@@ -67,7 +67,7 @@ subroutine project_out_1d(phi_i,wfx)
 
   complex(DP), intent(inout)    :: wfx(:)
   complex(DP), intent(in)       :: phi_i(:)
-  complex(DP)                   :: rot(ngrid)
+  complex(DP)                   :: rot(xngrid)
   real(DP)                      :: c_i
 
   c_i = braket_1d(phi_i, wfx)
@@ -87,7 +87,7 @@ subroutine project_out_2d(phi_i,wf2x)
 
   complex(DP), intent(inout)    :: wf2x(:,:)
   complex(DP), intent(in)       :: phi_i(:,:)
-  complex(DP)                   :: rot(ngrid,ngrid)
+  complex(DP)                   :: rot(xngrid,yngrid)
   real(DP)                      :: c_i
 
   c_i = braket_2d(phi_i, wf2x)
@@ -107,7 +107,7 @@ subroutine project_out_3d(phi_i,wf3x)
 
   complex(DP), intent(inout)    :: wf3x(:,:,:)
   complex(DP), intent(in)       :: phi_i(:,:,:)
-  complex(DP)                   :: rot(ngrid,ngrid,ngrid)
+  complex(DP)                   :: rot(xngrid,yngrid,zngrid)
   real(DP)                      :: c_i
 
   c_i = braket_3d(phi_i, wf3x)
@@ -263,7 +263,7 @@ subroutine print_chk()
 
   open(666,file='wf.chk', action='WRITE', iostat=iost)
   write(666,*) "#QDYN checkpoint file for reloading WF to program"
-  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",ngrid
+  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",xngrid
   if(rank .eq. 1) write(666,*) wfx
   if(rank .eq. 2) write(666,*) wf2x
   if(rank .eq. 3) write(666,*) wf3x
@@ -300,18 +300,18 @@ implicit none
   real(DP)                      :: old_energy
   integer                       :: i
 
-  allocate(wft(ngrid))
+  allocate(wft(xngrid))
 
   ! calculating <T>
   ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, ngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wfx, wfp)
   call dfftw_destroy_plan(plan_forward)
 
-  wfp = wfp / dsqrt(real(ngrid, kind=DP))
+  wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
+  do i=1, xngrid
     wft(i) = wfp(i)*px(i)**2/(2*mass_x)
   end do
 
@@ -342,19 +342,19 @@ implicit none
   complex(DP), allocatable      :: wf2t(:, :)
   integer                       :: i, j
 
-  allocate(wf2t(ngrid, ngrid))
+  allocate(wf2t(xngrid, yngrid))
 
   ! calculating T(psi)
   ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, ngrid, ngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf2x, wf2p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf2p = wf2p / ngrid
+  wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
       wf2t(i,j) = wf2p(i,j)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y))
     end do
   end do
@@ -386,21 +386,21 @@ implicit none
   complex(DP), allocatable      :: wf3t(:, :, :)
   integer                       :: i, j, k
 
-  allocate(wf3t(ngrid, ngrid, ngrid))
+  allocate(wf3t(xngrid, yngrid, zngrid))
 
 
   ! calculating T(psi)
   ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, ngrid, ngrid, ngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wf3x, wf3p)
   call dfftw_destroy_plan(plan_forward)
 
-  wf3p = wf3p / dsqrt(real(ngrid, kind=DP)**3)
+  wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
-    do j=1, ngrid
-      do k=1, ngrid
+  do i=1, xngrid
+    do j=1, yngrid
+      do k=1, zngrid
         wf3t(i,j,k) = wf3p(i,j,k)*(px(i)**2/(2*mass_x) + py(j)**2/(2*mass_y) + pz(k)**2/(2*mass_z))
       end do
     end do
@@ -432,28 +432,28 @@ implicit none
   real(DP)                      :: old_energy
   integer                       :: i
 
-  allocate(wft(ngrid))
+  allocate(wft(xngrid))
 
   ! calculating <T>
   ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, ngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_forward, wfx(1,:), wfp)
   call dfftw_destroy_plan(plan_forward)
 
-  wfp = wfp / dsqrt(real(ngrid, kind=DP))
+  wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
   ! p(t)
-  do i=1, ngrid
+  do i=1, xngrid
     wfp(i) = wfp(i)*px(i)**2/(2*mass_x)
   end do
 
   !TODO: this back FFT is not necessary since I still have the wf. It should be removed.
   ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, ngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
   call dfftw_execute_dft(plan_backward, wfp, wft)
   call dfftw_destroy_plan(plan_backward)
 
-  wft = wft / dsqrt(real(ngrid, kind=DP))
+  wft = wft / dsqrt(real(xngrid, kind=DP))
 
   ! calculating <T>
   energy(3) = braket_1d(wfx(1,:), wft)/braket_1d(wfx(1,:), wfx(1,:))
@@ -477,7 +477,7 @@ function elmag_field(t)
   real(DP)    :: point(1) !This is just a simple trick I use to create a 1D array out of t which is necessary for evalf
 
   point(1) = t
-  elmag_field = evalf(2, point)                                       !Evaluating field at time t
+  elmag_field = evalf(2, point)                   !Evaluating field at time t
   if (EvalErrType > 0) then
     WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
   end if

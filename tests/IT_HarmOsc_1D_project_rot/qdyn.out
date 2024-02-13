@@ -1,8 +1,8 @@
  ====== Qdyn =====
 
  ### Reading input ###
- RUN: 1 - IMAGINARY TIME PROPAGATION
- Grid size:   512
+ RUN: IMAGINARY TIME PROPAGATION
+ Grid size in x:   512
  Number of dimensions: 1
  Number of steps:        1
  xmin, xmax: -37.0000 37.0000
@@ -15,14 +15,8 @@
  Potential: 0.005*(x)**2                                                                                        
  Generating initial gaussian wave packet using section &init_wf.
  x0 =    7.40000
- y0 =    0.00000
- z0 =    0.00000
  xsigma =    1.48000
- ysigma =    0.00000
- zsigma =    0.00000
  px0 =    0.00000
- py0 =    0.00000
- pz0 =    0.00000
  norm =    1.00000
 
 

@@ -76,3 +76,4 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 ## small TODO list
 1) create ngridx, ngridy, ngridz
 2) adpat analyze programs to changes in dynamics
+3) change input in README.md

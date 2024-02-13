@@ -6,7 +6,7 @@
   dt=0.5,                      ! Timestep [a.u.]
   dtwrite=10.0,                ! Printing every time unit (modulo)
 
-  ngrid=512,                   ! Number of grid points (power of 2 for FFT)
+  xngrid=512,                   ! Number of grid points (power of 2 for FFT)
   xmin=-37.0,                  ! Grid xmin, xmax same for all dimensions
   xmax=37.0,
   mass_x=1.0,                    ! Reduced mass of system [a.u.]

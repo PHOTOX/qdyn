@@ -21,49 +21,55 @@ write(*,*) "### Initialization ###"
 ! initializing all states for IT propagation
 
 !-- GRID set-up
-dx=(xmax-xmin)/(ngrid-1)
-dy=(ymax-ymin)/(ngrid-1)
-dz=(zmax-zmin)/(ngrid-1)
+dx=(xmax-xmin)/(xngrid-1)
+dy=(ymax-ymin)/(yngrid-1)
+dz=(zmax-zmin)/(zngrid-1)
 
 !-- Allocating arrays
 ! grid
-if(rank .eq. 1) allocate(x(ngrid),px(ngrid),point(1))
-if(rank .eq. 2) allocate(x(ngrid),y(ngrid),px(ngrid),py(ngrid),point(2))
-if(rank .eq. 3) allocate(x(ngrid),y(ngrid),z(ngrid),px(ngrid),py(ngrid),pz(ngrid),point(3))
+if(rank .eq. 1) allocate(x(xngrid),px(xngrid),point(1))
+if(rank .eq. 2) allocate(x(xngrid),y(yngrid),px(xngrid),py(yngrid),point(2))
+if(rank .eq. 3) allocate(x(xngrid),y(yngrid),z(zngrid),px(xngrid),py(yngrid),pz(zngrid),point(3))
 
 ! wf
-if(rank .eq. 1) allocate(wfx(nstates,ngrid), wfp(ngrid))
-if(rank .eq. 2) allocate(wf2x(nstates,ngrid,ngrid), wf2p(ngrid,ngrid))
-if(rank .eq. 3) allocate(wf3x(nstates,ngrid,ngrid,ngrid), wf3p(ngrid,ngrid,ngrid))
+if(rank .eq. 1) allocate(wfx(nstates,xngrid), wfp(xngrid))
+if(rank .eq. 2) allocate(wf2x(nstates,xngrid,yngrid), wf2p(xngrid,yngrid))
+if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,zngrid))
 
 ! Hamiltonian
 if(run .eq. 0) then
-  if(rank .eq. 1) allocate(expV1(ngrid),v1_matrix(1,1,ngrid))
-  if(rank .eq. 2) allocate(expV2(ngrid,ngrid),v2(ngrid,ngrid))
-  if(rank .eq. 3) allocate(expV3(ngrid,ngrid,ngrid),v3(ngrid,ngrid,ngrid))
+  if(rank .eq. 1) allocate(expV1(xngrid),v1_matrix(1,1,xngrid))
+  if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
+  if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 
   if(field_coupling) then
-    if(rank .eq. 1) allocate(dipole_coupling(nstates,nstates,ngrid))
+    if(rank .eq. 1) allocate(dipole_coupling(nstates,nstates,xngrid))
   end if
 else if (run .eq. 1) then
-  if(rank .eq. 1) allocate(expV1(ngrid),v1(ngrid))
-  if(rank .eq. 2) allocate(expV2(ngrid,ngrid),v2(ngrid,ngrid))
-  if(rank .eq. 3) allocate(expV3(ngrid,ngrid,ngrid),v3(ngrid,ngrid,ngrid))
+  if(rank .eq. 1) allocate(expV1(xngrid),v1(xngrid))
+  if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
+  if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 end if
 
-if(rank .eq. 1) allocate(expT1(ngrid))
-if(rank .eq. 2) allocate(expT2(ngrid,ngrid))
-if(rank .eq. 3) allocate(expT3(ngrid,ngrid,ngrid))
+if(rank .eq. 1) allocate(expT1(xngrid))
+if(rank .eq. 2) allocate(expT2(xngrid,yngrid))
+if(rank .eq. 3) allocate(expT3(xngrid,yngrid,zngrid))
 
 !-- Setting up grid poitns
 x(1)=xmin
 if(rank .gt. 1) y(1)=ymin
 if(rank .gt. 2) z(1)=zmin
 
-do i=2, ngrid
+do i=2, xngrid
   x(i) = x(i-1) + dx
-  if(rank .gt. 1) y(i) = y(i-1) + dy
-  if(rank .gt. 2) z(i) = z(i-1) + dy
+end do
+
+do j=2, yngrid
+  y(j) = y(j-1) + dy
+end do
+
+do k=2, zngrid
+  z(k) = z(k-1) + dz
 end do
 
 !-- POTENTIAL energy init
@@ -77,7 +83,7 @@ if (run.eq.1) then
     select case(rank)
     case(1)
       call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
-      do i=1, ngrid
+      do i=1, xngrid
         point = x(i)
         v1(i) = evalf (1, point)                                       !Evaluating potential for grid
         if (EvalErrType > 0) then
@@ -88,8 +94,8 @@ if (run.eq.1) then
 
     case(2)
       call parsef (1, pot, (/'x','y'/))                                      
-      do i=1, ngrid
-        do j=1, ngrid
+      do i=1, xngrid
+        do j=1, yngrid
           point = (/x(i),y(j)/)
           v2(i,j) = evalf (1, point) 
           if (EvalErrType > 0) then
@@ -101,9 +107,9 @@ if (run.eq.1) then
 
     case(3)
       call parsef (1, pot, (/'x','y','z'/))
-      do i=1, ngrid
-        do j=1, ngrid
-          do k=1, ngrid
+      do i=1, xngrid
+        do j=1, yngrid
+          do k=1, zngrid
             point = (/x(i),y(j),z(k)/)
             v3(i,j,k) = evalf (1, point)
             if (EvalErrType > 0) then
@@ -131,19 +137,19 @@ if (run.eq.1) then
 
 ! IT: creating operator
   if(rank .eq. 1) then
-    do i=1, ngrid
+    do i=1, xngrid
       expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
   elseif(rank .eq. 2) then
-    do i=1, ngrid
-      do j=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
         expV2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
       end do
     end do
   elseif(rank .eq. 3) then
-    do i=1, ngrid
-      do j=1, ngrid
-        do k=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
+        do k=1, zngrid
           expV3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
         end do
       end do
@@ -159,7 +165,7 @@ else if (run.eq.0) then
     select case(rank)
     case(1)
       call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
-      do i=1, ngrid
+      do i=1, xngrid
         point = x(i)
         v1_matrix(1,1,i) = evalf (1, point)                                       !Evaluating potential for grid
         if (EvalErrType > 0) then
@@ -170,8 +176,8 @@ else if (run.eq.0) then
 
     case(2)
       call parsef (1, pot, (/'x','y'/))                                      
-      do i=1, ngrid
-        do j=1, ngrid
+      do i=1, xngrid
+        do j=1, yngrid
           point = (/x(i),y(j)/)
           v2(i,j) = evalf (1, point) 
           if (EvalErrType > 0) then
@@ -183,9 +189,9 @@ else if (run.eq.0) then
 
     case(3)
       call parsef (1, pot, (/'x','y','z'/))
-      do i=1, ngrid
-        do j=1, ngrid
-          do k=1, ngrid
+      do i=1, xngrid
+        do j=1, yngrid
+          do k=1, zngrid
             point = (/x(i),y(j),z(k)/)
             v3(i,j,k) = evalf (1, point)
             if (EvalErrType > 0) then
@@ -213,19 +219,19 @@ else if (run.eq.0) then
 
   ! RT: creating operator
   if(rank .eq. 1) then
-    do i=1, ngrid
+    do i=1, xngrid
       expV1(i) = cmplx(cos(-v1_matrix(1,1,i)*dt/2.0d0),sin(-v1_matrix(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
     end do
   elseif(rank .eq. 2) then
-    do i=1, ngrid
-      do j=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
         expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
       end do
     end do
   elseif(rank .eq. 3) then
-    do i=1, ngrid
-      do j=1, ngrid
-        do k=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
+        do k=1, zngrid
           expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
         end do
       end do
@@ -240,11 +246,11 @@ end if
 
 select case(rank)
   case(1)
-    do i=1, ngrid
-     if(i .le. ngrid/2) then
-       px(i) = 2*pi*(i-1)/(ngrid*dx)
+    do i=1, xngrid
+     if(i .le. xngrid/2) then
+       px(i) = 2*pi*(i-1)/(xngrid*dx)
      else
-       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
+       px(i) = 2*pi*(i-1-xngrid)/(xngrid*dx)
      end if
      if(run .eq. 0) expT1(i) = cmplx(dcos(-px(i)**2/(2*mass_x)*dt),dsin(-px(i)**2/(2*mass_x)*dt))
      if(run .eq. 1) expT1(i) = cmplx(dexp(-px(i)**2/(2*mass_x)*dt),0)
@@ -252,24 +258,24 @@ select case(rank)
   !2D
   case(2)
 
-   do i=1, ngrid
-     if(i .le. ngrid/2) then
-       px(i) = 2*pi*(i-1)/(ngrid*dx)
+   do i=1, xngrid
+     if(i .le. xngrid/2) then
+       px(i) = 2*pi*(i-1)/(xngrid*dx)
      else
-       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
+       px(i) = 2*pi*(i-1-xngrid)/(xngrid*dx)
      end if
    end do
 
-   do j=1, ngrid
-     if(j .le. ngrid/2) then
-       py(j) = 2*pi*(j-1)/(ngrid*dy)
+   do j=1, yngrid
+     if(j .le. yngrid/2) then
+       py(j) = 2*pi*(j-1)/(yngrid*dy)
      else
-       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dy)
+       py(j) = 2*pi*(j-1-yngrid)/(yngrid*dy)
      end if
    end do
 
-    do i=1, ngrid
-      do j=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
         if(run .eq. 0) expT2(i,j) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),&
                                       sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt))
         if(run .eq. 1) expT2(i,j) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),0)
@@ -279,33 +285,33 @@ select case(rank)
   !3D
   case(3)
 
-   do i=1, ngrid
-     if(i .le. ngrid/2) then
-       px(i) = 2*pi*(i-1)/(ngrid*dx)
+   do i=1, xngrid
+     if(i .le. xngrid/2) then
+       px(i) = 2*pi*(i-1)/(xngrid*dx)
      else
-       px(i) = 2*pi*(i-1-ngrid)/(ngrid*dx)
+       px(i) = 2*pi*(i-1-xngrid)/(xngrid*dx)
      end if
    end do
 
-   do j=1, ngrid
-     if(j .le. ngrid/2) then
-       py(j) = 2*pi*(j-1)/(ngrid*dy)
+   do j=1, yngrid
+     if(j .le. yngrid/2) then
+       py(j) = 2*pi*(j-1)/(yngrid*dy)
      else
-       py(j) = 2*pi*(j-1-ngrid)/(ngrid*dy)
+       py(j) = 2*pi*(j-1-yngrid)/(yngrid*dy)
      end if
    end do
 
-   do k=1, ngrid
-     if(k .le. ngrid/2) then
-       pz(k) = 2*pi*(k-1)/(ngrid*dz)
+   do k=1, zngrid
+     if(k .le. zngrid/2) then
+       pz(k) = 2*pi*(k-1)/(zngrid*dz)
      else
-       pz(k) = 2*pi*(k-1-ngrid)/(ngrid*dz)
+       pz(k) = 2*pi*(k-1-zngrid)/(zngrid*dz)
      end if
    end do
  
-    do i=1, ngrid
-      do j=1, ngrid
-        do k=1, ngrid
+    do i=1, xngrid
+      do j=1, yngrid
+        do k=1, zngrid
           if(run .eq. 0) expT3(i,j,k) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),&
                                          sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt))
           if(run .eq. 1) expT3(i,j,k) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),0)
@@ -500,14 +506,14 @@ if(wf .eq. 0) then
   close(100)
 
   write(*,'(A,F10.5)') " x0 = ", x0
-  write(*,'(A,F10.5)') " y0 = ", y0
-  write(*,'(A,F10.5)') " z0 = ", z0
+  if (rank .ge. 2) write(*,'(A,F10.5)') " y0 = ", y0
+  if (rank .ge. 3) write(*,'(A,F10.5)') " z0 = ", z0
   write(*,'(A,F10.5)') " xsigma = ", xsigma
-  write(*,'(A,F10.5)') " ysigma = ", ysigma
-  write(*,'(A,F10.5)') " zsigma = ", zsigma
+  if (rank .ge. 2) write(*,'(A,F10.5)') " ysigma = ", ysigma
+  if (rank .ge. 3) write(*,'(A,F10.5)') " zsigma = ", zsigma
   write(*,'(A,F10.5)') " px0 = ", px0
-  write(*,'(A,F10.5)') " py0 = ", py0
-  write(*,'(A,F10.5)') " pz0 = ", pz0
+  if (rank .ge. 2) write(*,'(A,F10.5)') " py0 = ", py0
+  if (rank .ge. 3) write(*,'(A,F10.5)') " pz0 = ", pz0
   
   ! normalization prefactor of the gaussian, same value for the whole grid
   select case (rank)
@@ -519,7 +525,7 @@ if(wf .eq. 0) then
     prefactor = (xsigma*ysigma*zsigma)**(-0.5)*pi**(-0.75)
   end select
 
-  do i=1, ngrid
+  do i=1, xngrid
     select case (rank)
       case (1)
         ! Gaussian part of the wave packet depending only on positions
@@ -536,7 +542,7 @@ if(wf .eq. 0) then
         end if
             
       case (2)
-        do j=1, ngrid
+        do j=1, yngrid
           ! Gaussian part of the wave packet depending only on positions
           gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2) -(y(j)-y0)**2/(2*ysigma**2))
           ! momentum calculation p0*(x-x0)
@@ -554,8 +560,8 @@ if(wf .eq. 0) then
         end do
             
       case (3)
-        do j=1, ngrid
-          do k=1, ngrid
+        do j=1, yngrid
+          do k=1, zngrid
             ! Gaussian part of the wave packet depending only on positions
             gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2)-(y(j)-y0)**2/(2*ysigma**2)-(z(k)-z0)**2/(2*zsigma**2))
             ! momentum calculation p0*(x-x0)

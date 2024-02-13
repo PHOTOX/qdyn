@@ -6,9 +6,11 @@
   dt=1.00,                      ! Timestep [a.u.]
   dtwrite=100.0,                 ! Printing every time unit (modulo)
 
-  ngrid=32,                   ! Number of grid points (power of 2 for FFT)
-  xmin=-13.0,                  
-  xmax=13.0,
+  xngrid=16,                   ! Number of grid points (power of 2 for FFT)
+  yngrid=32,                   ! Number of grid points (power of 2 for FFT)
+  zngrid=32,                   ! Number of grid points (power of 2 for FFT)
+  xmin=-14.0,                  
+  xmax=14.0,
   ymin=-13.0,                  
   ymax=13.0,
   zmin=-13.0,                  

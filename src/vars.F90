@@ -6,7 +6,7 @@ module mod_vars
   INTEGER, PARAMETER    :: DP = KIND(1.0d0)
   real(DP), parameter   :: pi = 3.14159265358979323846
   !-propagation data
-  integer               :: run, nstep, ngrid, wf, rank, nstates=1
+  integer               :: run, nstep, xngrid, yngrid, zngrid, wf, rank, nstates=1
   real(DP)              :: xmin, xmax, dx, ymin, ymax, dy, zmin, zmax, dz, dtwrite, dt 
   real(DP)              :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
@@ -45,8 +45,8 @@ module mod_vars
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
 
-  namelist /general/ dynamics, nstep, dt, dtwrite, ngrid, rank, xmin, xmax, ymin, ymax, zmin, zmax, &
-    mass_x, mass_y, mass_z, wf, nstates, print_wf
+  namelist /general/ dynamics, nstep, dt, dtwrite, xngrid, yngrid, zngrid, rank, &
+    xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, wf, nstates, print_wf
   namelist /it/ pot, analytic, project_rot
   namelist /rt/ pot, analytic, field_coupling, field
   !TODO: rt analytic will not be use probably
@@ -105,10 +105,10 @@ subroutine check()
 ! run case (imag/real)
 select case(dynamics)
   case('rt')
-    write(*,*) "RUN: 0 - REAL TIME PROPAGATION"
+    write(*,*) "RUN: REAL TIME PROPAGATION"
     run = 0
   case('it')
-    write(*,*) "RUN: 1 - IMAGINARY TIME PROPAGATION"
+    write(*,*) "RUN: IMAGINARY TIME PROPAGATION"
     run = 1
   case default
     write(*,*) "ERR: Unrecongnized 'dynamics' option. Choose either 'rt' or 'it'. Exiting"
@@ -116,12 +116,27 @@ select case(dynamics)
 end select
 
 ! ngrid is power of 2
-if ((ngrid .ne. 0) .and. (IAND(ngrid, ngrid-1) .eq. 0))  then
-  write(*,'(A,I5)') " Grid size: ",ngrid
-else
+write(*,'(A,I5)') " Grid size in x: ",xngrid
+if ((xngrid .le. 0) .or. (IAND(xngrid, xngrid-1) .ne. 0))  then
   write(*,*) "ERR: Grid size must be power of two."
   stop 1
 end if 
+
+if (rank .ge. 2) then
+  write(*,'(A,I5)') " Grid size in y: ",yngrid
+  if ((yngrid .le. 0) .or. (IAND(yngrid, yngrid-1) .ne. 0))  then
+    write(*,*) "ERR: Grid size must be power of two."
+    stop 1
+  end if 
+end if
+
+if (rank .ge. 3) then
+  write(*,'(A,I5)') " Grid size in z: ",zngrid
+  if ((zngrid .le. 0) .or. (IAND(zngrid, zngrid-1) .ne. 0))  then
+    write(*,*) "ERR: Grid size must be power of two."
+    stop 1
+  end if 
+end if
 
 ! dimensionality
 if ((rank .lt. 1) .or. (rank .gt. 3)) then
