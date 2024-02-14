@@ -74,6 +74,7 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 5) Add imaginary absorption potential
 
 ## small TODO list
-1) create ngridx, ngridy, ngridz
-2) adpat analyze programs to changes in dynamics
-3) change input in README.md
+1) adpat analyze programs to changes in dynamics
+2) change input in README.md
+3) hydrogen atom test is not working well
+4) add printingof number of steps and dt in the input
