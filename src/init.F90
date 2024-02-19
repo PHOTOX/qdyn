@@ -38,13 +38,16 @@ if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,
 
 ! Hamiltonian
 if(run .eq. 0) then
-  if(rank .eq. 1) allocate(expV1(xngrid),v1_matrix(1,1,xngrid))
+  !todo: this is currently the only modified part (rank=1)
+  !todo: I will need to have also expV1_matrix
+  if(rank .eq. 1) allocate(expV1(xngrid),H1(1,1,xngrid))
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 
   if(field_coupling) then
     if(rank .eq. 1) allocate(dipole_coupling(nstates,nstates,xngrid))
   end if
+
 else if (run .eq. 1) then
   if(rank .eq. 1) allocate(expV1(xngrid),v1(xngrid))
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
@@ -73,7 +76,7 @@ do k=2, zngrid
 end do
 
 !-- POTENTIAL energy init
-
+!- IT operators
 if (run.eq.1) then
   ! creating potential
   if (analytic) then
@@ -135,7 +138,7 @@ if (run.eq.1) then
     close(667)
   end if 
 
-! IT: creating operator
+! IT: creating exponentail operator
   if(rank .eq. 1) then
     do i=1, xngrid
       expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
@@ -156,6 +159,7 @@ if (run.eq.1) then
     end do 
   end if
 
+!- RT operators
 else if (run.eq.0) then
   ! creating potential
   if (analytic) then
@@ -167,7 +171,7 @@ else if (run.eq.0) then
       call parsef (1, pot, (/'x'/))                                       !Bytcompiling function string  
       do i=1, xngrid
         point = x(i)
-        v1_matrix(1,1,i) = evalf (1, point)                                       !Evaluating potential for grid
+        H1(1,1,i) = evalf (1, point)                                       !Evaluating potential for grid
         if (EvalErrType > 0) then
           WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
           stop 1
@@ -204,11 +208,12 @@ else if (run.eq.0) then
     end select
   ! reading potential from file pot.dat
   else 
+    !todo: here I need to add loop over states!!
     write(*,*) "Potential read from file: pot.dat"
     open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
     select case(rank)
     case(1)
-      read(667,*)v1_matrix(1,1,:)
+      read(667,*)H1(1,1,:)
     case(2)
       read(667,*)v2
     case(3)
@@ -219,8 +224,10 @@ else if (run.eq.0) then
 
   ! RT: creating operator
   if(rank .eq. 1) then
+    !todo: add loop over states
+    !todo: save to expV1_matrix
     do i=1, xngrid
-      expV1(i) = cmplx(cos(-v1_matrix(1,1,i)*dt/2.0d0),sin(-v1_matrix(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      expV1(i) = cmplx(cos(-H1(1,1,i)*dt/2.0d0),sin(-H1(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
     end do
   elseif(rank .eq. 2) then
     do i=1, xngrid

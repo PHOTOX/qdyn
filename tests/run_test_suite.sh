@@ -1,7 +1,12 @@
 #!/bin/bash
 
 # tests to be run
-tests="IT_HarmOsc_1D IT_HarmOsc_1D_project_rot IT_Morse_1D IT_HarmOsc_2D_sym IT_HarmOsc_2D_asym IT_HarmOsc_3D_sym IT_HarmOsc_3D_asym IT_HarmOsc_3D_spherical RT_HarmOsc_1D"
+if [[ $1 == 0 ]] # this option serves for quick testing
+then
+  tests="IT_HarmOsc_1D IT_HarmOsc_1D_project_rot IT_Morse_1D IT_HarmOsc_2D_asym IT_HarmOsc_3D_asym RT_HarmOsc_1D"
+else
+  tests="IT_HarmOsc_1D IT_HarmOsc_1D_project_rot IT_Morse_1D IT_HarmOsc_2D_sym IT_HarmOsc_2D_asym IT_HarmOsc_3D_sym IT_HarmOsc_3D_asym IT_HarmOsc_3D_spherical RT_HarmOsc_1D"
+fi
 
 echo -e "\nRunning test suite"
 

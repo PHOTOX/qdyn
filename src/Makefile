@@ -23,8 +23,13 @@ myprogram: $(OBJS)
 clean:
 	/bin/rm -f *.o *.mod $(OUT)
 
+# run the full test suite
 test:
 	cd ../tests; /bin/bash run_test_suite.sh
+
+# run the quick version of the test suite
+qtest:
+	cd ../tests; /bin/bash run_test_suite.sh 0
 
 
 .PHONY: clean 

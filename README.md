@@ -70,7 +70,7 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
  - read dipoles
 2) Transition dipole couplings
 3) Diabatic couplings
-4) Add autocorrelation function
+4) Add autocorrelation function to the analyze scripts
 5) Add imaginary absorption potential
 
 ## small TODO list

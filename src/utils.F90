@@ -205,9 +205,9 @@ subroutine printwf_1d(state)
   do i=1, size(x)
     select case(run)
     case(0)
-      v = v1_matrix(state,state,i)
+      v = H1(state,state,i)
     case(1)
-      v = v1(i)
+      v = v1(i)  ! V is same for all states
     end select
 
     write(file_unit,*) x(i), real(wfx(state,i)), aimag(wfx(state,i)), real(conjg(wfx(state,i))*wfx(state,i)), v
@@ -459,7 +459,7 @@ implicit none
   energy(3) = braket_1d(wfx(1,:), wft)/braket_1d(wfx(1,:), wfx(1,:))
 
   ! calculating <V>
-  energy(2) = braket_1d(wfx(1,:), v1_matrix(1,1,:)*wfx(1,:))/braket_1d(wfx(1,:), wfx(1,:))
+  energy(2) = braket_1d(wfx(1,:), H1(1,1,:)*wfx(1,:))/braket_1d(wfx(1,:), wfx(1,:))
 
   ! saving old energy
   old_energy = energy(1)

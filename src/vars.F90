@@ -29,21 +29,21 @@ module mod_vars
   complex(DP), dimension(:), allocatable :: expT1
   complex(DP), dimension(:,:), allocatable :: expT2
   complex(DP), dimension(:,:,:), allocatable :: expT3
-  !-imaginary time V operators
+  !-imaginary time V operators (V is used for IT, H is used for RT)
   real(DP), dimension(:), allocatable     :: v1
   real(DP), dimension(:,:), allocatable   :: v2
   real(DP), dimension(:,:,:), allocatable :: v3
   complex(DP), dimension(:), allocatable :: expV1 !exp(V)
   complex(DP), dimension(:,:), allocatable :: expV2
   complex(DP), dimension(:,:,:), allocatable :: expV3
-  !-real time V operators
+  !-real time H operators for diabatic H_el hamiltonian (V is used for IT, H is used for RT)
   ! TODO: these are prepared variables for RT propagation, not allocated yet in the init()
-  real(DP), dimension(:,:,:), allocatable     :: v1_matrix, dipole_coupling
-! real(DP), dimension(:,:,:), allocatable   :: v2_vector
-! real(DP), dimension(:,:,:,:), allocatable :: v3_vector
-! complex(DP), dimension(:,:,:), allocatable      :: expV1_matrix
-! complex(DP), dimension(:,:,:,:), allocatable    :: expV2_matrix
-! complex(DP), dimension(:,:,:,:,:), allocatable  :: expV3_matrix
+  real(DP), dimension(:,:,:), allocatable     :: H1, dipole_coupling
+! real(DP), dimension(:,:,:), allocatable   :: H2
+! real(DP), dimension(:,:,:,:), allocatable :: H3
+! complex(DP), dimension(:,:,:), allocatable      :: expH1_matrix
+! complex(DP), dimension(:,:,:,:), allocatable    :: expH2_matrix
+! complex(DP), dimension(:,:,:,:,:), allocatable  :: expH3_matrix
 
   namelist /general/ dynamics, nstep, dt, dtwrite, xngrid, yngrid, zngrid, rank, &
     xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, wf, nstates, print_wf
