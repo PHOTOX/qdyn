@@ -40,7 +40,7 @@ if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,
 if(run .eq. 0) then
   !todo: this is currently the only modified part (rank=1)
   !todo: I will need to have also expV1_matrix
-  if(rank .eq. 1) allocate(expV1(xngrid),H1(1,1,xngrid))
+  if(rank .eq. 1) allocate(expH1(1,1,xngrid),H1(1,1,xngrid))
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 
@@ -208,18 +208,23 @@ else if (run.eq.0) then
     end select
   ! reading potential from file pot.dat
   else 
-    !todo: here I need to add loop over states!!
+    write(*,*) "Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)"
+    select case(rank)
+    case(1)
+      call read_H1()
+    end select
+    !TODO: this is the old version for 2D and 3D that work only with 1 state now
+    if (rank.gt.1) then
     write(*,*) "Potential read from file: pot.dat"
     open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
     select case(rank)
-    case(1)
-      read(667,*)H1(1,1,:)
     case(2)
       read(667,*)v2
     case(3)
       read(667,*)v3
     end select
     close(667)
+    end if
   end if 
 
   ! RT: creating operator
@@ -227,7 +232,7 @@ else if (run.eq.0) then
     !todo: add loop over states
     !todo: save to expV1_matrix
     do i=1, xngrid
-      expV1(i) = cmplx(cos(-H1(1,1,i)*dt/2.0d0),sin(-H1(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+      expH1(1,1,i) = cmplx(cos(-H1(1,1,i)*dt/2.0d0),sin(-H1(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
     end do
   elseif(rank .eq. 2) then
     do i=1, xngrid
@@ -338,7 +343,7 @@ if (field_coupling) then
   end if
 
   ! Read dipole couplings
-  write(*,*) "Reading dipole couplings (file names expected to be dipole_coup.$i.$j.dat)"
+  write(*,*) "Reading dipole couplings (file names expected to be dipole_coup.i.j.dat)"
   call read_dipole_coupling()
 end if
 
@@ -629,15 +634,42 @@ subroutine read_dipole_coupling()
         open(file_unit,file=file_name, status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
         read(file_unit,*) dipole_coupling(istate,jstate,:)
         close(file_unit)
-
         write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|mu|psi_", jstate,"> = read from file"
-        print *, dipole_coupling(istate,jstate,:)
-        !TODO: save data to file
       else
         write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|mu|psi_", jstate,"> = 0"
-        !TODO: equal it zero
         dipole_coupling(istate,jstate,:) = 0.0d0
-        print *, dipole_coupling(istate,jstate,:)
+      end if
+    end do
+  end do
+
+end subroutine
+
+subroutine read_H1()
+
+  integer     :: istate, jstate
+  logical     :: file_exists
+
+  do istate=1,nstates
+    do jstate=1,nstates
+
+      write(file_name,'(I1,A,I1)') istate,".",jstate
+      file_name='H.'//trim(adjustl(file_name))//'.dat'
+      inquire(file=file_name, exist=file_exists)
+
+      if (file_exists) then
+        file_unit = 400
+        open(file_unit,file=file_name, status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+        read(file_unit,*) H1(istate,jstate,:)
+        close(file_unit)
+
+        write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|H_el|psi_", jstate,"> = read from file"
+      else
+        if (jstate.eq.istate) then
+          write(*,'(a,i1,a,i1,a)') "ERROR: H.",istate,".", jstate,".dat not found!"
+          stop 1
+        end if
+        write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|H_el|psi_", jstate,"> = 0"
+        dipole_coupling(istate,jstate,:) = 0.0d0
       end if
     end do
   end do

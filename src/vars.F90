@@ -41,7 +41,7 @@ module mod_vars
   real(DP), dimension(:,:,:), allocatable     :: H1, dipole_coupling
 ! real(DP), dimension(:,:,:), allocatable   :: H2
 ! real(DP), dimension(:,:,:,:), allocatable :: H3
-! complex(DP), dimension(:,:,:), allocatable      :: expH1_matrix
+  complex(DP), dimension(:,:,:), allocatable      :: expH1
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expH2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expH3_matrix
 
@@ -211,6 +211,10 @@ end select
 
 ! potential
 if (analytic) then
+  if ((run .eq. 0).and.(nstates.gt.1)) then
+    write(*,*) "Analytic potention cannot be used for RT dynamics with nstates>1"
+    stop 1
+  end if
   write(*,*) "Potential: analytic"
   if (pot == "") then
     write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "

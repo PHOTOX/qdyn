@@ -9,80 +9,54 @@ CONTAINS
 
 !--REAL TIME PROPAGATION
 subroutine propag_rt_1d()
-
 implicit none
-  integer                       :: i, istate, jstate
-  !TODO: Can I modify the previous wavefunciton? I probably cannot do that for the offdiagonal elements
+  integer                                  :: i, istate, jstate
+  complex(DP), dimension(nstates,xngrid)   :: wfx_tmp ! temporary wf for propagation
 
-  do istate=1,nstates
-    do jstate=1,nstates
-      ! Diagonal elements in the V matrix: half step
-      if (istate.eq.jstate) then
-        !TODO: half steps are demanding.. full steps would be better
-        ! V(t/2)
-        do i=1, xngrid
-        !TODO: expV1 must have index of state too
-          wfx(istate,i) = wfx(istate,i)*expV1(i)
-        end do
+  ! Propagating with H matrix: half step
+  call propag_H_rt_1d()
 
-        !>jj
-        ! Field propagation here
-        if (field_coupling) then
-          ! TODO: I need to add the dipole moment
-          wfx(istate,:) = wfx(istate,:)*cmplx(cos(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0),&
-            sin(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0))
-        end if
-        !<jj
-      end if
+  ! Propagating istate with T matrix: full step
+  call propag_T_1d()
 
-      !if (istate.not.jstate) then
-        !OFFdiagonal elements here
-        !wfx(istate,:) = wfx(istate,:) + wfx(jstate,:)*coupling
-      !end if
+  ! Propagating with H matrix: half step
+  call propag_H_rt_1d()
 
-      ! Diagonal elements in the T matrix: full step
-      if (istate.eq.jstate) then
-        ! FFT -> K
-        call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-        call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
-        call dfftw_destroy_plan(plan_forward)
+end subroutine propag_rt_1d
 
-        ! AFTER FFT, divide by sqrt(xngrid). This was found empirically to work, but checking the package would be desirable.
-        ! Using this, energy and norm are conserved. Applied throughout the whole code.
-        wfp = wfp / dsqrt(real(xngrid, kind=DP))
+subroutine propag_H_rt_1d()
+! This function propagates wave function with the H_el hamiltonian
+implicit none
+  integer                                  :: i, istate, jstate
+  complex(DP), dimension(nstates,xngrid)   :: wfx_tmp ! temporary wf for propagation
+  complex(DP), dimension(xngrid)           :: expField ! field operator 
 
-        ! p(t)
-        do i=1, xngrid
-          wfp(i) = wfp(i)*expT1(i)
-        end do
+  wfx_tmp=0.0d0
 
-        ! FFT -> x
-        call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-        call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
-        call dfftw_destroy_plan(plan_backward)
+  do istate=1,nstates ! states to be propagated
+    do jstate=1,nstates ! this loop goes through all the states contributing to propagation of istate
+      ! Field coupling 
+      !TODO: this should be rather defined coupling above and then added
+      !TODO: check this is mathematically right thing to do
+      if (field_coupling) then
+        expField = cmplx(cos(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0),&
+          sin(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0))
+      else
+        expField = 1.0d0 ! 1 equals no field operation is applied
+      end if 
+      !<jj
 
-        wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
-      end if
+      do i=1, xngrid
+        wfx_tmp(istate,i) = wfx_tmp(istate,i)+wfx(istate,i)*expH1(istate,jstate,i)*expField(i)
+      end do
 
-      ! Diagonal elements in the V matrix: half step
-      if (istate.eq.jstate) then
-        ! V(t/2)
-        do i=1, xngrid
-          wfx(istate,i) = wfx(istate,i)*expV1(i)
-        end do
-
-        !>jj
-        ! Field propagation here
-        if (field_coupling) then
-          wfx(istate,:) = wfx(istate,:)*cmplx(cos(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0),&
-            sin(dipole_coupling(istate,jstate,:)*elmag_field(time)*dt/2.0d0))
-        end if
-        !<jj
-      end if
     end do
   end do
 
-end subroutine propag_rt_1d
+  ! Saving propagated wave function
+  wfx = wfx_tmp
+
+end subroutine propag_H_rt_1d
 
 subroutine propag_rt_2d(wf2x)
 
@@ -308,5 +282,33 @@ implicit none
 
 end subroutine propag_it_3d
 
+!--GENERAL TIME PROPAGATION FUNCTIONS
+subroutine propag_T_1d()
+! This function propagates the wave function with kinetic operator T
+implicit none
+  integer    :: i, istate
+
+  do istate=1,nstates ! states to be propagated
+    ! FFT -> K
+    call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
+    call dfftw_destroy_plan(plan_forward)
+
+    wfp = wfp / dsqrt(real(xngrid, kind=DP))
+
+    ! p(t)
+    do i=1, xngrid
+      wfp(i) = wfp(i)*expT1(i)
+    end do
+
+    ! FFT -> x
+    call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
+    call dfftw_destroy_plan(plan_backward)
+
+    wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
+  end do
+
+end subroutine propag_T_1d
 
 end module 
