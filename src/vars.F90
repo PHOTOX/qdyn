@@ -11,6 +11,7 @@ module mod_vars
   real(DP)              :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
   real(DP), dimension(:), allocatable    :: x, y, z, px, py, pz 
+  real(DP), dimension(:), allocatable    :: diab_pop
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
   character(len=10)     :: dynamics=''
   !-wave function
@@ -114,6 +115,11 @@ select case(dynamics)
     write(*,*) "ERR: Unrecongnized 'dynamics' option. Choose either 'rt' or 'it'. Exiting"
     stop 1
 end select
+
+! writing time step and number of steps
+write(*,'(A,F9.5,A)') " Time step: ", dt, " a.u."
+write(*,'(A,I8)') " Number of steps: ", nstep 
+write(*,'(A,F10.2,A)') " Total time: ", dt*nstep, " a.u."
 
 ! ngrid is power of 2
 write(*,'(A,I5)') " Grid size in x: ",xngrid
@@ -228,13 +234,13 @@ end if
 if (nstates < 1) then
   write(*,*) "ERR: number of states must be 1 or more."
   stop 1
+!else
+!  if (run .eq. 0 .and. nstates > 1) then
+!    write(*,*) "ERR: nstates > 1 available only for imag propagation."
+!    stop 1
+!  end if
 else
-  if (run .eq. 0 .and. nstates > 1) then
-    write(*,*) "ERR: nstates > 1 available only for imag propagation."
-    stop 1
-  else
     write(*,'(A,I2)') " nstates: ", nstates
-  end if
 end if
 
 !projecting out rotated wf

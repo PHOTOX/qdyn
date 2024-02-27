@@ -12,6 +12,8 @@ module mod_init
 CONTAINS
 
 subroutine init()
+  implicit none
+  integer     :: istate, jstate
 
 write(*,*)
 write(*,*) "### Initialization ###"
@@ -38,15 +40,16 @@ if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,
 
 ! Hamiltonian
 if(run .eq. 0) then
-  !todo: this is currently the only modified part (rank=1)
-  !todo: I will need to have also expV1_matrix
-  if(rank .eq. 1) allocate(expH1(1,1,xngrid),H1(1,1,xngrid))
+  if(rank .eq. 1) allocate(expH1(nstates,nstates,xngrid),H1(nstates,nstates,xngrid))
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 
   if(field_coupling) then
     if(rank .eq. 1) allocate(dipole_coupling(nstates,nstates,xngrid))
   end if
+
+  ! allocating populations
+  if (nstates.gt.1) allocate(diab_pop(nstates))
 
 else if (run .eq. 1) then
   if(rank .eq. 1) allocate(expV1(xngrid),v1(xngrid))
@@ -161,7 +164,7 @@ if (run.eq.1) then
 
 !- RT operators
 else if (run.eq.0) then
-  ! creating potential
+  ! creating H matrix
   if (analytic) then
     write(*,*)"Potential: ",pot
     call initf (1)                                                     !Initialization of parser
@@ -206,7 +209,7 @@ else if (run.eq.0) then
         end do
       end do 
     end select
-  ! reading potential from file pot.dat
+  ! reading H matrix from file
   else 
     write(*,*) "Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)"
     select case(rank)
@@ -228,34 +231,81 @@ else if (run.eq.0) then
   end if 
 
   ! RT: creating operator
-  if(rank .eq. 1) then
-    !todo: add loop over states
-    !todo: save to expV1_matrix
-    do i=1, xngrid
-      expH1(1,1,i) = cmplx(cos(-H1(1,1,i)*dt/2.0d0),sin(-H1(1,1,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-    end do
-  elseif(rank .eq. 2) then
-    do i=1, xngrid
-      do j=1, yngrid
-        expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-      end do
-    end do
-  elseif(rank .eq. 3) then
-    do i=1, xngrid
-      do j=1, yngrid
-        do k=1, zngrid
-          expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+  ! if there is not field coupling (= no time-dependent part, we will built the propagators in advance)
+  if (field_coupling) then
+    write(*,*) "Time-dependent problem, exp(H_el) will be built every time step."
+  else
+    write(*,*) "Time-independent problem, exp(H_el) built."
+    ! for 1 state expH is directly diagonal
+    if (nstates.eq.1) then
+      if(rank .eq. 1) then
+        do istate=1, nstates
+          do jstate=1, nstates
+            do i=1, xngrid
+              expH1(istate,jstate,i) = cmplx(cos(-H1(istate,jstate,i)*dt/2.0d0),sin(-H1(istate,jstate,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+            end do
+          end do
         end do
-      end do
-    end do 
+      elseif(rank .eq. 2) then
+        do i=1, xngrid
+          do j=1, yngrid
+            expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+          end do
+        end do
+      elseif(rank .eq. 3) then
+        do i=1, xngrid
+          do j=1, yngrid
+            do k=1, zngrid
+              expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+            end do
+          end do
+        end do 
+      end if
+      ! diagonalization for two states
+    elseif (nstates.eq.2) then
+        select case(rank)
+        case(1)
+          !TODO: exact diagonalization necessary
+          write(*,*) "WARNING: expH = 1-i*H*dt"
+          do istate=1, nstates
+            do jstate=1, nstates
+              do i=1, xngrid
+                if (istate.eq.jstate) then
+                  expH1(istate,jstate,i) = 1-cmplx(0,H1(istate,jstate,i)*dt/2.0d0)
+                else
+                  expH1(istate,jstate,i) = cmplx(0,H1(istate,jstate,i)*dt/2.0d0)
+                end if
+              end do
+            end do
+          end do
+        case(2)
+          write(*,*) "Diagonalization for 2 states and dim 2 not available."
+          stop 1
+        case(3)
+          write(*,*) "Diagonalization for 2 states and dim 2 not available."
+          stop 1
+        end select
+    else
+        write(*,*) "Diagonalization for 3 or more states currently not available."
+        stop 1
+    end if
   end if
 end if
 
-! RT pot energy
+!todo: REMOVE
+if (run.eq.0) then
+write(*,*) "H11", H1(1,1,:)
+write(*,*) "H12", H1(1,2,:)
+write(*,*) "H21", H1(2,1,:)
+write(*,*) "H22", H1(2,2,:)
 
+write(*,*) "expH11", expH1(1,1,:)
+write(*,*) "expH12", expH1(1,2,:)
+write(*,*) "expH21", expH1(2,1,:)
+write(*,*) "expH22", expH1(2,2,:)
+end if
 
 !-- KINETIC energy init        exp[-iT/h_bar tau]
-
 select case(rank)
   case(1)
     do i=1, xngrid
@@ -475,7 +525,24 @@ if (field_coupling) then
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
+  write(*,'(A,A)') "Field outputed to file: ", file_name
   call print_field()
+
+end if
+
+!--Open file with diabatic populaitons
+if ((run.eq.0).and.(nstates.gt.1)) then
+  file_unit = 103
+  file_name = 'pop_diab.dat'
+  open(file_unit,file=file_name, action='WRITE', iostat=iost)
+  write(file_unit,*) "#  time     diabatic populations (1, 2, 3, ...)"
+  close(file_unit)
+  open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+  !TODO: here open adiab. pop file
+
+  write(*,'(A,A)') "Diabatic populations outputed to file: ", file_name
+  call print_pop()
 
 end if
 
@@ -669,7 +736,7 @@ subroutine read_H1()
           stop 1
         end if
         write(*,'(a,i1,a,i1,a)') " * <psi_",istate,"|H_el|psi_", jstate,"> = 0"
-        dipole_coupling(istate,jstate,:) = 0.0d0
+        H1(istate,jstate,:) = 0.0d0
       end if
     end do
   end do

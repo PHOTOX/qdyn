@@ -125,10 +125,16 @@ end subroutine
 
 !=== NORMALIZATION ===!
 subroutine update_norm() 
+  implicit none
+  integer   :: istate
 
+  norm = 0.0d0
   select case(rank)
     case(1)
-      norm = braket_1d(wfx(1,:), wfx(1,:))
+      do istate=1, nstates
+        norm = norm + braket_1d(wfx(istate,:), wfx(istate,:))
+        write(*,*) "norm update", istate, braket_1d(wfx(istate,:), wfx(istate,:))
+      end do
     case(2)
       norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
     case(3)
@@ -190,6 +196,70 @@ subroutine normalize_3d(wf)
   wf = wf / dsqrt(norm)
 
 end subroutine normalize_3d
+
+!=== POPULATIONS ===!
+subroutine update_pop() 
+  implicit none
+  integer   :: istate
+
+  diab_pop = 0.0d0
+  write(*,*) "diab_pop 1", diab_pop
+
+  select case(rank)
+    case(1)
+      do istate=1, nstates
+        diab_pop(istate) = braket_1d(wfx(istate,:), wfx(istate,:))
+      end do
+    case(2)
+      do istate=1, nstates
+        diab_pop(istate) = braket_2d(wf2x(istate,:,:), wf2x(istate,:,:))
+      end do
+    case(3)
+      do istate=1, nstates
+        diab_pop(istate) = braket_3d(wf3x(istate,:,:,:), wf3x(istate,:,:,:))
+      end do
+  end select
+
+  write(*,*) "diab_pop 1", diab_pop
+
+end subroutine update_pop
+
+!=== Diagonalize H ===!
+!todo: this will probably go to propag.F90 module
+subroutine build_expH1()
+! diagonalization of H and building of expH1
+! this function is called only when use_field = .true., otherwise expH1 is built during initialization
+  integer        :: istate, jstate
+  complex(DP)    :: H_el(nstates, nstates, xngrid)
+  complex(DP)    :: V_int(xngrid)
+
+  ! creating H_el=H1-mu*E(t)
+  do istate=1, nstates
+    do jstate=1, nstates
+      V_int(:) = - dipole_coupling(istate,jstate,:)*elmag_field(time) 
+      H_el(istate, jstate, :) = H1(istate,jstate,:) + V_int(:)
+    end do
+  end do
+
+  ! diagonalization of H_el
+  
+  ! calculating transformation vectors
+
+  ! building expH1
+!  if (nstates.eq.1) then
+!    expH1(
+!
+!  else if (nstates.eq.2) then
+!
+!  else
+!    write(*,*) "Diagonalization for 3 or more states not available."
+!    stop 1
+!  end if
+end subroutine build_expH1
+
+! diagonalize H
+subroutine diag_H_1d()
+end subroutine diag_H_1d
 
 !=== PRINTING ===!
 subroutine printwf_1d(state)
@@ -288,6 +358,14 @@ end subroutine
 subroutine print_field()
 
     write(102,'(F10.3,F14.9)') time, elmag_field(time)
+    
+end subroutine
+
+subroutine print_pop()
+
+    call update_pop()
+
+    write(103,'(F10.3,20(F9.5))') time, diab_pop
     
 end subroutine
 

@@ -66,15 +66,16 @@ A series of python scripts is prepared for plotting the data.
 
 ## TODO
 Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension to multiple states is currently under progress.
-1) Dipole coupling with field
- - read dipoles
-2) Transition dipole couplings
-3) Diabatic couplings
+1) Diagonalization of the H_el for nstates>1
+2) On the fly diag when field is used
+3) Add rotation matrix for propagation expH1
 4) Add autocorrelation function to the analyze scripts
 5) Add imaginary absorption potential
+6) convert diabatic to adiabatic populations
+*7) Output RT energies simulatneously
 
 ## small TODO list
 1) adpat analyze programs to changes in dynamics
 2) change input in README.md
 3) hydrogen atom test is not working well
-4) add printingof number of steps and dt in the input
+*4) initial state selection in the input

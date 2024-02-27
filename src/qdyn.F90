@@ -36,16 +36,13 @@ select case(run)
       select case(rank)
         case(1)
           call propag_rt_1d() 
-          call update_norm()
-
         case(2)
           call propag_rt_2d(wf2x(1,:,:))
-          call update_norm()
-
         case(3)
           call propag_rt_3d(wf3x(1,:,:,:))
-          call update_norm()
       end select
+
+      call update_norm()
 
       !print information
       if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
@@ -70,6 +67,8 @@ select case(run)
             call printwf_3d(1)
           end select
         end if
+        
+        if (nstates.gt.1) call print_pop()
 
         if (field_coupling) call print_field()
 

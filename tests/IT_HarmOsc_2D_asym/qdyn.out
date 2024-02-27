@@ -2,6 +2,9 @@
 
  ### Reading input ###
  RUN: IMAGINARY TIME PROPAGATION
+ Time step:   0.75000 a.u.
+ Number of steps:      350
+ Total time:     262.50 a.u.
  Grid size in x:    32
  Grid size in y:    64
  Number of dimensions: 2
