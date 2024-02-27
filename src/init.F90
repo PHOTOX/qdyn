@@ -401,20 +401,6 @@ end if
 !--Generating wavepacket
 call init_wavepacket()
 
-!Normalize wf
-if(rank .eq. 1) call normalize_1d(wfx(1,:)) 
-if(rank .eq. 2) call normalize_2d(wf2x(1,:,:))
-if(rank .eq. 3) call normalize_3d(wf3x(1,:,:,:)) 
-
-!TODO: this is normalization just for the IT, where all initial states are normalized. I need to split initialization of RT and IT
-if(run.eq.1 .and. nstates.ge.2) then
-  do jstate=2,nstates
-    if(rank .eq. 1) call normalize_1d(wfx(jstate,:))
-    if(rank .eq. 2) call normalize_2d(wf2x(jstate,:,:))
-    if(rank .eq. 3) call normalize_3d(wf3x(jstate,:,:,:)) 
-  end do
-end if
-
 !--Printing of WF
 if (print_wf) then
 if(rank .eq. 1) then
@@ -557,8 +543,9 @@ subroutine init_wavepacket()
 
   real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0
   real(DP)    :: prefactor, gauss, momenta, norm
+  integer     :: init_state=1
 
-  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0
+  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0,init_state
 
 if(wf .eq. 0) then                                           
   write(*,*) "Generating initial gaussian wave packet using section &init_wf."
@@ -584,6 +571,11 @@ if(wf .eq. 0) then
   end if
   close(100)
 
+  if ((init_state.lt.1).or.(init_state.gt.nstates)) then
+    write(*,*) "Initial state is greater than nstates or less than 1"
+    stop 1
+  end if
+  if (run.eq.0) write(*,'(A,I3)') " initial state = ", init_state
   write(*,'(A,F10.5)') " x0 = ", x0
   if (rank .ge. 2) write(*,'(A,F10.5)') " y0 = ", y0
   if (rank .ge. 3) write(*,'(A,F10.5)') " z0 = ", z0
@@ -612,11 +604,11 @@ if(wf .eq. 0) then
         ! momentum calculation p0*(x-x0)
         momenta = px0*(x(i)-x0)
         ! whole imaginary wf
-        wfx(1,i) = cmplx(gauss * cos(momenta), gauss * sin(momenta))  
+        wfx(init_state,i) = cmplx(gauss * cos(momenta), gauss * sin(momenta))  
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
-          do jstate=2,nstates
-            wfx(jstate,i) = wfx(1,i)
+          do jstate=1,nstates
+            wfx(jstate,i) = wfx(init_state,i)
           end do
         end if
             
@@ -627,12 +619,12 @@ if(wf .eq. 0) then
           ! momentum calculation p0*(x-x0)
           momenta = px0*(x(i)-x0) + py0*(y(j)-y0)
           ! whole imaginary wf
-          wf2x(1,i,j) = cmplx(gauss * cos(momenta), gauss * sin(momenta))
+          wf2x(init_state,i,j) = cmplx(gauss * cos(momenta), gauss * sin(momenta))
 
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
-          do jstate=2,nstates
-            wf2x(jstate,i,j) = wf2x(1,i,j)
+          do jstate=1,nstates
+            wf2x(jstate,i,j) = wf2x(init_state,i,j)
           end do
         end if
 
@@ -646,12 +638,12 @@ if(wf .eq. 0) then
             ! momentum calculation p0*(x-x0)
             momenta = px0*(x(i)-x0) + py0*(y(j)-y0) + pz0*(z(k)-z0)
             ! whole imaginary wf
-            wf3x(1,i,j,k) = cmplx(gauss * cos(momenta), gauss * sin(momenta)) 
+            wf3x(init_state,i,j,k) = cmplx(gauss * cos(momenta), gauss * sin(momenta)) 
 
           ! for the imag time, I create the came wave packet for all states
           if (run.eq.1 .and. nstates.ge.2) then
-            do jstate=2,nstates
-              wf3x(jstate,i,j,k) = wf3x(1,i,j,k)
+            do jstate=1,nstates
+              wf3x(jstate,i,j,k) = wf3x(init_state,i,j,k)
             end do
           end if
 
@@ -664,22 +656,42 @@ if(wf .eq. 0) then
   ! but just to check we have a correct initial guess
   select case(rank)
   case(1)
-    norm = braket_1d(wfx(1,:), wfx(1,:))
+    norm = braket_1d(wfx(init_state,:), wfx(init_state,:))
   case(2)
-    norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
+    norm = braket_2d(wf2x(init_state,:,:), wf2x(init_state,:,:))
   case(3)
-    norm = braket_3d(wf3x(1,:,:,:), wf3x(1,:,:,:))
+    norm = braket_3d(wf3x(init_state,:,:,:), wf3x(init_state,:,:,:))
   end select
   write(*,'(A,F10.5)') " norm = ", norm 
 
 elseif(wf .eq. 1) then
   !Procedure for loading WF from file
-  read(666,*) !two empty lines
-  read(666,*)
-  if(rank .eq. 1) read(666,*)wfx
-  if(rank .eq. 2) read(666,*)wf2x
-  if(rank .eq. 3) read(666,*)wf3x
-  close(666)
+  if(run.eq.1) then
+    read(666,*) !two empty lines
+    read(666,*)
+    if(rank .eq. 1) read(666,*)wfx
+    if(rank .eq. 2) read(666,*)wf2x
+    if(rank .eq. 3) read(666,*)wf3x
+    close(666)
+  else if(run.eq.0) then
+    write(*,*) "ERROR: reading wf from file ro RT is not ready."
+    stop 1
+    !TODO: I need to select, what state to initialze in
+    ! probably I will need to read again &init
+  end if
+end if
+
+!Normalize wf
+if(run.eq.1) then
+  do jstate=1,nstates
+    if(rank .eq. 1) call normalize_1d(wfx(jstate,:))
+    if(rank .eq. 2) call normalize_2d(wf2x(jstate,:,:))
+    if(rank .eq. 3) call normalize_3d(wf3x(jstate,:,:,:)) 
+  end do
+else if (run.eq.0) then
+  if(rank .eq. 1) call normalize_1d(wfx(init_state,:)) 
+  if(rank .eq. 2) call normalize_2d(wf2x(init_state,:,:))
+  if(rank .eq. 3) call normalize_3d(wf3x(init_state,:,:,:)) 
 end if
 
 end subroutine

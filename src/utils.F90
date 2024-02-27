@@ -145,17 +145,19 @@ subroutine update_norm()
   ! currenlty very simple patch
   if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
     write(*,'(a,F10.8,a)') "WARNING! Norm (",norm,") exceeded threshold"
+    write(*,*) "Renormalization!"
     select case(rank)
       case(1)
-        write(*,*) "Renormalization!"
-        call normalize_1d(wfx(1,:))
-        norm = braket_1d(wfx(1,:), wfx(1,:))
+        wfx(:,:) = wfx(:,:) / dsqrt(norm)
+        norm = 0.0d0
+        do istate=1, nstates
+          norm = norm + braket_1d(wfx(istate,:), wfx(istate,:))
+        end do
+        write(*,*) norm
       case(2)
-        write(*,*) "Renormalization!"
         call normalize_2d(wf2x(1,:,:))
         norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
       case(3)
-        write(*,*) "Renormalization!"
         call normalize_3d(wf3x(1,:,:,:))
         norm = braket_3d(wf3x(1,:,:,:), wf3x(1,:,:,:))
     end select
