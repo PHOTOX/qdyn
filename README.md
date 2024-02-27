@@ -64,18 +64,20 @@ Inputs can be prepared with the help of python scripts.
 ## Plotting
 A series of python scripts is prepared for plotting the data.
 
+## Notes
+Hydrogen atom test is not working well, probably too much stretch for the code. Spherical harmonic oscilator works so there should be no problem with spherical harmonics.
+
 ## TODO
-Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension to multiple states is currently under progress.
-1) Diagonalization of the H_el for nstates>1
+Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension of RT to multiple states is currently under progress.
+*1) Diagonalization of the H_el for nstates>1
 2) On the fly diag when field is used
 3) Add rotation matrix for propagation expH1
 4) Add autocorrelation function to the analyze scripts
 5) Add imaginary absorption potential
-6) convert diabatic to adiabatic populations
-*7) Output RT energies simulatneously
 
 ## small TODO list
-1) adpat analyze programs to changes in dynamics
+*1) adpat analyze programs to changes in dynamics
 2) change input in README.md
-3) hydrogen atom test is not working well
-*4) initial state selection in the input
+3) convert diabatic to adiabatic populations
+4) initial state selection in the input for loading wave function
+

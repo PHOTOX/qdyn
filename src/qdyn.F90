@@ -58,14 +58,16 @@ select case(run)
 
         write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
         if (print_wf) then
-          select case(rank)
-          case(1)
-           call printwf_1d(1)
-          case(2)
-            call printwf_2d(1)
-          case(3)
-            call printwf_3d(1)
-          end select
+          do istate=1, nstates 
+            select case(rank)
+            case(1)
+              call printwf_1d(istate)
+            case(2)
+              call printwf_2d(istate)
+            case(3)
+              call printwf_3d(istate)
+            end select
+          end do
         end if
         
         if (nstates.gt.1) call print_pop()
