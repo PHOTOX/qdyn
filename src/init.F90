@@ -470,7 +470,7 @@ case(0)
   !--Writing energies
   select case(rank)
   case(1)
-    call update_energy_1d_rt()
+    call update_total_energy_1d()
   case(2)
     call update_energy_2d(wf2x(1,:,:))
   case(3)

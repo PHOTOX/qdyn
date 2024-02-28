@@ -372,12 +372,12 @@ subroutine print_pop()
 end subroutine
 
 !=== ENERGIES ===!
-!TODO: I should combine all of these. With rank, I can tell which one will be used.
-subroutine update_energy_1d(wfx)
+!TODO: components of energy here
+function kinetic_energy_1d(wfx)
 implicit none
   complex(DP), intent(in)       :: wfx(:)
   complex(DP), allocatable      :: wft(:)
-  real(DP)                      :: old_energy
+  real(DP)                      :: kinetic_energy_1d
   integer                       :: i
 
   allocate(wft(xngrid))
@@ -396,10 +396,17 @@ implicit none
   end do
 
   ! calculating <T> in the momentum representation, back FFT to coordinate represetation was skipped
-  energy(3) = braket_1d(wfp, wft)/braket_1d(wfp, wfp)
-  ! Note that the braket_1d uses dx for the integration instead of dp, which is not correct
-  ! but in the fraction, the dx/dx will cancel out so it works. For more complex stuff, a 
-  ! problem can appear here!
+  kinetic_energy_1d = braket_1d(wfp, wft)/braket_1d(wfp, wfp)
+
+end function
+
+subroutine update_energy_1d(wfx)
+implicit none
+  complex(DP), intent(in)       :: wfx(:)
+  real(DP)                      :: old_energy
+
+  ! calculating <T>
+  energy(3) = kinetic_energy_1d(wfx)
 
   ! calculating <V>
   energy(2) = braket_1d(wfx, v1*wfx)/braket_1d(wfx, wfx)
@@ -506,49 +513,41 @@ implicit none
 
 end subroutine
 
-subroutine update_energy_1d_rt()
+subroutine update_total_energy_1d()
 implicit none
-  complex(DP), allocatable      :: wft(:)
-  real(DP)                      :: old_energy
-  integer                       :: i
-
-  allocate(wft(xngrid))
-
-  ! calculating <T>
-  ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(1,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wfx(1,:), wfp)
-  call dfftw_destroy_plan(plan_forward)
-
-  wfp = wfp / dsqrt(real(xngrid, kind=DP))
-
-  ! p(t)
-  do i=1, xngrid
-    wfp(i) = wfp(i)*px(i)**2/(2*mass_x)
-  end do
-
-  !TODO: this back FFT is not necessary since I still have the wf. It should be removed.
-  ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wft, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wfp, wft)
-  call dfftw_destroy_plan(plan_backward)
-
-  wft = wft / dsqrt(real(xngrid, kind=DP))
-
-  ! calculating <T>
-  energy(3) = braket_1d(wfx(1,:), wft)/braket_1d(wfx(1,:), wfx(1,:))
-
-  ! calculating <V>
-  energy(2) = braket_1d(wfx(1,:), H1(1,1,:)*wfx(1,:))/braket_1d(wfx(1,:), wfx(1,:))
+  real(DP)                      :: old_energy, norm, thresh=1.0d-5
+  integer                       :: i, istate, jstate
 
   ! saving old energy
   old_energy = energy(1)
+
+  energy = 0.0d0
+  write(*,*) "This must be all zeros"
+
+  ! calculating <T>
+  do istate=1, nstates
+    norm = braket_1d(wfx(istate,:), wfx(istate,:))
+    if (norm.gt.thresh) then
+      energy(3) = energy(3) + kinetic_energy_1d(wfx(istate, :))
+    end if
+  end do
+
+  ! calculating <V>
+  do istate=1, nstates
+    do jstate=1, nstates
+      energy(2) = energy(2) + &
+        braket_1d(wfx(istate,:), H1(istate,jstate,:)*wfx(jstate,:))
+    end do
+  end do
+
 
   ! calculating <E> = <V> + <T>
   energy(1) = energy(2)+ energy(3)
   
   ! energy difference from the last step
   energy_diff = energy(1) - old_energy
+
+  write(*,*) "ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!"
 
 end subroutine
 

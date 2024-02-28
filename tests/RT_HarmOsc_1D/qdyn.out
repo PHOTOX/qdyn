@@ -33,6 +33,8 @@
  px0 =    0.00000
  norm =    1.00000
  Outputing WF to file wf1d.1.out                                        
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
  norm update           1   1.0000000000000007     
 
 
@@ -158,7 +160,9 @@
  norm update           1  0.99999978501135312     
   end
  norm update           1  0.99999978501135312     
-     1.0 a.u.; E=   0.286809974 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     1.0 a.u.; E=   0.286809945 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999978501135312     
  **B           1           1  0.99999977343771063     
   H1
@@ -279,7 +283,9 @@
  norm update           1  0.99999963214611631     
   end
  norm update           1  0.99999963214611631     
-     2.0 a.u.; E=   0.286809971 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     2.0 a.u.; E=   0.286809922 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999963214611631     
  **B           1           1  0.99999962411402288     
   H1
@@ -400,7 +406,9 @@
  norm update           1  0.99999954210821762     
   end
  norm update           1  0.99999954210821762     
-     3.0 a.u.; E=   0.286809987 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     3.0 a.u.; E=   0.286809927 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999954210821762     
  **B           1           1  0.99999953667189911     
   H1
@@ -521,7 +529,9 @@
  norm update           1  0.99999949401972998     
   end
  norm update           1  0.99999949401972998     
-     4.0 a.u.; E=   0.286810012 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     4.0 a.u.; E=   0.286809945 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999949401972998     
  **B           1           1  0.99999949026076906     
   H1
@@ -642,7 +652,9 @@
  norm update           1  0.99999947398586364     
   end
  norm update           1  0.99999947398586364     
-     5.0 a.u.; E=   0.286810042 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     5.0 a.u.; E=   0.286809971 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999947398586364     
  **B           1           1  0.99999947140687762     
   H1
@@ -763,7 +775,9 @@
  norm update           1  0.99999947390912181     
   end
  norm update           1  0.99999947390912181     
-     6.0 a.u.; E=   0.286810075 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     6.0 a.u.; E=   0.286810004 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999947390912181     
  **B           1           1  0.99999947219070506     
   H1
@@ -884,7 +898,9 @@
  norm update           1  0.99999948774290870     
   end
  norm update           1  0.99999948774290870     
-     7.0 a.u.; E=   0.286810111 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     7.0 a.u.; E=   0.286810041 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999948774290870     
  **B           1           1  0.99999948663646920     
   H1
@@ -1005,7 +1021,9 @@
  norm update           1  0.99999951027311618     
   end
  norm update           1  0.99999951027311618     
-     8.0 a.u.; E=   0.286810149 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     8.0 a.u.; E=   0.286810081 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999951027311618     
  **B           1           1  0.99999950957820549     
   H1
@@ -1126,7 +1144,9 @@
  norm update           1  0.99999953684134946     
   end
  norm update           1  0.99999953684134946     
-     9.0 a.u.; E=   0.286810188 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+     9.0 a.u.; E=   0.286810122 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999953684134946     
  **B           1           1  0.99999953640425310     
   H1
@@ -1247,7 +1267,9 @@
  norm update           1  0.99999956327459727     
   end
  norm update           1  0.99999956327459727     
-    10.0 a.u.; E=   0.286810227 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    10.0 a.u.; E=   0.286810164 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999956327459727     
  **B           1           1  0.99999956298719261     
   H1
@@ -1368,7 +1390,9 @@
  norm update           1  0.99999958581700510     
   end
  norm update           1  0.99999958581700510     
-    11.0 a.u.; E=   0.286810267 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    11.0 a.u.; E=   0.286810206 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999958581700510     
  **B           1           1  0.99999958561016833     
   H1
@@ -1489,7 +1513,9 @@
  norm update           1  0.99999960109662134     
   end
  norm update           1  0.99999960109662134     
-    12.0 a.u.; E=   0.286810306 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    12.0 a.u.; E=   0.286810247 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999960109662134     
  **B           1           1  0.99999960093021567     
   H1
@@ -1610,7 +1636,9 @@
  norm update           1  0.99999960619983308     
   end
  norm update           1  0.99999960619983308     
-    13.0 a.u.; E=   0.286810344 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    13.0 a.u.; E=   0.286810285 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999960619983308     
  **B           1           1  0.99999960605276084     
   H1
@@ -1731,7 +1759,9 @@
  norm update           1  0.99999959873529676     
   end
  norm update           1  0.99999959873529676     
-    14.0 a.u.; E=   0.286810379 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    14.0 a.u.; E=   0.286810319 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999959873529676     
  **B           1           1  0.99999959859768450     
   H1
@@ -1852,7 +1882,9 @@
  norm update           1  0.99999957635740233     
   end
  norm update           1  0.99999957635740233     
-    15.0 a.u.; E=   0.286810412 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    15.0 a.u.; E=   0.286810347 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999957635740233     
  **B           1           1  0.99999957622513158     
   H1
@@ -1973,7 +2005,9 @@
  norm update           1  0.99999953435816236     
   end
  norm update           1  0.99999953435816236     
-    16.0 a.u.; E=   0.286810444 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    16.0 a.u.; E=   0.286810372 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999953435816236     
  **B           1           1  0.99999953422964294     
   H1
@@ -2094,7 +2128,9 @@
  norm update           1  0.99999946196070766     
   end
  norm update           1  0.99999946196070766     
-    17.0 a.u.; E=   0.286810475 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    17.0 a.u.; E=   0.286810391 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999946196070766     
  **B           1           1  0.99999946183526511     
   H1
@@ -2215,7 +2251,9 @@
  norm update           1  0.99999934110309419     
   end
  norm update           1  0.99999934110309419     
-    18.0 a.u.; E=   0.286810497 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    18.0 a.u.; E=   0.286810394 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999934110309419     
  **B           1           1  0.99999934097910392     
   H1
@@ -2336,7 +2374,9 @@
  norm update           1  0.99999916363124486     
   end
  norm update           1  0.99999916363124486     
-    19.0 a.u.; E=   0.286810498 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    19.0 a.u.; E=   0.286810367 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999916363124486     
  **B           1           1  0.99999916351029350     
   H1
@@ -2457,7 +2497,9 @@
  norm update           1  0.99999895694262864     
   end
  norm update           1  0.99999895694262864     
-    20.0 a.u.; E=   0.286810485 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    20.0 a.u.; E=   0.286810322 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999895694262864     
  **B           1           1  0.99999895682064122     
   H1
@@ -2578,7 +2620,9 @@
  norm update           1  0.99999876742368377     
   end
  norm update           1  0.99999876742368377     
-    21.0 a.u.; E=   0.286810473 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    21.0 a.u.; E=   0.286810281 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999876742368377     
  **B           1           1  0.99999876730238513     
   H1
@@ -2699,7 +2743,9 @@
  norm update           1  0.99999863083414708     
   end
  norm update           1  0.99999863083414708     
-    22.0 a.u.; E=   0.286810472 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    22.0 a.u.; E=   0.286810260 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999863083414708     
  **B           1           1  0.99999863070504258     
   H1
@@ -2820,7 +2866,9 @@
  norm update           1  0.99999854744984940     
   end
  norm update           1  0.99999854744984940     
-    23.0 a.u.; E=   0.286810474 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    23.0 a.u.; E=   0.286810249 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854744984940     
  **B           1           1  0.99999854733074933     
   H1
@@ -2941,7 +2989,9 @@
  norm update           1  0.99999849839037336     
   end
  norm update           1  0.99999849839037336     
-    24.0 a.u.; E=   0.286810467 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    24.0 a.u.; E=   0.286810237 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999849839037336     
  **B           1           1  0.99999849824682685     
   H1
@@ -3062,7 +3112,9 @@
  norm update           1  0.99999847156607058     
   end
  norm update           1  0.99999847156607058     
-    25.0 a.u.; E=   0.286810454 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    25.0 a.u.; E=   0.286810222 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999847156607058     
  **B           1           1  0.99999847144195897     
   H1
@@ -3183,7 +3235,9 @@
  norm update           1  0.99999846023856509     
   end
  norm update           1  0.99999846023856509     
-    26.0 a.u.; E=   0.286810435 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    26.0 a.u.; E=   0.286810204 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999846023856509     
  **B           1           1  0.99999846008823445     
   H1
@@ -3304,7 +3358,9 @@
  norm update           1  0.99999846224012678     
   end
  norm update           1  0.99999846224012678     
-    27.0 a.u.; E=   0.286810414 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    27.0 a.u.; E=   0.286810186 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999846224012678     
  **B           1           1  0.99999846208100318     
   H1
@@ -3425,7 +3481,9 @@
  norm update           1  0.99999847501884020     
   end
  norm update           1  0.99999847501884020     
-    28.0 a.u.; E=   0.286810391 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    28.0 a.u.; E=   0.286810168 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999847501884020     
  **B           1           1  0.99999847483153148     
   H1
@@ -3546,7 +3604,9 @@
  norm update           1  0.99999849597400259     
   end
  norm update           1  0.99999849597400259     
-    29.0 a.u.; E=   0.286810366 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    29.0 a.u.; E=   0.286810149 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999849597400259     
  **B           1           1  0.99999849570287180     
   H1
@@ -3667,7 +3727,9 @@
  norm update           1  0.99999852162817648     
   end
  norm update           1  0.99999852162817648     
-    30.0 a.u.; E=   0.286810339 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    30.0 a.u.; E=   0.286810129 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999852162817648     
  **B           1           1  0.99999852125385269     
   H1
@@ -3788,7 +3850,9 @@
  norm update           1  0.99999854853845682     
   end
  norm update           1  0.99999854853845682     
-    31.0 a.u.; E=   0.286810313 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    31.0 a.u.; E=   0.286810110 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854853845682     
  **B           1           1  0.99999854791253973     
   H1
@@ -3909,7 +3973,9 @@
  norm update           1  0.99999857263384939     
   end
  norm update           1  0.99999857263384939     
-    32.0 a.u.; E=   0.286810289 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    32.0 a.u.; E=   0.286810092 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999857263384939     
  **B           1           1  0.99999857166791972     
   H1
@@ -4030,7 +4096,9 @@
  norm update           1  0.99999858933511510     
   end
  norm update           1  0.99999858933511510     
-    33.0 a.u.; E=   0.286810268 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    33.0 a.u.; E=   0.286810075 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999858933511510     
  **B           1           1  0.99999858779640749     
   H1
@@ -4151,7 +4219,9 @@
  norm update           1  0.99999859352223908     
   end
  norm update           1  0.99999859352223908     
-    34.0 a.u.; E=   0.286810249 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    34.0 a.u.; E=   0.286810060 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999859352223908     
  **B           1           1  0.99999859120798207     
   H1
@@ -4272,7 +4342,9 @@
  norm update           1  0.99999857961489047     
   end
  norm update           1  0.99999857961489047     
-    35.0 a.u.; E=   0.286810234 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    35.0 a.u.; E=   0.286810045 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999857961489047     
  **B           1           1  0.99999857621024346     
   H1
@@ -4393,7 +4465,9 @@
  norm update           1  0.99999854003696598     
   end
  norm update           1  0.99999854003696598     
-    36.0 a.u.; E=   0.286810223 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    36.0 a.u.; E=   0.286810030 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854003696598     
  **B           1           1  0.99999853511917391     
   H1
@@ -4514,7 +4588,9 @@
  norm update           1  0.99999846325342179     
   end
  norm update           1  0.99999846325342179     
-    37.0 a.u.; E=   0.286810214 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    37.0 a.u.; E=   0.286810012 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999846325342179     
  **B           1           1  0.99999845604607851     
   H1
@@ -4635,7 +4711,9 @@
  norm update           1  0.99999832913197939     
   end
  norm update           1  0.99999832913197939     
-    38.0 a.u.; E=   0.286810199 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    38.0 a.u.; E=   0.286809980 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999832913197939     
  **B           1           1  0.99999831851486620     
   H1
@@ -4756,7 +4834,9 @@
  norm update           1  0.99999812737996263     
   end
  norm update           1  0.99999812737996263     
-    39.0 a.u.; E=   0.286810163 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    39.0 a.u.; E=   0.286809919 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999812737996263     
  **B           1           1  0.99999811396700145     
   H1
@@ -4880,7 +4960,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999990436914132     
   end
  norm update           1  0.99999990436914132     
-    40.0 a.u.; E=   0.286810122 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    40.0 a.u.; E=   0.286810110 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999990436914132     
  **B           1           1  0.99999989191138261     
   H1
@@ -5001,7 +5083,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999973222463701     
   end
  norm update           1  0.99999973222463701     
-    41.0 a.u.; E=   0.286810110 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    41.0 a.u.; E=   0.286810075 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999973222463701     
  **B           1           1  0.99999972330139097     
   H1
@@ -5122,7 +5206,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999962746049631     
   end
  norm update           1  0.99999962746049631     
-    42.0 a.u.; E=   0.286810124 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    42.0 a.u.; E=   0.286810074 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999962746049631     
  **B           1           1  0.99999962142699295     
   H1
@@ -5243,7 +5329,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999956965829417     
   end
  norm update           1  0.99999956965829417     
-    43.0 a.u.; E=   0.286810146 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    43.0 a.u.; E=   0.286810089 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999956965829417     
  **B           1           1  0.99999956551380664     
   H1
@@ -5364,7 +5452,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999954307811223     
   end
  norm update           1  0.99999954307811223     
-    44.0 a.u.; E=   0.286810175 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    44.0 a.u.; E=   0.286810114 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999954307811223     
  **B           1           1  0.99999954021433124     
   H1
@@ -5485,7 +5575,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999953824888110     
   end
  norm update           1  0.99999953824888110     
-    45.0 a.u.; E=   0.286810207 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    45.0 a.u.; E=   0.286810145 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999953824888110     
  **B           1           1  0.99999953632679928     
   H1
@@ -5606,7 +5698,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999954888383902     
   end
  norm update           1  0.99999954888383902     
-    46.0 a.u.; E=   0.286810243 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    46.0 a.u.; E=   0.286810181 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999954888383902     
  **B           1           1  0.99999954763256638     
   H1
@@ -5727,7 +5821,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999956956651737     
   end
  norm update           1  0.99999956956651737     
-    47.0 a.u.; E=   0.286810280 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    47.0 a.u.; E=   0.286810220 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999956956651737     
  **B           1           1  0.99999956877921636     
   H1
@@ -5848,7 +5944,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999959541647943     
   end
  norm update           1  0.99999959541647943     
-    48.0 a.u.; E=   0.286810318 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    48.0 a.u.; E=   0.286810261 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999959541647943     
  **B           1           1  0.99999959492166846     
   H1
@@ -5969,7 +6067,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999962228904071     
   end
  norm update           1  0.99999962228904071     
-    49.0 a.u.; E=   0.286810357 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    49.0 a.u.; E=   0.286810303 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999962228904071     
  **B           1           1  0.99999962196582093     
   H1
@@ -6090,7 +6190,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999964623710003     
   end
  norm update           1  0.99999964623710003     
-    50.0 a.u.; E=   0.286810397 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    50.0 a.u.; E=   0.286810345 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999964623710003     
  **B           1           1  0.99999964602097469     
   H1
@@ -6211,7 +6313,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999966379305827     
   end
  norm update           1  0.99999966379305827     
-    51.0 a.u.; E=   0.286810436 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    51.0 a.u.; E=   0.286810387 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999966379305827     
  **B           1           1  0.99999966361041426     
   H1
@@ -6332,7 +6436,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999967192022499     
   end
  norm update           1  0.99999967192022499     
-    52.0 a.u.; E=   0.286810475 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    52.0 a.u.; E=   0.286810426 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999967192022499     
  **B           1           1  0.99999967177645399     
   H1
@@ -6453,7 +6559,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999966801890117     
   end
  norm update           1  0.99999966801890117     
-    53.0 a.u.; E=   0.286810511 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    53.0 a.u.; E=   0.286810461 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999966801890117     
  **B           1           1  0.99999966787270322     
   H1
@@ -6574,7 +6682,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999965001699054     
   end
  norm update           1  0.99999965001699054     
-    54.0 a.u.; E=   0.286810545 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    54.0 a.u.; E=   0.286810492 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999965001699054     
  **B           1           1  0.99999964989083701     
   H1
@@ -6695,7 +6805,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999961393339332     
   end
  norm update           1  0.99999961393339332     
-    55.0 a.u.; E=   0.286810578 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    55.0 a.u.; E=   0.286810518 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999961393339332     
  **B           1           1  0.99999961379658142     
   H1
@@ -6816,7 +6928,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999955146505282     
   end
  norm update           1  0.99999955146505282     
-    56.0 a.u.; E=   0.286810610 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    56.0 a.u.; E=   0.286810541 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999955146505282     
  **B           1           1  0.99999955134530083     
   H1
@@ -6937,7 +7051,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999944534300156     
   end
  norm update           1  0.99999944534300156     
-    57.0 a.u.; E=   0.286810636 a.u.; norm=0.9999994
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    57.0 a.u.; E=   0.286810550 a.u.; norm=0.9999994
  **A           1           1   0.0000000000000000       0.99999944534300156     
  **B           1           1  0.99999944521446460     
   H1
@@ -7058,7 +7174,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999928211663336     
   end
  norm update           1  0.99999928211663336     
-    58.0 a.u.; E=   0.286810644 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    58.0 a.u.; E=   0.286810532 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999928211663336     
  **B           1           1  0.99999928199661037     
   H1
@@ -7179,7 +7297,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999907891221251     
   end
  norm update           1  0.99999907891221251     
-    59.0 a.u.; E=   0.286810634 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    59.0 a.u.; E=   0.286810490 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999907891221251     
  **B           1           1  0.99999907879102556     
   H1
@@ -7300,7 +7420,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999888029892625     
   end
  norm update           1  0.99999888029892625     
-    60.0 a.u.; E=   0.286810621 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    60.0 a.u.; E=   0.286810446 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999888029892625     
  **B           1           1  0.99999888017363081     
   H1
@@ -7421,7 +7543,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999872759878827     
   end
  norm update           1  0.99999872759878827     
-    61.0 a.u.; E=   0.286810617 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    61.0 a.u.; E=   0.286810419 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999872759878827     
  **B           1           1  0.99999872747773111     
   H1
@@ -7542,7 +7666,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999863184083304     
   end
  norm update           1  0.99999863184083304     
-    62.0 a.u.; E=   0.286810620 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    62.0 a.u.; E=   0.286810409 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999863184083304     
  **B           1           1  0.99999863171431824     
   H1
@@ -7663,7 +7789,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999857499633360     
   end
  norm update           1  0.99999857499633360     
-    63.0 a.u.; E=   0.286810616 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    63.0 a.u.; E=   0.286810397 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999857499633360     
  **B           1           1  0.99999857486259802     
   H1
@@ -7784,7 +7912,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999854295783719     
   end
  norm update           1  0.99999854295783719     
-    64.0 a.u.; E=   0.286810604 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    64.0 a.u.; E=   0.286810382 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854295783719     
  **B           1           1  0.99999854282904921     
   H1
@@ -7905,7 +8035,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999852795259592     
   end
  norm update           1  0.99999852795259592     
-    65.0 a.u.; E=   0.286810587 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    65.0 a.u.; E=   0.286810366 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999852795259592     
  **B           1           1  0.99999852780712906     
   H1
@@ -8026,7 +8158,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999852637374176     
   end
  norm update           1  0.99999852637374176     
-    66.0 a.u.; E=   0.286810566 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    66.0 a.u.; E=   0.286810347 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999852637374176     
  **B           1           1  0.99999852622000751     
   H1
@@ -8147,7 +8281,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999853668473415     
   end
  norm update           1  0.99999853668473415     
-    67.0 a.u.; E=   0.286810544 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    67.0 a.u.; E=   0.286810329 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999853668473415     
  **B           1           1  0.99999853650765402     
   H1
@@ -8268,7 +8404,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999855554492900     
   end
  norm update           1  0.99999855554492900     
-    68.0 a.u.; E=   0.286810518 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    68.0 a.u.; E=   0.286810309 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999855554492900     
  **B           1           1  0.99999855529974602     
   H1
@@ -8389,7 +8527,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999858052960022     
   end
  norm update           1  0.99999858052960022     
-    69.0 a.u.; E=   0.286810492 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    69.0 a.u.; E=   0.286810290 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999858052960022     
  **B           1           1  0.99999858019226695     
   H1
@@ -8510,7 +8650,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999860718113120     
   end
  norm update           1  0.99999860718113120     
-    70.0 a.u.; E=   0.286810466 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    70.0 a.u.; E=   0.286810269 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999860718113120     
  **B           1           1  0.99999860663452977     
   H1
@@ -8631,7 +8773,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999863264206490     
   end
  norm update           1  0.99999863264206490     
-    71.0 a.u.; E=   0.286810441 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    71.0 a.u.; E=   0.286810251 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999863264206490     
  **B           1           1  0.99999863178402193     
   H1
@@ -8752,7 +8896,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999865179659597     
   end
  norm update           1  0.99999865179659597     
-    72.0 a.u.; E=   0.286810418 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    72.0 a.u.; E=   0.286810233 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999865179659597     
  **B           1           1  0.99999865043531777     
   H1
@@ -8873,7 +9019,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999865981572311     
   end
  norm update           1  0.99999865981572311     
-    73.0 a.u.; E=   0.286810398 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    73.0 a.u.; E=   0.286810217 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999865981572311     
  **B           1           1  0.99999865773288110     
   H1
@@ -8994,7 +9142,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999865152748302     
   end
  norm update           1  0.99999865152748302     
-    74.0 a.u.; E=   0.286810382 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    74.0 a.u.; E=   0.286810202 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999865152748302     
  **B           1           1  0.99999864845779318     
   H1
@@ -9115,7 +9265,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999861971721216     
   end
  norm update           1  0.99999861971721216     
-    75.0 a.u.; E=   0.286810369 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    75.0 a.u.; E=   0.286810186 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999861971721216     
  **B           1           1  0.99999861525482536     
   H1
@@ -9236,7 +9388,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999855455711006     
   end
  norm update           1  0.99999855455711006     
-    76.0 a.u.; E=   0.286810359 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    76.0 a.u.; E=   0.286810169 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999855455711006     
  **B           1           1  0.99999854808531097     
   H1
@@ -9357,7 +9511,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999843817454348     
   end
  norm update           1  0.99999843817454348     
-    77.0 a.u.; E=   0.286810347 a.u.; norm=0.9999984
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    77.0 a.u.; E=   0.286810143 a.u.; norm=0.9999984
  **A           1           1   0.0000000000000000       0.99999843817454348     
  **B           1           1  0.99999842854241616     
   H1
@@ -9478,7 +9634,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999825296124734     
   end
  norm update           1  0.99999825296124734     
-    78.0 a.u.; E=   0.286810317 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    78.0 a.u.; E=   0.286810089 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999825296124734     
  **B           1           1  0.99999824003537841     
   H1
@@ -9599,7 +9757,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999802786429770     
   end
  norm update           1  0.99999802786429770     
-    79.0 a.u.; E=   0.286810274 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    79.0 a.u.; E=   0.286810016 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999802786429770     
  **B           1           1  0.99999801474128391     
   H1
@@ -9723,7 +9883,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999984410981091     
   end
  norm update           1  0.99999984410981091     
-    80.0 a.u.; E=   0.286810252 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    80.0 a.u.; E=   0.286810232 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999984410981091     
  **B           1           1  0.99999983420411809     
   H1
@@ -9844,7 +10006,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999972286155558     
   end
  norm update           1  0.99999972286155558     
-    81.0 a.u.; E=   0.286810260 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    81.0 a.u.; E=   0.286810224 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999972286155558     
  **B           1           1  0.99999971617617633     
   H1
@@ -9965,7 +10129,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999965426975679     
   end
  norm update           1  0.99999965426975679     
-    82.0 a.u.; E=   0.286810281 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    82.0 a.u.; E=   0.286810235 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999965426975679     
  **B           1           1  0.99999964967924770     
   H1
@@ -10086,7 +10252,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999962042608792     
   end
  norm update           1  0.99999962042608792     
-    83.0 a.u.; E=   0.286810307 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    83.0 a.u.; E=   0.286810257 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999962042608792     
  **B           1           1  0.99999961726695341     
   H1
@@ -10207,7 +10375,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999961043862728     
   end
  norm update           1  0.99999961043862728     
-    84.0 a.u.; E=   0.286810339 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    84.0 a.u.; E=   0.286810286 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999961043862728     
  **B           1           1  0.99999960828347889     
   H1
@@ -10328,7 +10498,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999961743830035     
   end
  norm update           1  0.99999961743830035     
-    85.0 a.u.; E=   0.286810373 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    85.0 a.u.; E=   0.286810321 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999961743830035     
  **B           1           1  0.99999961603514376     
   H1
@@ -10449,7 +10621,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999963591185148     
   end
  norm update           1  0.99999963591185148     
-    86.0 a.u.; E=   0.286810410 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    86.0 a.u.; E=   0.286810359 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999963591185148     
  **B           1           1  0.99999963501231492     
   H1
@@ -10570,7 +10744,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999966086399850     
   end
  norm update           1  0.99999966086399850     
-    87.0 a.u.; E=   0.286810447 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    87.0 a.u.; E=   0.286810400 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999966086399850     
  **B           1           1  0.99999966030965981     
   H1
@@ -10691,7 +10867,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999968772135817     
   end
  norm update           1  0.99999968772135817     
-    88.0 a.u.; E=   0.286810486 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    88.0 a.u.; E=   0.286810441 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999968772135817     
  **B           1           1  0.99999968735541089     
   H1
@@ -10812,7 +10990,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999971291040113     
   end
  norm update           1  0.99999971291040113     
-    89.0 a.u.; E=   0.286810525 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    89.0 a.u.; E=   0.286810484 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999971291040113     
  **B           1           1  0.99999971267419752     
   H1
@@ -10933,7 +11113,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999973254201291     
   end
  norm update           1  0.99999973254201291     
-    90.0 a.u.; E=   0.286810565 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    90.0 a.u.; E=   0.286810525 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999973254201291     
  **B           1           1  0.99999973235527351     
   H1
@@ -11054,7 +11236,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999974343466502     
   end
  norm update           1  0.99999974343466502     
-    91.0 a.u.; E=   0.286810603 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    91.0 a.u.; E=   0.286810565 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974343466502     
  **B           1           1  0.99999974327532293     
   H1
@@ -11175,7 +11359,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999974297350025     
   end
  norm update           1  0.99999974297350025     
-    92.0 a.u.; E=   0.286810640 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    92.0 a.u.; E=   0.286810601 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974297350025     
  **B           1           1  0.99999974283819704     
   H1
@@ -11296,7 +11482,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999972914788948     
   end
  norm update           1  0.99999972914788948     
-    93.0 a.u.; E=   0.286810674 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    93.0 a.u.; E=   0.286810633 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999972914788948     
  **B           1           1  0.99999972900707268     
   H1
@@ -11417,7 +11605,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999969837669833     
   end
  norm update           1  0.99999969837669833     
-    94.0 a.u.; E=   0.286810707 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    94.0 a.u.; E=   0.286810660 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999969837669833     
  **B           1           1  0.99999969825190371     
   H1
@@ -11538,7 +11728,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999964434466015     
   end
  norm update           1  0.99999964434466015     
-    95.0 a.u.; E=   0.286810739 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    95.0 a.u.; E=   0.286810684 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999964434466015     
  **B           1           1  0.99999964421507492     
   H1
@@ -11659,7 +11851,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999955217124126     
   end
  norm update           1  0.99999955217124126     
-    96.0 a.u.; E=   0.286810768 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    96.0 a.u.; E=   0.286810698 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999955217124126     
  **B           1           1  0.99999955204605673     
   H1
@@ -11780,7 +11974,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999940405155507     
   end
  norm update           1  0.99999940405155507     
-    97.0 a.u.; E=   0.286810780 a.u.; norm=0.9999994
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    97.0 a.u.; E=   0.286810687 a.u.; norm=0.9999994
  **A           1           1   0.0000000000000000       0.99999940405155507     
  **B           1           1  0.99999940393104925     
   H1
@@ -11901,7 +12097,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999920801687392     
   end
  norm update           1  0.99999920801687392     
-    98.0 a.u.; E=   0.286810773 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    98.0 a.u.; E=   0.286810649 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999920801687392     
  **B           1           1  0.99999920789501329     
   H1
@@ -12022,7 +12220,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999900336835690     
   end
  norm update           1  0.99999900336835690     
-    99.0 a.u.; E=   0.286810759 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+    99.0 a.u.; E=   0.286810603 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999900336835690     
  **B           1           1  0.99999900324151192     
   H1
@@ -12143,7 +12343,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999883559375768     
   end
  norm update           1  0.99999883559375768     
-   100.0 a.u.; E=   0.286810752 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   100.0 a.u.; E=   0.286810570 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999883559375768     
  **B           1           1  0.99999883547699231     
   H1
@@ -12264,7 +12466,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999872546001611     
   end
  norm update           1  0.99999872546001611     
-   101.0 a.u.; E=   0.286810753 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   101.0 a.u.; E=   0.286810556 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999872546001611     
  **B           1           1  0.99999872533130607     
   H1
@@ -12385,7 +12589,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999866025834061     
   end
  norm update           1  0.99999866025834061     
-   102.0 a.u.; E=   0.286810751 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   102.0 a.u.; E=   0.286810545 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999866025834061     
  **B           1           1  0.99999866012901262     
   H1
@@ -12506,7 +12712,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999862223966685     
   end
  norm update           1  0.99999862223966685     
-   103.0 a.u.; E=   0.286810740 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   103.0 a.u.; E=   0.286810530 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999862223966685     
  **B           1           1  0.99999862210782031     
   H1
@@ -12627,7 +12835,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999860325768319     
   end
  norm update           1  0.99999860325768319     
-   104.0 a.u.; E=   0.286810725 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   104.0 a.u.; E=   0.286810514 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999860325768319     
  **B           1           1  0.99999860311851474     
   H1
@@ -12748,7 +12958,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999859813802239     
   end
  norm update           1  0.99999859813802239     
-   105.0 a.u.; E=   0.286810704 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   105.0 a.u.; E=   0.286810495 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999859813802239     
  **B           1           1  0.99999859798628521     
   H1
@@ -12869,7 +13081,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999860565421828     
   end
  norm update           1  0.99999860565421828     
-   106.0 a.u.; E=   0.286810682 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   106.0 a.u.; E=   0.286810476 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999860565421828     
  **B           1           1  0.99999860548598563     
   H1
@@ -12990,7 +13204,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999862227399472     
   end
  norm update           1  0.99999862227399472     
-   107.0 a.u.; E=   0.286810657 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   107.0 a.u.; E=   0.286810456 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999862227399472     
  **B           1           1  0.99999862205327528     
   H1
@@ -13111,7 +13327,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999864617164935     
   end
  norm update           1  0.99999864617164935     
-   108.0 a.u.; E=   0.286810631 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   108.0 a.u.; E=   0.286810436 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999864617164935     
  **B           1           1  0.99999864586133758     
   H1
@@ -13232,7 +13450,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999867262116404     
   end
  norm update           1  0.99999867262116404     
-   109.0 a.u.; E=   0.286810603 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   109.0 a.u.; E=   0.286810415 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999867262116404     
  **B           1           1  0.99999867214753646     
   H1
@@ -13353,7 +13573,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999869874843939     
   end
  norm update           1  0.99999869874843939     
-   110.0 a.u.; E=   0.286810577 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   110.0 a.u.; E=   0.286810396 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999869874843939     
  **B           1           1  0.99999869798383245     
   H1
@@ -13474,7 +13696,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999872018900748     
   end
  norm update           1  0.99999872018900748     
-   111.0 a.u.; E=   0.286810553 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   111.0 a.u.; E=   0.286810377 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999872018900748     
  **B           1           1  0.99999871898878556     
   H1
@@ -13595,7 +13819,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999873166097408     
   end
  norm update           1  0.99999873166097408     
-   112.0 a.u.; E=   0.286810532 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   112.0 a.u.; E=   0.286810360 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999873166097408     
  **B           1           1  0.99999872979197235     
   H1
@@ -13716,7 +13942,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999872837455539     
   end
  norm update           1  0.99999872837455539     
-   113.0 a.u.; E=   0.286810515 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   113.0 a.u.; E=   0.286810344 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999872837455539     
  **B           1           1  0.99999872560928482     
   H1
@@ -13837,7 +14065,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999870380339051     
   end
  norm update           1  0.99999870380339051     
-   114.0 a.u.; E=   0.286810501 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   114.0 a.u.; E=   0.286810329 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999870380339051     
  **B           1           1  0.99999869975949152     
   H1
@@ -13958,7 +14188,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999864882211675     
   end
  norm update           1  0.99999864882211675     
-   115.0 a.u.; E=   0.286810490 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   115.0 a.u.; E=   0.286810312 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999864882211675     
  **B           1           1  0.99999864298527619     
   H1
@@ -14079,7 +14311,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999854873869465     
   end
  norm update           1  0.99999854873869465     
-   116.0 a.u.; E=   0.286810480 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   116.0 a.u.; E=   0.286810289 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854873869465     
  **B           1           1  0.99999854007504962     
   H1
@@ -14200,7 +14434,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999838186245604     
   end
  norm update           1  0.99999838186245604     
-   117.0 a.u.; E=   0.286810455 a.u.; norm=0.9999984
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   117.0 a.u.; E=   0.286810243 a.u.; norm=0.9999984
  **A           1           1   0.0000000000000000       0.99999838186245604     
  **B           1           1  0.99999836965043543     
   H1
@@ -14321,7 +14557,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999816103138539     
   end
  norm update           1  0.99999816103138539     
-   118.0 a.u.; E=   0.286810412 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   118.0 a.u.; E=   0.286810172 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999816103138539     
  **B           1           1  0.99999814754148852     
   H1
@@ -14445,7 +14683,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999995596043700     
   end
  norm update           1  0.99999995596043700     
-   119.0 a.u.; E=   0.286810382 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   119.0 a.u.; E=   0.286810376 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999995596043700     
  **B           1           1  0.99999994503549572     
   H1
@@ -14566,7 +14806,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999981652747194     
   end
  norm update           1  0.99999981652747194     
-   120.0 a.u.; E=   0.286810384 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   120.0 a.u.; E=   0.286810360 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999981652747194     
  **B           1           1  0.99999980910806052     
   H1
@@ -14687,7 +14929,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999973602722925     
   end
  norm update           1  0.99999973602722925     
-   121.0 a.u.; E=   0.286810402 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   121.0 a.u.; E=   0.286810367 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999973602722925     
  **B           1           1  0.99999973094402184     
   H1
@@ -14808,7 +15052,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999969394261989     
   end
  norm update           1  0.99999969394261989     
-   122.0 a.u.; E=   0.286810427 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   122.0 a.u.; E=   0.286810386 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999969394261989     
  **B           1           1  0.99999969045394022     
   H1
@@ -14929,7 +15175,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999967844543625     
   end
  norm update           1  0.99999967844543625     
-   123.0 a.u.; E=   0.286810457 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   123.0 a.u.; E=   0.286810414 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999967844543625     
  **B           1           1  0.99999967604234963     
   H1
@@ -15050,7 +15298,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999968132126615     
   end
  norm update           1  0.99999968132126615     
-   124.0 a.u.; E=   0.286810491 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   124.0 a.u.; E=   0.286810447 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999968132126615     
  **B           1           1  0.99999967974790227     
   H1
@@ -15171,7 +15421,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999969735063965     
   end
  norm update           1  0.99999969735063965     
-   125.0 a.u.; E=   0.286810527 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   125.0 a.u.; E=   0.286810485 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999969735063965     
  **B           1           1  0.99999969632652230     
   H1
@@ -15292,7 +15544,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999972087591260     
   end
  norm update           1  0.99999972087591260     
-   126.0 a.u.; E=   0.286810564 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   126.0 a.u.; E=   0.286810525 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999972087591260     
  **B           1           1  0.99999972025029082     
   H1
@@ -15413,7 +15667,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999974777347478     
   end
  norm update           1  0.99999974777347478     
-   127.0 a.u.; E=   0.286810603 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   127.0 a.u.; E=   0.286810567 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974777347478     
  **B           1           1  0.99999974736262920     
   H1
@@ -15534,7 +15790,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999977353911840     
   end
  norm update           1  0.99999977353911840     
-   128.0 a.u.; E=   0.286810641 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   128.0 a.u.; E=   0.286810609 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999977353911840     
  **B           1           1  0.99999977327286782     
   H1
@@ -15655,7 +15913,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999979524914540     
   end
  norm update           1  0.99999979524914540     
-   129.0 a.u.; E=   0.286810681 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   129.0 a.u.; E=   0.286810651 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999979524914540     
  **B           1           1  0.99999979506253944     
   H1
@@ -15776,7 +16036,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999980865407445     
   end
  norm update           1  0.99999980865407445     
-   130.0 a.u.; E=   0.286810720 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   130.0 a.u.; E=   0.286810691 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999980865407445     
  **B           1           1  0.99999980847328296     
   H1
@@ -15897,7 +16159,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999981155163653     
   end
  norm update           1  0.99999981155163653     
-   131.0 a.u.; E=   0.286810757 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   131.0 a.u.; E=   0.286810728 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999981155163653     
  **B           1           1  0.99999981142955963     
   H1
@@ -16018,7 +16282,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999980151142365     
   end
  norm update           1  0.99999980151142365     
-   132.0 a.u.; E=   0.286810791 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   132.0 a.u.; E=   0.286810761 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999980151142365     
  **B           1           1  0.99999980135739808     
   H1
@@ -16139,7 +16405,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999977585146282     
   end
  norm update           1  0.99999977585146282     
-   133.0 a.u.; E=   0.286810823 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   133.0 a.u.; E=   0.286810789 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999977585146282     
  **B           1           1  0.99999977573101673     
   H1
@@ -16260,7 +16528,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999972895091316     
   end
  norm update           1  0.99999972895091316     
-   134.0 a.u.; E=   0.286810855 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   134.0 a.u.; E=   0.286810813 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999972895091316     
  **B           1           1  0.99999972881954113     
   H1
@@ -16381,7 +16651,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999964926636742     
   end
  norm update           1  0.99999964926636742     
-   135.0 a.u.; E=   0.286810885 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   135.0 a.u.; E=   0.286810831 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999964926636742     
  **B           1           1  0.99999964914194894     
   H1
@@ -16502,7 +16774,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999951691524347     
   end
  norm update           1  0.99999951691524347     
-   136.0 a.u.; E=   0.286810902 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   136.0 a.u.; E=   0.286810827 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999951691524347     
  **B           1           1  0.99999951678960741     
   H1
@@ -16623,7 +16897,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999933097738336     
   end
  norm update           1  0.99999933097738336     
-   137.0 a.u.; E=   0.286810899 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   137.0 a.u.; E=   0.286810794 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999933097738336     
  **B           1           1  0.99999933086257964     
   H1
@@ -16744,7 +17020,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999912377303568     
   end
  norm update           1  0.99999912377303568     
-   138.0 a.u.; E=   0.286810884 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   138.0 a.u.; E=   0.286810747 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999912377303568     
  **B           1           1  0.99999912364073573     
   H1
@@ -16865,7 +17143,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999894265325362     
   end
  norm update           1  0.99999894265325362     
-   139.0 a.u.; E=   0.286810873 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   139.0 a.u.; E=   0.286810708 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999894265325362     
  **B           1           1  0.99999894253741684     
   H1
@@ -16986,7 +17266,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999881687438086     
   end
  norm update           1  0.99999881687438086     
-   140.0 a.u.; E=   0.286810872 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   140.0 a.u.; E=   0.286810688 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999881687438086     
  **B           1           1  0.99999881674796731     
   H1
@@ -17107,7 +17389,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999874186985727     
   end
  norm update           1  0.99999874186985727     
-   141.0 a.u.; E=   0.286810872 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   141.0 a.u.; E=   0.286810678 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999874186985727     
  **B           1           1  0.99999874174020786     
   H1
@@ -17228,7 +17512,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999869761567028     
   end
  norm update           1  0.99999869761567028     
-   142.0 a.u.; E=   0.286810862 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   142.0 a.u.; E=   0.286810663 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999869761567028     
  **B           1           1  0.99999869748687020     
   H1
@@ -17349,7 +17635,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999867393518316     
   end
  norm update           1  0.99999867393518316     
-   143.0 a.u.; E=   0.286810847 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   143.0 a.u.; E=   0.286810646 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999867393518316     
  **B           1           1  0.99999867379573981     
   H1
@@ -17470,7 +17758,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999866553623384     
   end
  norm update           1  0.99999866553623384     
-   144.0 a.u.; E=   0.286810828 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   144.0 a.u.; E=   0.286810628 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999866553623384     
  **B           1           1  0.99999866539112237     
   H1
@@ -17591,7 +17881,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999866965090667     
   end
  norm update           1  0.99999866965090667     
-   145.0 a.u.; E=   0.286810806 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   145.0 a.u.; E=   0.286810609 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999866965090667     
  **B           1           1  0.99999866948591976     
   H1
@@ -17712,7 +18004,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999868423828753     
   end
  norm update           1  0.99999868423828753     
-   146.0 a.u.; E=   0.286810782 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   146.0 a.u.; E=   0.286810589 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999868423828753     
  **B           1           1  0.99999868403648107     
   H1
@@ -17833,7 +18127,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999870632844345     
   end
  norm update           1  0.99999870632844345     
-   147.0 a.u.; E=   0.286810756 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   147.0 a.u.; E=   0.286810570 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999870632844345     
  **B           1           1  0.99999870604768404     
   H1
@@ -17954,7 +18250,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999873274954687     
   end
  norm update           1  0.99999873274954687     
-   148.0 a.u.; E=   0.286810729 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   148.0 a.u.; E=   0.286810549 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999873274954687     
  **B           1           1  0.99999873233128445     
   H1
@@ -18075,7 +18373,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999875903867208     
   end
  norm update           1  0.99999875903867208     
-   149.0 a.u.; E=   0.286810702 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   149.0 a.u.; E=   0.286810529 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999875903867208     
  **B           1           1  0.99999875836533025     
   H1
@@ -18196,7 +18496,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999878239366735     
   end
  norm update           1  0.99999878239366735     
-   150.0 a.u.; E=   0.286810679 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   150.0 a.u.; E=   0.286810511 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999878239366735     
  **B           1           1  0.99999878133007680     
   H1
@@ -18317,7 +18619,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999879698831962     
   end
  norm update           1  0.99999879698831962     
-   151.0 a.u.; E=   0.286810658 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   151.0 a.u.; E=   0.286810494 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999879698831962     
  **B           1           1  0.99999879532343605     
   H1
@@ -18438,7 +18742,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999879817957649     
   end
  norm update           1  0.99999879817957649     
-   152.0 a.u.; E=   0.286810640 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   152.0 a.u.; E=   0.286810478 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999879817957649     
  **B           1           1  0.99999879568260519     
   H1
@@ -18559,7 +18865,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999878023110700     
   end
  norm update           1  0.99999878023110700     
-   153.0 a.u.; E=   0.286810626 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   153.0 a.u.; E=   0.286810464 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999878023110700     
  **B           1           1  0.99999877658109981     
   H1
@@ -18680,7 +18988,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999873449285648     
   end
  norm update           1  0.99999873449285648     
-   154.0 a.u.; E=   0.286810615 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   154.0 a.u.; E=   0.286810447 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999873449285648     
  **B           1           1  0.99999872920511013     
   H1
@@ -18801,7 +19111,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999864871711353     
   end
  norm update           1  0.99999864871711353     
-   155.0 a.u.; E=   0.286810605 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   155.0 a.u.; E=   0.286810428 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999864871711353     
  **B           1           1  0.99999864095341939     
   H1
@@ -18922,7 +19234,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999850113993127     
   end
  norm update           1  0.99999850113993127     
-   156.0 a.u.; E=   0.286810587 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   156.0 a.u.; E=   0.286810391 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999850113993127     
  **B           1           1  0.99999848981400252     
   H1
@@ -19043,7 +19357,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999828971014615     
   end
  norm update           1  0.99999828971014615     
-   157.0 a.u.; E=   0.286810547 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   157.0 a.u.; E=   0.286810324 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999828971014615     
  **B           1           1  0.99999827615999082     
   H1
@@ -19164,7 +19480,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999807193948920     
   end
  norm update           1  0.99999807193948920     
-   158.0 a.u.; E=   0.286810510 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   158.0 a.u.; E=   0.286810258 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999807193948920     
  **B           1           1  0.99999806006960701     
   H1
@@ -19288,7 +19606,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999991350842532     
   end
  norm update           1  0.99999991350842532     
-   159.0 a.u.; E=   0.286810504 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   159.0 a.u.; E=   0.286810493 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999991350842532     
  **B           1           1  0.99999990523458693     
   H1
@@ -19409,7 +19729,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999981964080442     
   end
  norm update           1  0.99999981964080442     
-   160.0 a.u.; E=   0.286810521 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   160.0 a.u.; E=   0.286810497 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999981964080442     
  **B           1           1  0.99999981403186711     
   H1
@@ -19530,7 +19852,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999976850460759     
   end
  norm update           1  0.99999976850460759     
-   161.0 a.u.; E=   0.286810544 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   161.0 a.u.; E=   0.286810513 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999976850460759     
  **B           1           1  0.99999976463487805     
   H1
@@ -19651,7 +19975,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999974684478066     
   end
  norm update           1  0.99999974684478066     
-   162.0 a.u.; E=   0.286810574 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   162.0 a.u.; E=   0.286810540 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974684478066     
  **B           1           1  0.99999974418762494     
   H1
@@ -19772,7 +20098,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999974526547042     
   end
  norm update           1  0.99999974526547042     
-   163.0 a.u.; E=   0.286810607 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   163.0 a.u.; E=   0.286810572 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974526547042     
  **B           1           1  0.99999974348958365     
   H1
@@ -19893,7 +20221,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999975835793364     
   end
  norm update           1  0.99999975835793364     
-   164.0 a.u.; E=   0.286810643 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   164.0 a.u.; E=   0.286810610 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999975835793364     
  **B           1           1  0.99999975720911805     
   H1
@@ -20014,7 +20344,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999978025145808     
   end
  norm update           1  0.99999978025145808     
-   165.0 a.u.; E=   0.286810680 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   165.0 a.u.; E=   0.286810649 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999978025145808     
  **B           1           1  0.99999977953251795     
   H1
@@ -20135,7 +20467,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999980677526890     
   end
  norm update           1  0.99999980677526890     
-   166.0 a.u.; E=   0.286810719 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   166.0 a.u.; E=   0.286810691 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999980677526890     
  **B           1           1  0.99999980632263119     
   H1
@@ -20256,7 +20590,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999983312282348     
   end
  norm update           1  0.99999983312282348     
-   167.0 a.u.; E=   0.286810757 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   167.0 a.u.; E=   0.286810733 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999983312282348     
  **B           1           1  0.99999983281753657     
   H1
@@ -20377,7 +20713,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999985628692123     
   end
  norm update           1  0.99999985628692123     
-   168.0 a.u.; E=   0.286810797 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   168.0 a.u.; E=   0.286810776 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999985628692123     
  **B           1           1  0.99999985609045361     
   H1
@@ -20498,7 +20836,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999987230281773     
   end
  norm update           1  0.99999987230281773     
-   169.0 a.u.; E=   0.286810836 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   169.0 a.u.; E=   0.286810817 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999987230281773     
  **B           1           1  0.99999987211999020     
   H1
@@ -20619,7 +20959,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999987818158909     
   end
  norm update           1  0.99999987818158909     
-   170.0 a.u.; E=   0.286810874 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   170.0 a.u.; E=   0.286810856 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999987818158909     
  **B           1           1  0.99999987804205392     
   H1
@@ -20740,7 +21082,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999987188098005     
   end
  norm update           1  0.99999987188098005     
-   171.0 a.u.; E=   0.286810910 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   171.0 a.u.; E=   0.286810890 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999987188098005     
  **B           1           1  0.99999987173972549     
   H1
@@ -20861,7 +21205,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999985084524556     
   end
  norm update           1  0.99999985084524556     
-   172.0 a.u.; E=   0.286810943 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   172.0 a.u.; E=   0.286810920 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999985084524556     
  **B           1           1  0.99999985071294883     
   H1
@@ -20982,7 +21328,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999981045317132     
   end
  norm update           1  0.99999981045317132     
-   173.0 a.u.; E=   0.286810974 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   173.0 a.u.; E=   0.286810945 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999981045317132     
  **B           1           1  0.99999981032873808     
   H1
@@ -21103,7 +21451,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999974134196767     
   end
  norm update           1  0.99999974134196767     
-   174.0 a.u.; E=   0.286811005 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   174.0 a.u.; E=   0.286810965 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974134196767     
  **B           1           1  0.99999974121270385     
   H1
@@ -21224,7 +21574,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999962489435568     
   end
  norm update           1  0.99999962489435568     
-   175.0 a.u.; E=   0.286811028 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   175.0 a.u.; E=   0.286810969 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999962489435568     
  **B           1           1  0.99999962477130622     
   H1
@@ -21345,7 +21697,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999945126107215     
   end
  norm update           1  0.99999945126107215     
-   176.0 a.u.; E=   0.286811029 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   176.0 a.u.; E=   0.286810944 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999945126107215     
  **B           1           1  0.99999945114131150     
   H1
@@ -21466,7 +21820,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999924535476414     
   end
  norm update           1  0.99999924535476414     
-   177.0 a.u.; E=   0.286811016 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   177.0 a.u.; E=   0.286810899 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999924535476414     
  **B           1           1  0.99999924523216654     
   H1
@@ -21587,7 +21943,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999905294499447     
   end
  norm update           1  0.99999905294499447     
-   178.0 a.u.; E=   0.286811003 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   178.0 a.u.; E=   0.286810856 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999905294499447     
  **B           1           1  0.99999905281773060     
   H1
@@ -21708,7 +22066,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999891140455521     
   end
  norm update           1  0.99999891140455521     
-   179.0 a.u.; E=   0.286811000 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   179.0 a.u.; E=   0.286810831 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999891140455521     
  **B           1           1  0.99999891128909879     
   H1
@@ -21829,7 +22189,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999882448200139     
   end
  norm update           1  0.99999882448200139     
-   180.0 a.u.; E=   0.286811001 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   180.0 a.u.; E=   0.286810820 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999882448200139     
  **B           1           1  0.99999882434676834     
   H1
@@ -21950,7 +22312,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999877364328404     
   end
  norm update           1  0.99999877364328404     
-   181.0 a.u.; E=   0.286810995 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   181.0 a.u.; E=   0.286810807 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999877364328404     
  **B           1           1  0.99999877351714250     
   H1
@@ -22071,7 +22435,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999874484303597     
   end
  norm update           1  0.99999874484303597     
-   182.0 a.u.; E=   0.286810981 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   182.0 a.u.; E=   0.286810790 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999874484303597     
  **B           1           1  0.99999874470823447     
   H1
@@ -22192,7 +22558,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999873280794749     
   end
  norm update           1  0.99999873280794749     
-   183.0 a.u.; E=   0.286810964 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   183.0 a.u.; E=   0.286810773 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999873280794749     
  **B           1           1  0.99999873266266570     
   H1
@@ -22313,7 +22681,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999873362933234     
   end
  norm update           1  0.99999873362933234     
-   184.0 a.u.; E=   0.286810943 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   184.0 a.u.; E=   0.286810755 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999873362933234     
  **B           1           1  0.99999873347091961     
   H1
@@ -22434,7 +22804,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999874581833870     
   end
  norm update           1  0.99999874581833870     
-   185.0 a.u.; E=   0.286810920 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   185.0 a.u.; E=   0.286810736 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999874581833870     
  **B           1           1  0.99999874563239832     
   H1
@@ -22555,7 +22927,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999876594360859     
   end
  norm update           1  0.99999876594360859     
-   186.0 a.u.; E=   0.286810895 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   186.0 a.u.; E=   0.286810717 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999876594360859     
  **B           1           1  0.99999876568320623     
   H1
@@ -22676,7 +23050,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999879175941531     
   end
  norm update           1  0.99999879175941531     
-   187.0 a.u.; E=   0.286810870 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   187.0 a.u.; E=   0.286810698 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999879175941531     
  **B           1           1  0.99999879139349168     
   H1
@@ -22797,7 +23173,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999881840866367     
   end
  norm update           1  0.99999881840866367     
-   188.0 a.u.; E=   0.286810843 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   188.0 a.u.; E=   0.286810677 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999881840866367     
  **B           1           1  0.99999881781143030     
   H1
@@ -22918,7 +23296,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999884288821494     
   end
  norm update           1  0.99999884288821494     
-   189.0 a.u.; E=   0.286810819 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   189.0 a.u.; E=   0.286810659 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999884288821494     
  **B           1           1  0.99999884195215849     
   H1
@@ -23039,7 +23419,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999886056787668     
   end
  norm update           1  0.99999886056787668     
-   190.0 a.u.; E=   0.286810798 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   190.0 a.u.; E=   0.286810643 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999886056787668     
  **B           1           1  0.99999885908480968     
   H1
@@ -23160,7 +23542,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999886565250784     
   end
  norm update           1  0.99999886565250784     
-   191.0 a.u.; E=   0.286810779 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   191.0 a.u.; E=   0.286810626 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999886565250784     
  **B           1           1  0.99999886340539546     
   H1
@@ -23281,7 +23665,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999885375041442     
   end
  norm update           1  0.99999885375041442     
-   192.0 a.u.; E=   0.286810765 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   192.0 a.u.; E=   0.286810612 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999885375041442     
  **B           1           1  0.99999885045550652     
   H1
@@ -23402,7 +23788,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999881633118015     
   end
  norm update           1  0.99999881633118015     
-   193.0 a.u.; E=   0.286810753 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   193.0 a.u.; E=   0.286810596 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999881633118015     
  **B           1           1  0.99999881153943715     
   H1
@@ -23523,7 +23911,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999874328401928     
   end
  norm update           1  0.99999874328401928     
-   194.0 a.u.; E=   0.286810744 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   194.0 a.u.; E=   0.286810579 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999874328401928     
  **B           1           1  0.99999873631496783     
   H1
@@ -23644,7 +24034,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999861436723159     
   end
  norm update           1  0.99999861436723159     
-   195.0 a.u.; E=   0.286810730 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   195.0 a.u.; E=   0.286810549 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999861436723159     
  **B           1           1  0.99999860402762308     
   H1
@@ -23765,7 +24157,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999841707176573     
   end
  norm update           1  0.99999841707176573     
-   196.0 a.u.; E=   0.286810696 a.u.; norm=0.9999984
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   196.0 a.u.; E=   0.286810489 a.u.; norm=0.9999984
  **A           1           1   0.0000000000000000       0.99999841707176573     
  **B           1           1  0.99999840377550930     
   H1
@@ -23886,7 +24280,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999819294810000     
   end
  norm update           1  0.99999819294810000     
-   197.0 a.u.; E=   0.286810654 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   197.0 a.u.; E=   0.286810418 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999819294810000     
  **B           1           1  0.99999818027906751     
   H1
@@ -24007,7 +24403,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999801509931041     
   end
  norm update           1  0.99999801509931041     
-   198.0 a.u.; E=   0.286810639 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   198.0 a.u.; E=   0.286810379 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999801509931041     
  **B           1           1  0.99999800587940901     
   H1
@@ -24131,7 +24529,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999991335711647     
   end
  norm update           1  0.99999991335711647     
-   199.0 a.u.; E=   0.286810652 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   199.0 a.u.; E=   0.286810640 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999991335711647     
  **B           1           1  0.99999990715574638     
   H1
@@ -24252,7 +24652,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999985247050460     
   end
  norm update           1  0.99999985247050460     
-   200.0 a.u.; E=   0.286810674 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   200.0 a.u.; E=   0.286810654 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999985247050460     
  **B           1           1  0.99999984818581245     
   H1
@@ -24373,7 +24775,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999982380809893     
   end
  norm update           1  0.99999982380809893     
-   201.0 a.u.; E=   0.286810702 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   201.0 a.u.; E=   0.286810678 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999982380809893     
  **B           1           1  0.99999982086955075     
   H1
@@ -24494,7 +24898,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999981757049605     
   end
  norm update           1  0.99999981757049605     
-   202.0 a.u.; E=   0.286810734 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   202.0 a.u.; E=   0.286810709 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999981757049605     
  **B           1           1  0.99999981557496920     
   H1
@@ -24615,7 +25021,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999982712701041     
   end
  norm update           1  0.99999982712701041     
-   203.0 a.u.; E=   0.286810769 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   203.0 a.u.; E=   0.286810746 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999982712701041     
  **B           1           1  0.99999982584230396     
   H1
@@ -24736,7 +25144,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999984728054414     
   end
  norm update           1  0.99999984728054414     
-   204.0 a.u.; E=   0.286810807 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   204.0 a.u.; E=   0.286810786 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999984728054414     
  **B           1           1  0.99999984645168849     
   H1
@@ -24857,7 +25267,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999987277358326     
   end
  norm update           1  0.99999987277358326     
-   205.0 a.u.; E=   0.286810845 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   205.0 a.u.; E=   0.286810827 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999987277358326     
  **B           1           1  0.99999987226953113     
   H1
@@ -24978,7 +25390,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999989982640947     
   end
  norm update           1  0.99999989982640947     
-   206.0 a.u.; E=   0.286810884 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   206.0 a.u.; E=   0.286810870 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999989982640947     
  **B           1           1  0.99999989948774770     
   H1
@@ -25099,7 +25513,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999992386895642     
   end
  norm update           1  0.99999992386895642     
-   207.0 a.u.; E=   0.286810924 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   207.0 a.u.; E=   0.286810913 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999992386895642     
  **B           1           1  0.99999992364302404     
   H1
@@ -25220,7 +25636,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999994243563239     
   end
  norm update           1  0.99999994243563239     
-   208.0 a.u.; E=   0.286810964 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   208.0 a.u.; E=   0.286810955 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999994243563239     
  **B           1           1  0.99999994226615030     
   H1
@@ -25341,7 +25759,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999995121029550     
   end
  norm update           1  0.99999995121029550     
-   209.0 a.u.; E=   0.286811002 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   209.0 a.u.; E=   0.286810995 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999995121029550     
  **B           1           1  0.99999995104087991     
   H1
@@ -25462,7 +25882,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999994828066086     
   end
  norm update           1  0.99999994828066086     
-   210.0 a.u.; E=   0.286811039 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   210.0 a.u.; E=   0.286811031 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999994828066086     
  **B           1           1  0.99999994816129012     
   H1
@@ -25583,7 +26005,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999993172594359     
   end
  norm update           1  0.99999993172594359     
-   211.0 a.u.; E=   0.286811074 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   211.0 a.u.; E=   0.286811063 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999993172594359     
  **B           1           1  0.99999993157378209     
   H1
@@ -25704,7 +26128,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999989707695780     
   end
  norm update           1  0.99999989707695780     
-   212.0 a.u.; E=   0.286811106 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   212.0 a.u.; E=   0.286811090 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999989707695780     
  **B           1           1  0.99999989696209501     
   H1
@@ -25825,7 +26251,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999983717104812     
   end
  norm update           1  0.99999983717104812     
-   213.0 a.u.; E=   0.286811139 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   213.0 a.u.; E=   0.286811113 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999983717104812     
  **B           1           1  0.99999983703714457     
   H1
@@ -25946,7 +26374,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999973557762034     
   end
  norm update           1  0.99999973557762034     
-   214.0 a.u.; E=   0.286811166 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   214.0 a.u.; E=   0.286811125 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999973557762034     
  **B           1           1  0.99999973545765564     
   H1
@@ -26067,7 +26497,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999957637727077     
   end
  norm update           1  0.99999957637727077     
-   215.0 a.u.; E=   0.286811174 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   215.0 a.u.; E=   0.286811108 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999957637727077     
  **B           1           1  0.99999957624963076     
   H1
@@ -26188,7 +26620,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999937508021375     
   end
  norm update           1  0.99999937508021375     
-   216.0 a.u.; E=   0.286811163 a.u.; norm=0.9999994
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   216.0 a.u.; E=   0.286811066 a.u.; norm=0.9999994
  **A           1           1   0.0000000000000000       0.99999937508021375     
  **B           1           1  0.99999937496966418     
   H1
@@ -26309,7 +26743,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999917435183616     
   end
  norm update           1  0.99999917435183616     
-   217.0 a.u.; E=   0.286811149 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   217.0 a.u.; E=   0.286811020 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999917435183616     
  **B           1           1  0.99999917421391038     
   H1
@@ -26430,7 +26866,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999901726063700     
   end
  norm update           1  0.99999901726063700     
-   218.0 a.u.; E=   0.286811143 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   218.0 a.u.; E=   0.286810991 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999901726063700     
  **B           1           1  0.99999901715097472     
   H1
@@ -26551,7 +26989,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999891695752030     
   end
  norm update           1  0.99999891695752030     
-   219.0 a.u.; E=   0.286811144 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   219.0 a.u.; E=   0.286810977 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999891695752030     
  **B           1           1  0.99999891682524067     
   H1
@@ -26672,7 +27112,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999885828249502     
   end
  norm update           1  0.99999885828249502     
-   220.0 a.u.; E=   0.286811141 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   220.0 a.u.; E=   0.286810965 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999885828249502     
  **B           1           1  0.99999885814862077     
   H1
@@ -26793,7 +27235,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999882433340459     
   end
  norm update           1  0.99999882433340459     
-   221.0 a.u.; E=   0.286811128 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   221.0 a.u.; E=   0.286810949 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999882433340459     
  **B           1           1  0.99999882421259079     
   H1
@@ -26914,7 +27358,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999880808042918     
   end
  norm update           1  0.99999880808042918     
-   222.0 a.u.; E=   0.286811112 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   222.0 a.u.; E=   0.286810932 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999880808042918     
  **B           1           1  0.99999880792312956     
   H1
@@ -27035,7 +27481,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999880571500044     
   end
  norm update           1  0.99999880571500044     
-   223.0 a.u.; E=   0.286811092 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   223.0 a.u.; E=   0.286810914 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999880571500044     
  **B           1           1  0.99999880557676080     
   H1
@@ -27156,7 +27604,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999881505128985     
   end
  norm update           1  0.99999881505128985     
-   224.0 a.u.; E=   0.286811071 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   224.0 a.u.; E=   0.286810896 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999881505128985     
  **B           1           1  0.99999881486334474     
   H1
@@ -27277,7 +27727,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999883338729234     
   end
  norm update           1  0.99999883338729234     
-   225.0 a.u.; E=   0.286811047 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   225.0 a.u.; E=   0.286810878 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999883338729234     
  **B           1           1  0.99999883315792060     
   H1
@@ -27398,7 +27850,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999885782307396     
   end
  norm update           1  0.99999885782307396     
-   226.0 a.u.; E=   0.286811022 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   226.0 a.u.; E=   0.286810858 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999885782307396     
  **B           1           1  0.99999885749029993     
   H1
@@ -27519,7 +27973,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999888493613387     
   end
  norm update           1  0.99999888493613387     
-   227.0 a.u.; E=   0.286810996 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   227.0 a.u.; E=   0.286810839 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999888493613387     
  **B           1           1  0.99999888441455731     
   H1
@@ -27640,7 +28096,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999891011418296     
   end
  norm update           1  0.99999891011418296     
-   228.0 a.u.; E=   0.286810971 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   228.0 a.u.; E=   0.286810820 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999891011418296     
  **B           1           1  0.99999890928484170     
   H1
@@ -27761,7 +28219,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999893033039455     
   end
  norm update           1  0.99999893033039455     
-   229.0 a.u.; E=   0.286810950 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   229.0 a.u.; E=   0.286810803 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999893033039455     
  **B           1           1  0.99999892901705267     
   H1
@@ -27882,7 +28342,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999893919214322     
   end
  norm update           1  0.99999893919214322     
-   230.0 a.u.; E=   0.286810930 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   230.0 a.u.; E=   0.286810786 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999893919214322     
  **B           1           1  0.99999893717332955     
   H1
@@ -28003,7 +28465,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999893255377170     
   end
  norm update           1  0.99999893255377170     
-   231.0 a.u.; E=   0.286810914 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   231.0 a.u.; E=   0.286810771 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999893255377170     
  **B           1           1  0.99999892957900904     
   H1
@@ -28124,7 +28588,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999890287840021     
   end
  norm update           1  0.99999890287840021     
-   232.0 a.u.; E=   0.286810902 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   232.0 a.u.; E=   0.286810756 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999890287840021     
  **B           1           1  0.99999889854250668     
   H1
@@ -28245,7 +28711,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999884092225322     
   end
  norm update           1  0.99999884092225322     
-   233.0 a.u.; E=   0.286810892 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   233.0 a.u.; E=   0.286810739 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999884092225322     
  **B           1           1  0.99999883464202921     
   H1
@@ -28366,7 +28834,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999872949886193     
   end
  norm update           1  0.99999872949886193     
-   234.0 a.u.; E=   0.286810880 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   234.0 a.u.; E=   0.286810714 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999872949886193     
  **B           1           1  0.99999872016449698     
   H1
@@ -28487,7 +28957,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999854940493604     
   end
  norm update           1  0.99999854940493604     
-   235.0 a.u.; E=   0.286810851 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   235.0 a.u.; E=   0.286810661 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999854940493604     
  **B           1           1  0.99999853665150662     
   H1
@@ -28608,7 +29080,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999832496415519     
   end
  norm update           1  0.99999832496415519     
-   236.0 a.u.; E=   0.286810807 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   236.0 a.u.; E=   0.286810588 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999832496415519     
  **B           1           1  0.99999831171809495     
   H1
@@ -28729,7 +29203,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999812948357247     
   end
  norm update           1  0.99999812948357247     
-   237.0 a.u.; E=   0.286810783 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   237.0 a.u.; E=   0.286810538 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999812948357247     
  **B           1           1  0.99999811926701054     
   H1
@@ -28850,7 +29326,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999800301052177     
   end
  norm update           1  0.99999800301052177     
-   238.0 a.u.; E=   0.286810789 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   238.0 a.u.; E=   0.286810526 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999800301052177     
  **B           1           1  0.99999799612616236     
   H1
@@ -28974,7 +29452,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999993502807882     
   end
  norm update           1  0.99999993502807882     
-   239.0 a.u.; E=   0.286810809 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   239.0 a.u.; E=   0.286810800 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999993502807882     
  **B           1           1  0.99999993029638623     
   H1
@@ -29095,7 +29575,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999989879077222     
   end
  norm update           1  0.99999989879077222     
-   240.0 a.u.; E=   0.286810835 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   240.0 a.u.; E=   0.286810821 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999989879077222     
  **B           1           1  0.99999989553517377     
   H1
@@ -29216,7 +29698,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999988727568545     
   end
  norm update           1  0.99999988727568545     
-   241.0 a.u.; E=   0.286810865 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   241.0 a.u.; E=   0.286810850 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999988727568545     
  **B           1           1  0.99999988505184223     
   H1
@@ -29337,7 +29821,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999989301797820     
   end
  norm update           1  0.99999989301797820     
-   242.0 a.u.; E=   0.286810899 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   242.0 a.u.; E=   0.286810885 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999989301797820     
  **B           1           1  0.99999989156594016     
   H1
@@ -29458,7 +29944,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999991100627605     
   end
  norm update           1  0.99999991100627605     
-   243.0 a.u.; E=   0.286810937 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   243.0 a.u.; E=   0.286810924 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999991100627605     
  **B           1           1  0.99999991007551414     
   H1
@@ -29579,7 +30067,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999993524180908     
   end
  norm update           1  0.99999993524180908     
-   244.0 a.u.; E=   0.286810974 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   244.0 a.u.; E=   0.286810965 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999993524180908     
  **B           1           1  0.99999993465611936     
   H1
@@ -29700,7 +30190,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999996252083034     
   end
  norm update           1  0.99999996252083034     
-   245.0 a.u.; E=   0.286811014 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   245.0 a.u.; E=   0.286811008 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999996252083034     
  **B           1           1  0.99999996216182996     
   H1
@@ -29821,7 +30313,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999998760843101     
   end
  norm update           1  0.99999998760843101     
-   246.0 a.u.; E=   0.286811053 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   246.0 a.u.; E=   0.286811051 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999998760843101     
  **B           1           1  0.99999998733696549     
   H1
@@ -29942,7 +30436,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000079712759     
   end
  norm update           1   1.0000000079712759     
-   247.0 a.u.; E=   0.286811093 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   247.0 a.u.; E=   0.286811094 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000079712759     
  **B           1           1   1.0000000078119575     
   H1
@@ -30063,7 +30559,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000198232237     
   end
  norm update           1   1.0000000198232237     
-   248.0 a.u.; E=   0.286811133 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   248.0 a.u.; E=   0.286811136 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000198232237     
  **B           1           1   1.0000000196410233     
   H1
@@ -30184,7 +30682,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000200155839     
   end
  norm update           1   1.0000000200155839     
-   249.0 a.u.; E=   0.286811170 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   249.0 a.u.; E=   0.286811173 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000200155839     
  **B           1           1   1.0000000198865577     
   H1
@@ -30305,7 +30805,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000076403965     
   end
  norm update           1   1.0000000076403965     
-   250.0 a.u.; E=   0.286811205 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   250.0 a.u.; E=   0.286811206 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000076403965     
  **B           1           1   1.0000000075043622     
   H1
@@ -30426,7 +30928,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999997820881947     
   end
  norm update           1  0.99999997820881947     
-   251.0 a.u.; E=   0.286811237 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   251.0 a.u.; E=   0.286811234 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999997820881947     
  **B           1           1  0.99999997807025387     
   H1
@@ -30547,7 +31051,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999992641696334     
   end
  norm update           1  0.99999992641696334     
-   252.0 a.u.; E=   0.286811269 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   252.0 a.u.; E=   0.286811257 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999992641696334     
  **B           1           1  0.99999992630318046     
   H1
@@ -30668,7 +31174,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999983811932802     
   end
  norm update           1  0.99999983811932802     
-   253.0 a.u.; E=   0.286811299 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   253.0 a.u.; E=   0.286811273 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999983811932802     
  **B           1           1  0.99999983798391701     
   H1
@@ -30789,7 +31297,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999969462301075     
   end
  norm update           1  0.99999969462301075     
-   254.0 a.u.; E=   0.286811313 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   254.0 a.u.; E=   0.286811265 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999969462301075     
  **B           1           1  0.99999969450684745     
   H1
@@ -30910,7 +31420,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999950114265079     
   end
  norm update           1  0.99999950114265079     
-   255.0 a.u.; E=   0.286811306 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   255.0 a.u.; E=   0.286811229 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999950114265079     
  **B           1           1  0.99999950101885193     
   H1
@@ -31031,7 +31543,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999929553384059     
   end
  norm update           1  0.99999929553384059     
-   256.0 a.u.; E=   0.286811292 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   256.0 a.u.; E=   0.286811182 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999929553384059     
  **B           1           1  0.99999929541523602     
   H1
@@ -31152,7 +31666,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999912365424859     
   end
  norm update           1  0.99999912365424859     
-   257.0 a.u.; E=   0.286811283 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   257.0 a.u.; E=   0.286811146 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999912365424859     
  **B           1           1  0.99999912352392784     
   H1
@@ -31273,7 +31789,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999900892403248     
   end
  norm update           1  0.99999900892403248     
-   258.0 a.u.; E=   0.286811283 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   258.0 a.u.; E=   0.286811129 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999900892403248     
  **B           1           1  0.99999900881148673     
   H1
@@ -31394,7 +31912,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999894092584196     
   end
  norm update           1  0.99999894092584196     
-   259.0 a.u.; E=   0.286811281 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   259.0 a.u.; E=   0.286811118 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999894092584196     
  **B           1           1  0.99999894077823503     
   H1
@@ -31515,7 +32035,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999890137727365     
   end
  norm update           1  0.99999890137727365     
-   260.0 a.u.; E=   0.286811270 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   260.0 a.u.; E=   0.286811102 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999890137727365     
  **B           1           1  0.99999890126344204     
   H1
@@ -31636,7 +32158,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999888077688914     
   end
  norm update           1  0.99999888077688914     
-   261.0 a.u.; E=   0.286811254 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   261.0 a.u.; E=   0.286811085 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999888077688914     
  **B           1           1  0.99999888062600895     
   H1
@@ -31757,7 +32281,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999887487891703     
   end
  norm update           1  0.99999887487891703     
-   262.0 a.u.; E=   0.286811235 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   262.0 a.u.; E=   0.286811067 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999887487891703     
  **B           1           1  0.99999887473379356     
   H1
@@ -31878,7 +32404,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999888138298842     
   end
  norm update           1  0.99999888138298842     
-   263.0 a.u.; E=   0.286811214 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   263.0 a.u.; E=   0.286811049 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999888138298842     
  **B           1           1  0.99999888122015046     
   H1
@@ -31999,7 +32527,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999889755561944     
   end
  norm update           1  0.99999889755561944     
-   264.0 a.u.; E=   0.286811190 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   264.0 a.u.; E=   0.286811030 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999889755561944     
  **B           1           1  0.99999889733103187     
   H1
@@ -32120,7 +32650,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999892057798911     
   end
  norm update           1  0.99999892057798911     
-   265.0 a.u.; E=   0.286811165 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   265.0 a.u.; E=   0.286811010 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999892057798911     
  **B           1           1  0.99999892028303317     
   H1
@@ -32241,7 +32773,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999894745601525     
   end
  norm update           1  0.99999894745601525     
-   266.0 a.u.; E=   0.286811139 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   266.0 a.u.; E=   0.286810990 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999894745601525     
  **B           1           1  0.99999894699794922     
   H1
@@ -32362,7 +32896,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999897347718747     
   end
  norm update           1  0.99999897347718747     
-   267.0 a.u.; E=   0.286811113 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   267.0 a.u.; E=   0.286810970 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999897347718747     
  **B           1           1  0.99999897274065830     
   H1
@@ -32483,7 +33019,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999899546717719     
   end
  norm update           1  0.99999899546717719     
-   268.0 a.u.; E=   0.286811090 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   268.0 a.u.; E=   0.286810951 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999899546717719     
  **B           1           1  0.99999899430978523     
   H1
@@ -32604,7 +33142,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999900806607278     
   end
  norm update           1  0.99999900806607278     
-   269.0 a.u.; E=   0.286811069 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   269.0 a.u.; E=   0.286810934 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999900806607278     
  **B           1           1  0.99999900625596339     
   H1
@@ -32725,7 +33265,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999900594200752     
   end
  norm update           1  0.99999900594200752     
-   270.0 a.u.; E=   0.286811051 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   270.0 a.u.; E=   0.286810918 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999900594200752     
  **B           1           1  0.99999900326113056     
   H1
@@ -32846,7 +33388,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999898352960359     
   end
  norm update           1  0.99999898352960359     
-   271.0 a.u.; E=   0.286811037 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   271.0 a.u.; E=   0.286810902 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999898352960359     
  **B           1           1  0.99999897960353612     
   H1
@@ -32967,7 +33511,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999893124400618     
   end
  norm update           1  0.99999893124400618     
-   272.0 a.u.; E=   0.286811025 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   272.0 a.u.; E=   0.286810884 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999893124400618     
  **B           1           1  0.99999892557576031     
   H1
@@ -33088,7 +33634,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999883576025062     
   end
  norm update           1  0.99999883576025062     
-   273.0 a.u.; E=   0.286811015 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   273.0 a.u.; E=   0.286810862 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999883576025062     
  **B           1           1  0.99999882737029844     
   H1
@@ -33209,7 +33757,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999867432905487     
   end
  norm update           1  0.99999867432905487     
-   274.0 a.u.; E=   0.286810991 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   274.0 a.u.; E=   0.286810817 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999867432905487     
  **B           1           1  0.99999866236313528     
   H1
@@ -33330,7 +33880,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999845584608327     
   end
  norm update           1  0.99999845584608327     
-   275.0 a.u.; E=   0.286810948 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   275.0 a.u.; E=   0.286810746 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999845584608327     
  **B           1           1  0.99999844230094570     
   H1
@@ -33451,7 +34003,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999824546137617     
   end
  norm update           1  0.99999824546137617     
-   276.0 a.u.; E=   0.286810914 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   276.0 a.u.; E=   0.286810684 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999824546137617     
  **B           1           1  0.99999823425664880     
   H1
@@ -33572,7 +34126,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999810060522498     
   end
  norm update           1  0.99999810060522498     
-   277.0 a.u.; E=   0.286810913 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   277.0 a.u.; E=   0.286810663 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999810060522498     
  **B           1           1  0.99999809293734487     
   H1
@@ -33693,7 +34249,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999801620202700     
   end
  norm update           1  0.99999801620202700     
-   278.0 a.u.; E=   0.286810930 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   278.0 a.u.; E=   0.286810668 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999801620202700     
  **B           1           1  0.99999801097941066     
   H1
@@ -33817,7 +34375,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999997197391921     
   end
  norm update           1  0.99999997197391921     
-   279.0 a.u.; E=   0.286810954 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   279.0 a.u.; E=   0.286810950 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999997197391921     
  **B           1           1  0.99999996836917693     
   H1
@@ -33938,7 +34498,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999995461687563     
   end
  norm update           1  0.99999995461687563     
-   280.0 a.u.; E=   0.286810984 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   280.0 a.u.; E=   0.286810978 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999995461687563     
  **B           1           1  0.99999995214564930     
   H1
@@ -34059,7 +34621,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999995629444749     
   end
  norm update           1  0.99999995629444749     
-   281.0 a.u.; E=   0.286811017 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   281.0 a.u.; E=   0.286811011 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999995629444749     
  **B           1           1  0.99999995465886438     
   H1
@@ -34180,7 +34744,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999997153332831     
   end
  norm update           1  0.99999997153332831     
-   282.0 a.u.; E=   0.286811053 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   282.0 a.u.; E=   0.286811050 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999997153332831     
  **B           1           1  0.99999997048454170     
   H1
@@ -34301,6 +34867,8 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999999449887433     
   end
  norm update           1  0.99999999449887433     
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
    283.0 a.u.; E=   0.286811090 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000       0.99999999449887433     
  **B           1           1  0.99999999382870930     
@@ -34422,7 +34990,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000213137030     
   end
  norm update           1   1.0000000213137030     
-   284.0 a.u.; E=   0.286811129 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   284.0 a.u.; E=   0.286811132 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000213137030     
  **B           1           1   1.0000000209122450     
   H1
@@ -34543,7 +35113,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000475229380     
   end
  norm update           1   1.0000000475229380     
-   285.0 a.u.; E=   0.286811168 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   285.0 a.u.; E=   0.286811175 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000475229380     
  **B           1           1   1.0000000472298938     
   H1
@@ -34664,7 +35236,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000692198334     
   end
  norm update           1   1.0000000692198334     
-   286.0 a.u.; E=   0.286811208 a.u.; norm=1.0000001
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   286.0 a.u.; E=   0.286811218 a.u.; norm=1.0000001
  **A           1           1   0.0000000000000000        1.0000000692198334     
  **B           1           1   1.0000000690310620     
   H1
@@ -34785,7 +35359,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000840059833     
   end
  norm update           1   1.0000000840059833     
-   287.0 a.u.; E=   0.286811248 a.u.; norm=1.0000001
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   287.0 a.u.; E=   0.286811260 a.u.; norm=1.0000001
  **A           1           1   0.0000000000000000        1.0000000840059833     
  **B           1           1   1.0000000838453882     
   H1
@@ -34906,7 +35482,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000873501798     
   end
  norm update           1   1.0000000873501798     
-   288.0 a.u.; E=   0.286811285 a.u.; norm=1.0000001
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   288.0 a.u.; E=   0.286811298 a.u.; norm=1.0000001
  **A           1           1   0.0000000000000000        1.0000000873501798     
  **B           1           1   1.0000000871901771     
   H1
@@ -35027,7 +35605,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000785925203     
   end
  norm update           1   1.0000000785925203     
-   289.0 a.u.; E=   0.286811320 a.u.; norm=1.0000001
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   289.0 a.u.; E=   0.286811332 a.u.; norm=1.0000001
  **A           1           1   0.0000000000000000        1.0000000785925203     
  **B           1           1   1.0000000784765628     
   H1
@@ -35148,7 +35728,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000543552909     
   end
  norm update           1   1.0000000543552909     
-   290.0 a.u.; E=   0.286811353 a.u.; norm=1.0000001
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   290.0 a.u.; E=   0.286811361 a.u.; norm=1.0000001
  **A           1           1   0.0000000000000000        1.0000000543552909     
  **B           1           1   1.0000000541992802     
   H1
@@ -35269,7 +35851,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1   1.0000000092845487     
   end
  norm update           1   1.0000000092845487     
-   291.0 a.u.; E=   0.286811384 a.u.; norm=1.0000000
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   291.0 a.u.; E=   0.286811386 a.u.; norm=1.0000000
  **A           1           1   0.0000000000000000        1.0000000092845487     
  **B           1           1   1.0000000091818004     
   H1
@@ -35390,7 +35974,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999993307157464     
   end
  norm update           1  0.99999993307157464     
-   292.0 a.u.; E=   0.286811415 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   292.0 a.u.; E=   0.286811405 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999993307157464     
  **B           1           1  0.99999993292702616     
   H1
@@ -35511,7 +36097,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999980531983446     
   end
  norm update           1  0.99999980531983446     
-   293.0 a.u.; E=   0.286811434 a.u.; norm=0.9999998
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   293.0 a.u.; E=   0.286811404 a.u.; norm=0.9999998
  **A           1           1   0.0000000000000000       0.99999980531983446     
  **B           1           1  0.99999980521135234     
   H1
@@ -35632,7 +36220,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999962279508070     
   end
  norm update           1  0.99999962279508070     
-   294.0 a.u.; E=   0.286811433 a.u.; norm=0.9999996
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   294.0 a.u.; E=   0.286811374 a.u.; norm=0.9999996
  **A           1           1   0.0000000000000000       0.99999962279508070     
  **B           1           1  0.99999962266291020     
   H1
@@ -35753,7 +36343,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999941562476058     
   end
  norm update           1  0.99999941562476058     
-   295.0 a.u.; E=   0.286811418 a.u.; norm=0.9999994
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   295.0 a.u.; E=   0.286811327 a.u.; norm=0.9999994
  **A           1           1   0.0000000000000000       0.99999941562476058     
  **B           1           1  0.99999941551410565     
   H1
@@ -35874,7 +36466,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999923093153309     
   end
  norm update           1  0.99999923093153309     
-   296.0 a.u.; E=   0.286811407 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   296.0 a.u.; E=   0.286811287 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999923093153309     
  **B           1           1  0.99999923079532993     
   H1
@@ -35995,7 +36589,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999910061423025     
   end
  norm update           1  0.99999910061423025     
-   297.0 a.u.; E=   0.286811405 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   297.0 a.u.; E=   0.286811265 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999910061423025     
  **B           1           1  0.99999910050518337     
   H1
@@ -36116,7 +36712,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999902218551340     
   end
  norm update           1  0.99999902218551340     
-   298.0 a.u.; E=   0.286811405 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   298.0 a.u.; E=   0.286811254 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999902218551340     
  **B           1           1  0.99999902204541580     
   H1
@@ -36237,7 +36835,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999897601481880     
   end
  norm update           1  0.99999897601481880     
-   299.0 a.u.; E=   0.286811396 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   299.0 a.u.; E=   0.286811239 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999897601481880     
  **B           1           1  0.99999897588431541     
   H1
@@ -36358,7 +36958,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999895110241566     
   end
  norm update           1  0.99999895110241566     
-   300.0 a.u.; E=   0.286811381 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   300.0 a.u.; E=   0.286811222 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999895110241566     
  **B           1           1  0.99999895097866132     
   H1
@@ -36479,7 +37081,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999894130396250     
   end
  norm update           1  0.99999894130396250     
-   301.0 a.u.; E=   0.286811362 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   301.0 a.u.; E=   0.286811203 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999894130396250     
  **B           1           1  0.99999894113512511     
   H1
@@ -36600,7 +37204,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999894475239770     
   end
  norm update           1  0.99999894475239770     
-   302.0 a.u.; E=   0.286811340 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   302.0 a.u.; E=   0.286811184 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999894475239770     
  **B           1           1  0.99999894461858096     
   H1
@@ -36721,7 +37327,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999895867963828     
   end
  norm update           1  0.99999895867963828     
-   303.0 a.u.; E=   0.286811317 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   303.0 a.u.; E=   0.286811165 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999895867963828     
  **B           1           1  0.99999895846070130     
   H1
@@ -36842,7 +37450,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999898008040033     
   end
  norm update           1  0.99999898008040033     
-   304.0 a.u.; E=   0.286811292 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   304.0 a.u.; E=   0.286811145 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999898008040033     
  **B           1           1  0.99999897981504959     
   H1
@@ -36963,7 +37573,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999900631440430     
   end
  norm update           1  0.99999900631440430     
-   305.0 a.u.; E=   0.286811266 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   305.0 a.u.; E=   0.286811125 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999900631440430     
  **B           1           1  0.99999900591252633     
   H1
@@ -37084,7 +37696,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999903294456061     
   end
  norm update           1  0.99999903294456061     
-   306.0 a.u.; E=   0.286811240 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   306.0 a.u.; E=   0.286811104 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999903294456061     
  **B           1           1  0.99999903228784459     
   H1
@@ -37205,7 +37819,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999905639088038     
   end
  norm update           1  0.99999905639088038     
-   307.0 a.u.; E=   0.286811216 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   307.0 a.u.; E=   0.286811085 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999905639088038     
  **B           1           1  0.99999905537626876     
   H1
@@ -37326,7 +37942,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999907214057859     
   end
  norm update           1  0.99999907214057859     
-   308.0 a.u.; E=   0.286811194 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   308.0 a.u.; E=   0.286811068 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999907214057859     
  **B           1           1  0.99999907052023995     
   H1
@@ -37447,7 +38065,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999907441230407     
   end
  norm update           1  0.99999907441230407     
-   309.0 a.u.; E=   0.286811176 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   309.0 a.u.; E=   0.286811051 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999907441230407     
  **B           1           1  0.99999907199940219     
   H1
@@ -37568,7 +38188,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999905835641933     
   end
  norm update           1  0.99999905835641933     
-   310.0 a.u.; E=   0.286811161 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   310.0 a.u.; E=   0.286811035 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999905835641933     
  **B           1           1  0.99999905480879525     
   H1
@@ -37689,7 +38311,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999901506819522     
   end
  norm update           1  0.99999901506819522     
-   311.0 a.u.; E=   0.286811149 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   311.0 a.u.; E=   0.286811019 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999901506819522     
  **B           1           1  0.99999900993418789     
   H1
@@ -37810,7 +38434,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999893330915635     
   end
  norm update           1  0.99999893330915635     
-   312.0 a.u.; E=   0.286811140 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   312.0 a.u.; E=   0.286811000 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999893330915635     
  **B           1           1  0.99999892578862737     
   H1
@@ -37931,7 +38557,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999879128302982     
   end
  norm update           1  0.99999879128302982     
-   313.0 a.u.; E=   0.286811122 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   313.0 a.u.; E=   0.286810964 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999879128302982     
  **B           1           1  0.99999878024074318     
   H1
@@ -38052,7 +38680,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999858355678706     
   end
  norm update           1  0.99999858355678706     
-   314.0 a.u.; E=   0.286811084 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   314.0 a.u.; E=   0.286810899 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999858355678706     
  **B           1           1  0.99999857004924553     
   H1
@@ -38173,7 +38803,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999836334255343     
   end
  norm update           1  0.99999836334255343     
-   315.0 a.u.; E=   0.286811045 a.u.; norm=0.9999984
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   315.0 a.u.; E=   0.286810831 a.u.; norm=0.9999984
  **A           1           1   0.0000000000000000       0.99999836334255343     
  **B           1           1  0.99999835121875524     
   H1
@@ -38294,7 +38926,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999819886968788     
   end
  norm update           1  0.99999819886968788     
-   316.0 a.u.; E=   0.286811036 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   316.0 a.u.; E=   0.286810800 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999819886968788     
  **B           1           1  0.99999819032656811     
   H1
@@ -38415,7 +39049,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999810068697603     
   end
  norm update           1  0.99999810068697603     
-   317.0 a.u.; E=   0.286811051 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   317.0 a.u.; E=   0.286810801 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999810068697603     
  **B           1           1  0.99999809491201908     
   H1
@@ -38536,7 +39172,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999804674293691     
   end
  norm update           1  0.99999804674293691     
-   318.0 a.u.; E=   0.286811074 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   318.0 a.u.; E=   0.286810814 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999804674293691     
  **B           1           1  0.99999804275542992     
   H1
@@ -38657,7 +39295,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999802317917108     
   end
  norm update           1  0.99999802317917108     
-   319.0 a.u.; E=   0.286811103 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   319.0 a.u.; E=   0.286810838 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999802317917108     
  **B           1           1  0.99999802044141717     
   H1
@@ -38778,7 +39418,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999802018629924     
   end
  norm update           1  0.99999802018629924     
-   320.0 a.u.; E=   0.286811136 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   320.0 a.u.; E=   0.286810867 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999802018629924     
  **B           1           1  0.99999801834513902     
   H1
@@ -38899,7 +39541,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999803240794549     
   end
  norm update           1  0.99999803240794549     
-   321.0 a.u.; E=   0.286811172 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   321.0 a.u.; E=   0.286810901 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999803240794549     
  **B           1           1  0.99999803122770325     
   H1
@@ -39020,7 +39664,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999805382222062     
   end
  norm update           1  0.99999805382222062     
-   322.0 a.u.; E=   0.286811209 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   322.0 a.u.; E=   0.286810937 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999805382222062     
  **B           1           1  0.99999805306570311     
   H1
@@ -39141,7 +39787,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999807980699906     
   end
  norm update           1  0.99999807980699906     
-   323.0 a.u.; E=   0.286811247 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   323.0 a.u.; E=   0.286810975 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999807980699906     
  **B           1           1  0.99999807934018148     
   H1
@@ -39262,7 +39910,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999810684531043     
   end
  norm update           1  0.99999810684531043     
-   324.0 a.u.; E=   0.286811286 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   324.0 a.u.; E=   0.286811014 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999810684531043     
  **B           1           1  0.99999810654058363     
   H1
@@ -39383,7 +40033,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999812979314540     
   end
  norm update           1  0.99999812979314540     
-   325.0 a.u.; E=   0.286811325 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   325.0 a.u.; E=   0.286811053 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999812979314540     
  **B           1           1  0.99999812956446188     
   H1
@@ -39504,7 +40156,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999814694613132     
   end
  norm update           1  0.99999814694613132     
-   326.0 a.u.; E=   0.286811365 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   326.0 a.u.; E=   0.286811091 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999814694613132     
  **B           1           1  0.99999814679858468     
   H1
@@ -39625,7 +40279,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999815362965927     
   end
  norm update           1  0.99999815362965927     
-   327.0 a.u.; E=   0.286811402 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   327.0 a.u.; E=   0.286811126 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999815362965927     
  **B           1           1  0.99999815345624898     
   H1
@@ -39746,7 +40402,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999814819584754     
   end
  norm update           1  0.99999814819584754     
-   328.0 a.u.; E=   0.286811438 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   328.0 a.u.; E=   0.286811158 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999814819584754     
  **B           1           1  0.99999814807546594     
   H1
@@ -39867,7 +40525,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999812875560723     
   end
  norm update           1  0.99999812875560723     
-   329.0 a.u.; E=   0.286811471 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   329.0 a.u.; E=   0.286811185 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999812875560723     
  **B           1           1  0.99999812861525184     
   H1
@@ -39988,7 +40648,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999808975353666     
   end
  norm update           1  0.99999808975353666     
-   330.0 a.u.; E=   0.286811502 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   330.0 a.u.; E=   0.286811208 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999808975353666     
  **B           1           1  0.99999808962205716     
   H1
@@ -40109,7 +40771,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999802391760362     
   end
  norm update           1  0.99999802391760362     
-   331.0 a.u.; E=   0.286811533 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   331.0 a.u.; E=   0.286811227 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999802391760362     
  **B           1           1  0.99999802380338243     
   H1
@@ -40233,7 +40897,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999991534292687     
   end
  norm update           1  0.99999991534292687     
-   332.0 a.u.; E=   0.286811557 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   332.0 a.u.; E=   0.286811543 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999991534292687     
  **B           1           1  0.99999991520649067     
   H1
@@ -40354,7 +41020,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999974607785347     
   end
  norm update           1  0.99999974607785347     
-   333.0 a.u.; E=   0.286811560 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   333.0 a.u.; E=   0.286811521 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999974607785347     
  **B           1           1  0.99999974596663399     
   H1
@@ -40475,7 +41143,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999954097726040     
   end
  norm update           1  0.99999954097726040     
-   334.0 a.u.; E=   0.286811547 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   334.0 a.u.; E=   0.286811476 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999954097726040     
  **B           1           1  0.99999954085095921     
   H1
@@ -40596,7 +41266,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999934596036077     
   end
  norm update           1  0.99999934596036077     
-   335.0 a.u.; E=   0.286811534 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   335.0 a.u.; E=   0.286811432 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999934596036077     
  **B           1           1  0.99999934583735695     
   H1
@@ -40717,7 +41389,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999919968454509     
   end
  norm update           1  0.99999919968454509     
-   336.0 a.u.; E=   0.286811530 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   336.0 a.u.; E=   0.286811405 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999919968454509     
  **B           1           1  0.99999919956383099     
   H1
@@ -40838,7 +41512,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999910918393120     
   end
  norm update           1  0.99999910918393120     
-   337.0 a.u.; E=   0.286811531 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   337.0 a.u.; E=   0.286811393 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999910918393120     
  **B           1           1  0.99999910905839851     
   H1
@@ -40959,7 +41635,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999905583666704     
   end
  norm update           1  0.99999905583666704     
-   338.0 a.u.; E=   0.286811524 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   338.0 a.u.; E=   0.286811380 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999905583666704     
  **B           1           1  0.99999905569438352     
   H1
@@ -41080,7 +41758,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999902587866674     
   end
  norm update           1  0.99999902587866674     
-   339.0 a.u.; E=   0.286811511 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   339.0 a.u.; E=   0.286811363 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999902587866674     
  **B           1           1  0.99999902576498600     
   H1
@@ -41201,7 +41881,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999901241308464     
   end
  norm update           1  0.99999901241308464     
-   340.0 a.u.; E=   0.286811493 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   340.0 a.u.; E=   0.286811345 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999901241308464     
  **B           1           1  0.99999901224523180     
   H1
@@ -41322,7 +42004,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999901229069343     
   end
  norm update           1  0.99999901229069343     
-   341.0 a.u.; E=   0.286811472 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   341.0 a.u.; E=   0.286811325 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999901229069343     
  **B           1           1  0.99999901215367804     
   H1
@@ -41443,7 +42127,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999902398010798     
   end
  norm update           1  0.99999902398010798     
-   342.0 a.u.; E=   0.286811450 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   342.0 a.u.; E=   0.286811307 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999902398010798     
  **B           1           1  0.99999902379346850     
   H1
@@ -41564,7 +42250,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999904333343170     
   end
  norm update           1  0.99999904333343170     
-   343.0 a.u.; E=   0.286811424 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   343.0 a.u.; E=   0.286811286 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999904333343170     
  **B           1           1  0.99999904307235066     
   H1
@@ -41685,7 +42373,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999906891687163     
   end
  norm update           1  0.99999906891687163     
-   344.0 a.u.; E=   0.286811399 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   344.0 a.u.; E=   0.286811266 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999906891687163     
  **B           1           1  0.99999906857226095     
   H1
@@ -41806,7 +42496,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999909558592570     
   end
  norm update           1  0.99999909558592570     
-   345.0 a.u.; E=   0.286811373 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   345.0 a.u.; E=   0.286811246 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999909558592570     
  **B           1           1  0.99999909500204187     
   H1
@@ -41927,7 +42619,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999912044346861     
   end
  norm update           1  0.99999912044346861     
-   346.0 a.u.; E=   0.286811349 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   346.0 a.u.; E=   0.286811227 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999912044346861     
  **B           1           1  0.99999911954708842     
   H1
@@ -42048,7 +42742,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999913871092383     
   end
  norm update           1  0.99999913871092383     
-   347.0 a.u.; E=   0.286811327 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   347.0 a.u.; E=   0.286811209 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999913871092383     
  **B           1           1  0.99999913727373935     
   H1
@@ -42169,7 +42865,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999914516268662     
   end
  norm update           1  0.99999914516268662     
-   348.0 a.u.; E=   0.286811308 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   348.0 a.u.; E=   0.286811193 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999914516268662     
  **B           1           1  0.99999914298873760     
   H1
@@ -42290,7 +42988,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999913468585067     
   end
  norm update           1  0.99999913468585067     
-   349.0 a.u.; E=   0.286811294 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   349.0 a.u.; E=   0.286811178 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999913468585067     
  **B           1           1  0.99999913148698460     
   H1
@@ -42411,7 +43111,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999909975638557     
   end
  norm update           1  0.99999909975638557     
-   350.0 a.u.; E=   0.286811282 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   350.0 a.u.; E=   0.286811163 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999909975638557     
  **B           1           1  0.99999909509966933     
   H1
@@ -42532,7 +43234,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999902995868761     
   end
  norm update           1  0.99999902995868761     
-   351.0 a.u.; E=   0.286811273 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   351.0 a.u.; E=   0.286811146 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999902995868761     
  **B           1           1  0.99999902320774869     
   H1
@@ -42653,7 +43357,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999890656522461     
   end
  norm update           1  0.99999890656522461     
-   352.0 a.u.; E=   0.286811262 a.u.; norm=0.9999989
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   352.0 a.u.; E=   0.286811118 a.u.; norm=0.9999989
  **A           1           1   0.0000000000000000       0.99999890656522461     
  **B           1           1  0.99999889651512286     
   H1
@@ -42774,7 +43480,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999871377210836     
   end
  norm update           1  0.99999871377210836     
-   353.0 a.u.; E=   0.286811230 a.u.; norm=0.9999987
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   353.0 a.u.; E=   0.286811062 a.u.; norm=0.9999987
  **A           1           1   0.0000000000000000       0.99999871377210836     
  **B           1           1  0.99999870061591156     
   H1
@@ -42895,7 +43603,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999848924116008     
   end
  norm update           1  0.99999848924116008     
-   354.0 a.u.; E=   0.286811189 a.u.; norm=0.9999985
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   354.0 a.u.; E=   0.286810991 a.u.; norm=0.9999985
  **A           1           1   0.0000000000000000       0.99999848924116008     
  **B           1           1  0.99999847636872985     
   H1
@@ -43016,7 +43726,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999830569863923     
   end
  norm update           1  0.99999830569863923     
-   355.0 a.u.; E=   0.286811172 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   355.0 a.u.; E=   0.286810950 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999830569863923     
  **B           1           1  0.99999829619408687     
   H1
@@ -43137,7 +43849,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999819177985927     
   end
  norm update           1  0.99999819177985927     
-   356.0 a.u.; E=   0.286811184 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   356.0 a.u.; E=   0.286810946 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999819177985927     
  **B           1           1  0.99999818538477703     
   H1
@@ -43258,7 +43972,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999812756631712     
   end
  norm update           1  0.99999812756631712     
-   357.0 a.u.; E=   0.286811206 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   357.0 a.u.; E=   0.286810958 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999812756631712     
  **B           1           1  0.99999812315611425     
   H1
@@ -43379,7 +44095,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999809697106012     
   end
  norm update           1  0.99999809697106012     
-   358.0 a.u.; E=   0.286811235 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   358.0 a.u.; E=   0.286810980 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999809697106012     
  **B           1           1  0.99999809394297512     
   H1
@@ -43500,7 +44218,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999808907339482     
   end
  norm update           1  0.99999808907339482     
-   359.0 a.u.; E=   0.286811267 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   359.0 a.u.; E=   0.286811009 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999808907339482     
  **B           1           1  0.99999808700941595     
   H1
@@ -43621,7 +44341,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999809767810610     
   end
  norm update           1  0.99999809767810610     
-   360.0 a.u.; E=   0.286811303 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   360.0 a.u.; E=   0.286811042 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999809767810610     
  **B           1           1  0.99999809635079806     
   H1
@@ -43742,7 +44464,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999811730941035     
   end
  norm update           1  0.99999811730941035     
-   361.0 a.u.; E=   0.286811340 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   361.0 a.u.; E=   0.286811078 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999811730941035     
  **B           1           1  0.99999811645010417     
   H1
@@ -43863,7 +44587,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999814221172845     
   end
  norm update           1  0.99999814221172845     
-   362.0 a.u.; E=   0.286811377 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   362.0 a.u.; E=   0.286811116 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999814221172845     
  **B           1           1  0.99999814168140067     
   H1
@@ -43984,7 +44710,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999816956741383     
   end
  norm update           1  0.99999816956741383     
-   363.0 a.u.; E=   0.286811416 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   363.0 a.u.; E=   0.286811155 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999816956741383     
  **B           1           1  0.99999816923159002     
   H1
@@ -44105,7 +44833,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999819385027111     
   end
  norm update           1  0.99999819385027111     
-   364.0 a.u.; E=   0.286811455 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   364.0 a.u.; E=   0.286811193 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999819385027111     
  **B           1           1  0.99999819359978970     
   H1
@@ -44226,7 +44956,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999821291460678     
   end
  norm update           1  0.99999821291460678     
-   365.0 a.u.; E=   0.286811495 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   365.0 a.u.; E=   0.286811232 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999821291460678     
  **B           1           1  0.99999821275224465     
   H1
@@ -44347,7 +45079,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999822275147743     
   end
  norm update           1  0.99999822275147743     
-   366.0 a.u.; E=   0.286811533 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   366.0 a.u.; E=   0.286811268 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999822275147743     
  **B           1           1  0.99999822258614379     
   H1
@@ -44468,7 +45202,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999822068719868     
   end
  norm update           1  0.99999822068719868     
-   367.0 a.u.; E=   0.286811569 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   367.0 a.u.; E=   0.286811301 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999822068719868     
  **B           1           1  0.99999822055173593     
   H1
@@ -44589,7 +45325,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999820547007634     
   end
  norm update           1  0.99999820547007634     
-   368.0 a.u.; E=   0.286811603 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   368.0 a.u.; E=   0.286811329 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999820547007634     
  **B           1           1  0.99999820533848116     
   H1
@@ -44710,7 +45448,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999817222940757     
   end
  norm update           1  0.99999817222940757     
-   369.0 a.u.; E=   0.286811633 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   369.0 a.u.; E=   0.286811352 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999817222940757     
  **B           1           1  0.99999817209104547     
   H1
@@ -44831,7 +45571,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999811503670599     
   end
  norm update           1  0.99999811503670599     
-   370.0 a.u.; E=   0.286811664 a.u.; norm=0.9999981
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   370.0 a.u.; E=   0.286811373 a.u.; norm=0.9999981
  **A           1           1   0.0000000000000000       0.99999811503670599     
  **B           1           1  0.99999811492555180     
   H1
@@ -44952,7 +45694,9 @@ WARNING! Norm (0.99999800) exceeded threshold
  norm update           1  0.99999801738954897     
   end
  norm update           1  0.99999801738954897     
-   371.0 a.u.; E=   0.286811691 a.u.; norm=0.9999980
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   371.0 a.u.; E=   0.286811383 a.u.; norm=0.9999980
  **A           1           1   0.0000000000000000       0.99999801738954897     
  **B           1           1  0.99999801724902482     
   H1
@@ -45076,7 +45820,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999987144976643     
   end
  norm update           1  0.99999987144976643     
-   372.0 a.u.; E=   0.286811700 a.u.; norm=0.9999999
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   372.0 a.u.; E=   0.286811680 a.u.; norm=0.9999999
  **A           1           1   0.0000000000000000       0.99999987144976643     
  **B           1           1  0.99999987134365320     
   H1
@@ -45197,7 +45943,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999967221210906     
   end
  norm update           1  0.99999967221210906     
-   373.0 a.u.; E=   0.286811691 a.u.; norm=0.9999997
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   373.0 a.u.; E=   0.286811639 a.u.; norm=0.9999997
  **A           1           1   0.0000000000000000       0.99999967221210906     
  **B           1           1  0.99999967207822671     
   H1
@@ -45318,7 +46066,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999946961098929     
   end
  norm update           1  0.99999946961098929     
-   374.0 a.u.; E=   0.286811676 a.u.; norm=0.9999995
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   374.0 a.u.; E=   0.286811593 a.u.; norm=0.9999995
  **A           1           1   0.0000000000000000       0.99999946961098929     
  **B           1           1  0.99999946949593954     
   H1
@@ -45439,7 +46189,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999930810460824     
   end
  norm update           1  0.99999930810460824     
-   375.0 a.u.; E=   0.286811669 a.u.; norm=0.9999993
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   375.0 a.u.; E=   0.286811561 a.u.; norm=0.9999993
  **A           1           1   0.0000000000000000       0.99999930810460824     
  **B           1           1  0.99999930797777958     
   H1
@@ -45560,7 +46312,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999920367615869     
   end
  norm update           1  0.99999920367615869     
-   376.0 a.u.; E=   0.286811670 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   376.0 a.u.; E=   0.286811546 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999920367615869     
  **B           1           1  0.99999920355587235     
   H1
@@ -45681,7 +46435,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999914244300303     
   end
  norm update           1  0.99999914244300303     
-   377.0 a.u.; E=   0.286811667 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   377.0 a.u.; E=   0.286811535 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999914244300303     
  **B           1           1  0.99999914230536413     
   H1
@@ -45802,7 +46558,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999910679073467     
   end
  norm update           1  0.99999910679073467     
-   378.0 a.u.; E=   0.286811655 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   378.0 a.u.; E=   0.286811518 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999910679073467     
  **B           1           1  0.99999910666409320     
   H1
@@ -45923,7 +46681,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999908945240301     
   end
  norm update           1  0.99999908945240301     
-   379.0 a.u.; E=   0.286811638 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   379.0 a.u.; E=   0.286811501 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999908945240301     
  **B           1           1  0.99999908931030390     
   H1
@@ -46044,7 +46804,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999908577571472     
   end
  norm update           1  0.99999908577571472     
-   380.0 a.u.; E=   0.286811618 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   380.0 a.u.; E=   0.286811482 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999908577571472     
  **B           1           1  0.99999908561668349     
   H1
@@ -46165,7 +46927,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999909463339087     
   end
  norm update           1  0.99999909463339087     
-   381.0 a.u.; E=   0.286811597 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   381.0 a.u.; E=   0.286811463 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999909463339087     
  **B           1           1  0.99999909447613200     
   H1
@@ -46286,7 +47050,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999911220962068     
   end
  norm update           1  0.99999911220962068     
-   382.0 a.u.; E=   0.286811572 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   382.0 a.u.; E=   0.286811444 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999911220962068     
  **B           1           1  0.99999911196694602     
   H1
@@ -46407,7 +47173,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999913641082472     
   end
  norm update           1  0.99999913641082472     
-   383.0 a.u.; E=   0.286811547 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   383.0 a.u.; E=   0.286811423 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999913641082472     
  **B           1           1  0.99999913609502300     
   H1
@@ -46528,7 +47296,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999916329495475     
   end
  norm update           1  0.99999916329495475     
-   384.0 a.u.; E=   0.286811521 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   384.0 a.u.; E=   0.286811403 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999916329495475     
  **B           1           1  0.99999916279305257     
   H1
@@ -46649,7 +47419,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999918886051109     
   end
  norm update           1  0.99999918886051109     
-   385.0 a.u.; E=   0.286811496 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   385.0 a.u.; E=   0.286811383 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999918886051109     
  **B           1           1  0.99999918805601140     
   H1
@@ -46770,7 +47542,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999920950655952     
   end
  norm update           1  0.99999920950655952     
-   386.0 a.u.; E=   0.286811474 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   386.0 a.u.; E=   0.286811366 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999920950655952     
  **B           1           1  0.99999920824409672     
   H1
@@ -46891,7 +47665,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999921959590643     
   end
  norm update           1  0.99999921959590643     
-   387.0 a.u.; E=   0.286811455 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   387.0 a.u.; E=   0.286811350 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999921959590643     
  **B           1           1  0.99999921763657817     
   H1
@@ -47012,7 +47788,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999921429223826     
   end
  norm update           1  0.99999921429223826     
-   388.0 a.u.; E=   0.286811440 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   388.0 a.u.; E=   0.286811335 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999921429223826     
  **B           1           1  0.99999921141315273     
   H1
@@ -47133,7 +47911,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999918690059819     
   end
  norm update           1  0.99999918690059819     
-   389.0 a.u.; E=   0.286811429 a.u.; norm=0.9999992
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   389.0 a.u.; E=   0.286811321 a.u.; norm=0.9999992
  **A           1           1   0.0000000000000000       0.99999918690059819     
  **B           1           1  0.99999918268012677     
   H1
@@ -47254,7 +48034,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999912778581468     
   end
  norm update           1  0.99999912778581468     
-   390.0 a.u.; E=   0.286811420 a.u.; norm=0.9999991
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   390.0 a.u.; E=   0.286811305 a.u.; norm=0.9999991
  **A           1           1   0.0000000000000000       0.99999912778581468     
  **B           1           1  0.99999912169994987     
   H1
@@ -47375,7 +48157,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999902139091490     
   end
  norm update           1  0.99999902139091490     
-   391.0 a.u.; E=   0.286811412 a.u.; norm=0.9999990
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   391.0 a.u.; E=   0.286811283 a.u.; norm=0.9999990
  **A           1           1   0.0000000000000000       0.99999902139091490     
  **B           1           1  0.99999901233800581     
   H1
@@ -47496,7 +48280,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999884642918790     
   end
  norm update           1  0.99999884642918790     
-   392.0 a.u.; E=   0.286811386 a.u.; norm=0.9999988
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   392.0 a.u.; E=   0.286811235 a.u.; norm=0.9999988
  **A           1           1   0.0000000000000000       0.99999884642918790     
  **B           1           1  0.99999883388465216     
   H1
@@ -47617,7 +48403,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999862336861134     
   end
  norm update           1  0.99999862336861134     
-   393.0 a.u.; E=   0.286811345 a.u.; norm=0.9999986
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   393.0 a.u.; E=   0.286811165 a.u.; norm=0.9999986
  **A           1           1   0.0000000000000000       0.99999862336861134     
  **B           1           1  0.99999861000928991     
   H1
@@ -47738,7 +48526,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999842301715824     
   end
  norm update           1  0.99999842301715824     
-   394.0 a.u.; E=   0.286811320 a.u.; norm=0.9999984
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   394.0 a.u.; E=   0.286811113 a.u.; norm=0.9999984
  **A           1           1   0.0000000000000000       0.99999842301715824     
  **B           1           1  0.99999841249907595     
   H1
@@ -47859,7 +48649,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999829126554540     
   end
  norm update           1  0.99999829126554540     
-   395.0 a.u.; E=   0.286811326 a.u.; norm=0.9999983
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   395.0 a.u.; E=   0.286811101 a.u.; norm=0.9999983
  **A           1           1   0.0000000000000000       0.99999829126554540     
  **B           1           1  0.99999828416728542     
   H1
@@ -47980,7 +48772,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999821594532401     
   end
  norm update           1  0.99999821594532401     
-   396.0 a.u.; E=   0.286811347 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   396.0 a.u.; E=   0.286811111 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999821594532401     
  **B           1           1  0.99999821107113973     
   H1
@@ -48101,7 +48895,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999817725849927     
   end
  norm update           1  0.99999817725849927     
-   397.0 a.u.; E=   0.286811374 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   397.0 a.u.; E=   0.286811131 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999817725849927     
  **B           1           1  0.99999817390549794     
   H1
@@ -48222,7 +49018,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999816425808041     
   end
  norm update           1  0.99999816425808041     
-   398.0 a.u.; E=   0.286811406 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   398.0 a.u.; E=   0.286811158 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999816425808041     
  **B           1           1  0.99999816196362767     
   H1
@@ -48343,7 +49141,9 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999816859185420     
   end
  norm update           1  0.99999816859185420     
-   399.0 a.u.; E=   0.286811440 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   399.0 a.u.; E=   0.286811190 a.u.; norm=0.9999982
  **A           1           1   0.0000000000000000       0.99999816859185420     
  **B           1           1  0.99999816708594891     
   H1
@@ -48464,5 +49264,7 @@ WARNING! Norm (0.99999799) exceeded threshold
  norm update           1  0.99999818623026693     
   end
  norm update           1  0.99999818623026693     
-   400.0 a.u.; E=   0.286811478 a.u.; norm=0.9999982
+ This must be all zeros
+ ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!
+   400.0 a.u.; E=   0.286811227 a.u.; norm=0.9999982
  JOB DONE.
