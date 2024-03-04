@@ -457,6 +457,7 @@ case(0)
   open(101,file='energies.dat', status='old', position='append', action='WRITE', iostat=iost)
 
   !--Writing energies
+  call update_norm()
   select case(rank)
   case(1)
     call update_total_energy_1d()
@@ -465,7 +466,6 @@ case(0)
   case(3)
     call update_energy_3d(wf3x(1,:,:,:))
   end select
-  call update_norm()
   call printen()
 case(1)
   do jstate=1,nstates
@@ -514,7 +514,7 @@ if ((run.eq.0).and.(nstates.gt.1)) then
   write(file_unit,*) "#  time     diabatic populations (1, 2, 3, ...)   norm"
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
-  write(*,'(A,A)') "Diabatic populations outputed to file: ", file_name
+  write(*,'(A,A)') " Diabatic populations outputed to file: ", trim(file_name)
 
   file_unit = 104
   file_name = 'pop_ad.dat'
@@ -522,7 +522,7 @@ if ((run.eq.0).and.(nstates.gt.1)) then
   write(file_unit,*) "#  time     adiabatic populations (1, 2, 3, ...)  norm"
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
-  write(*,'(A,A)') "Adiabatic populations outputed to file: ", file_name
+  write(*,'(A,A)') " Adiabatic populations outputed to file: ", trim(file_name)
 
   call print_pop()
 

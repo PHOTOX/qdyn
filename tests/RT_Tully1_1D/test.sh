@@ -41,7 +41,7 @@ then
   echo "Test passed - adiabatic populations match the reference." > results.dat
 elif [[ $test_result == "False" ]]
 then
-  echo "Test failed - .adiabatic populations don't match the reference" > results.dat
+  echo "Test failed - adiabatic populations don't match the reference and energy is conserved    ." > results.dat
 else
   echo "Test failed - error in python script, it prints '$test_result' instead of True or False." > results.dat
 fi

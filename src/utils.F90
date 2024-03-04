@@ -14,7 +14,7 @@ CONTAINS
 function braket_1d(bra, ket)
 
   complex(DP), intent(in)       :: bra(:), ket(:)
-  real(DP)                      :: braket_1d
+  complex(DP)                   :: braket_1d
   integer                       :: i
 
   braket_1d=0.0d0
@@ -287,15 +287,12 @@ end subroutine build_expH1
 
 !=== ADIABATIC TRANSFORMATION ===!
 subroutine adiab_trans_matrix()
-  !todo: following to be removed
-  real(DP)            :: D, norm
   integer             :: ioerr,lwork,dim_work,liwork,dim_iwork,ldwork,dim_dwork
   integer,allocatable :: iwork(:)
   real(kind=8),allocatable :: work(:)
 
-  write(*,*) " Adiabatic transformation matrix calculated."
-  write(*,*) " **** Dsyevd to be implemented."
-  !todo: this must be changed with dsyevd !!!!
+  write(*,*) "Adiabatic energies and transformation matrix calculated."
+  write(*,*) " **** Inverse matrix must be added!!! Current transformation is not probabaly correct."
   ! U_ad needs to contain the matrix that will be diagonalized, it will contain output eigenvectors
   U_ad=H1
 
@@ -326,37 +323,6 @@ subroutine adiab_trans_matrix()
   ! invU = from diabatic to adiabatic
   !todo: I will need to calculate inverse here
   !todo: create U_diab which will be used here
-
-
-! !todo: remove later
-! do i=1, xngrid 
-!   D = dsqrt(4.0d0 * H1(2,1,i)**2.0d0 + (H1(1,1,i) - H1(2,2,i))**2.0d0)
-!   ! eigenval 1
-!   H1_ad(1,i) = (H1(1,1,i) + H1(2,2,i) - D)/2.0d0
-!   ! eigenval 2
-!   H1_ad(2,i) = (H1(1,1,i) + H1(2,2,i) + D)/2.0d0
-!   if (H1(2,1,i).eq.0.0d0) then
-!     U_ad(1,1,i) = 1.0d0
-!     U_ad(2,1,i) = 0.0d0
-!     U_ad(1,2,i) = 0.0d0
-!     U_ad(2,2,i) = 1.0d0
-!     cycle
-!   end if
-!   ! eigenvec 1
-!   U_ad(1,1,i) = (H1(1,1,i)-H1(2,2,i)-D)/(2.0d0*H1(2,1,i))
-!   U_ad(2,1,i) = 1.0d0
-!   write(*,*) "U1", U_ad(1,1,i), U_ad(1,2,i)
-!   norm = dsqrt(U_ad(1,1,i)**2 + U_ad(2,1,i)**2)
-!   U_ad(1,1,i) = U_ad(1,1,i) / norm
-!   U_ad(2,1,i) = U_ad(2,1,i) / norm
-!   ! eigenvec 2
-!   U_ad(1,2,i) = (H1(1,1,i)-H1(2,2,i)+D)/(2.0d0*H1(2,1,i))
-!   U_ad(2,2,i) = 1.0d0
-!   norm = dsqrt(U_ad(1,2,i)**2 + U_ad(2,2,i)**2)
-!   U_ad(1,2,i) = U_ad(1,2,i) / norm
-!   U_ad(2,2,i) = U_ad(2,2,i) / norm
-!   write(*,*) U_ad(:,:,i)
-! end do
 
 end subroutine adiab_trans_matrix
 
@@ -545,7 +511,7 @@ implicit none
   end do
 
   ! calculating <T> in the momentum representation, back FFT to coordinate represetation was skipped
-  kinetic_energy_1d = braket_1d(wfp, wft)/braket_1d(wfp, wfp)
+  kinetic_energy_1d = braket_1d(wfp, wft)
 
 end function
 
@@ -664,7 +630,8 @@ end subroutine
 
 subroutine update_total_energy_1d()
 implicit none
-  real(DP)                      :: old_energy, norm, thresh=1.0d-4
+  real(DP)                      :: old_energy, local_norm, thresh=1.0d-6
+  complex(DP)                   :: temp_en
   integer                       :: i, istate, jstate
 
   ! saving old energy
@@ -674,28 +641,31 @@ implicit none
 
   ! calculating <T>
   do istate=1, nstates
-    norm = braket_1d(wfx(istate,:), wfx(istate,:))
-    if (norm.gt.thresh) then
+    local_norm = braket_1d(wfx(istate,:), wfx(istate,:))
+    if (local_norm.gt.thresh) then
       energy(3) = energy(3) + kinetic_energy_1d(wfx(istate, :))
     end if
   end do
 
   ! calculating <V>
   do istate=1, nstates
-    do jstate=1, nstates
-      energy(2) = energy(2) + &
+    do jstate=istate, nstates
+      ! if i=j then <i|H_el|j> is real number
+      if (istate.eq.jstate) energy(2) = energy(2) + &
         braket_1d(wfx(istate,:), H1(istate,jstate,:)*wfx(jstate,:))
+      ! if i/=j then <i|H_el|j> is a complex number and <i|H_el|j> + <j|H_el|i> = 2*Re{<i|H_el|j>}
+      if (istate.ne.jstate) energy(2) = energy(2) + &
+        2*real(braket_1d(wfx(istate,:), H1(istate,jstate,:)*wfx(jstate,:)))
     end do
   end do
 
-
   ! calculating <E> = <V> + <T>
   energy(1) = energy(2)+ energy(3)
+
+  energy(:) = energy(:)/norm
   
   ! energy difference from the last step
   energy_diff = energy(1) - old_energy
-
-  write(*,*) "ZKONTROLOVAT VZORECEK PRO ENERGII!!!!!"
 
 end subroutine
 

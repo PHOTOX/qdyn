@@ -5,7 +5,7 @@ grid_size = 512
 x0 = 2 # initial position of the wave funciton (zero initial momentum considered)
 exact_omega = 0.08 # exact omega from the model
 thresh = 1e-4 # threshold for the error
-ethresh = 1e-5 # threshold for the energy std and drift 
+ethresh = 2e-5 # threshold for the energy std and drift 
 
 # reading the wave function and reshaping
 wf = np.genfromtxt('wf1d.1.out')

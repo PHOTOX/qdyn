@@ -69,17 +69,14 @@ Hydrogen atom test is not working well, probably too much stretch for the code. 
 
 ## TODO
 Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension of RT to multiple states is currently under progress.
-*1) Diagonalization of the H_el for nstates>1
-*2) On the fly diag when field is used
-3) Add rotation matrix for propagation expH1
-4) Add autocorrelation function to the analyze scripts
-5) Add imaginary absorption potential
+*0) Correct rotation matrix for ad. trans and testing with Tully!
+*1) On the fly diag when field is used - to be tested
+2) Add rotation matrix for propagation expH1
+3) Add autocorrelation function to the analyze scripts
+4) Add imaginary absorption potential
 
 ## small TODO list
-*1) adpat analyze programs to changes in dynamics
-2) change input in README.md
-3) convert diabatic to adiabatic populations
-4) initial state selection in the input for loading wave function
-5) add -llapack to the fftw compilation script
-6) rename wf keyword to generate wf
+1) change input in README.md
+2) initial state selection in the input for loading wave function
+3) rename wf keyword to generate wf
 
