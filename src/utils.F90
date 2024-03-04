@@ -133,7 +133,6 @@ subroutine update_norm()
     case(1)
       do istate=1, nstates
         norm = norm + braket_1d(wfx(istate,:), wfx(istate,:))
-        write(*,*) "norm update", istate, braket_1d(wfx(istate,:), wfx(istate,:))
       end do
     case(2)
       norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
@@ -143,7 +142,7 @@ subroutine update_norm()
 
   !TODO: here should be norm check with some clever threshold
   ! currenlty very simple patch
-  if (dabs(dsqrt(norm)-1.0d0) >= 1.0d-6 .and. run == 0) then
+  if (dabs(dsqrt(norm)-1.0d0) >= norm_thresh .and. run == 0) then
     write(*,'(a,F10.8,a)') "WARNING! Norm (",norm,") exceeded threshold"
     write(*,*) "Renormalization!"
     select case(rank)
@@ -153,7 +152,6 @@ subroutine update_norm()
         do istate=1, nstates
           norm = norm + braket_1d(wfx(istate,:), wfx(istate,:))
         end do
-        write(*,*) norm
       case(2)
         call normalize_2d(wf2x(1,:,:))
         norm = braket_2d(wf2x(1,:,:), wf2x(1,:,:))
@@ -205,12 +203,13 @@ subroutine update_pop()
   integer   :: istate
 
   diab_pop = 0.0d0
-  write(*,*) "diab_pop 1", diab_pop
+  ad_pop = 0.0d0
 
   select case(rank)
     case(1)
       do istate=1, nstates
         diab_pop(istate) = braket_1d(wfx(istate,:), wfx(istate,:))
+        ad_pop(istate) = braket_1d(wfx_ad(istate,:), wfx_ad(istate,:))
       end do
     case(2)
       do istate=1, nstates
@@ -222,46 +221,173 @@ subroutine update_pop()
       end do
   end select
 
-  write(*,*) "diab_pop 1", diab_pop
-
 end subroutine update_pop
 
-!=== Diagonalize H ===!
-!todo: this will probably go to propag.F90 module
+!=== Diagonalize H and build expH ===!
 subroutine build_expH1()
 ! diagonalization of H and building of expH1
-! this function is called only when use_field = .true., otherwise expH1 is built during initialization
-  integer        :: istate, jstate
-  complex(DP)    :: H_el(nstates, nstates, xngrid)
-  complex(DP)    :: V_int(xngrid)
+  integer      :: istate, jstate
+  real(DP)     :: H_el(nstates, nstates, xngrid) ! H1 + V_int, this Hamiltonian is diagonalized
+  real(DP)     :: V_int(xngrid)
+  ! auxiliary variables to calculate diagonal expH for 2 states
+  real(DP)     :: ampl, D 
+  complex(DP)  :: prefactor
 
+  H_el = H1
+
+  ! if the field is on, we add the field couplings to the H_el matrix
   ! creating H_el=H1-mu*E(t)
-  do istate=1, nstates
-    do jstate=1, nstates
-      V_int(:) = - dipole_coupling(istate,jstate,:)*elmag_field(time) 
-      H_el(istate, jstate, :) = H1(istate,jstate,:) + V_int(:)
+  if (field_coupling) then
+    do istate=1, nstates
+      do jstate=1, nstates
+        V_int(:) = - dipole_coupling(istate,jstate,:)*elmag_field(time) 
+        H_el(istate, jstate, :) = H_el(istate,jstate,:) + V_int(:)
+      end do
     end do
-  end do
-
-  ! diagonalization of H_el
-  
-  ! calculating transformation vectors
+  end if
 
   ! building expH1
-!  if (nstates.eq.1) then
-!    expH1(
-!
-!  else if (nstates.eq.2) then
-!
-!  else
-!    write(*,*) "Diagonalization for 3 or more states not available."
-!    stop 1
-!  end if
+  if (nstates.eq.1) then ! no diagonalization is necessary
+
+    do i=1, xngrid
+      expH1(1,1,i) = cmplx(dcos(-H_el(1,1,i)*dt/2.0d0),dsin(-H_el(1,1,i)*dt/2.0d0)) !exp(-i H(x) tau/(2 h_bar))
+    end do
+
+  else if (nstates.eq.2) then ! diagonalized H and directly constructed exp, see Tannor chapter 11.7 (eq 11.204)
+
+    do i=1, xngrid
+      ampl = - ( H_el(1,1,i) + H_el(2,2,i) ) * dt / 4.0d0
+      prefactor = cmplx(dcos(ampl),dsin(ampl))
+      !D = sqrt(4 * |V21|^2 + (V1-V2)^2)
+      D = dsqrt(4.0d0 * H_el(2,1,i)**2.0d0 + (H_el(1,1,i) - H_el(2,2,i))**2.0d0)
+
+      expH1(1,1,i) = prefactor*cmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(2,2,i)-H_el(1,1,i)))
+      expH1(2,2,i) = prefactor*cmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(1,1,i)-H_el(2,2,i)))
+      expH1(1,2,i) = prefactor*cmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(1,2,i)))
+      expH1(2,1,i) = prefactor*cmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(2,1,i)))
+      
+    end do
+
+  elseif (nstates.gt.2) then ! for more than 2 states i use 1-iH
+
+    write(*,*) "WARNING: expH = 1-i*H*dt"
+    do istate=1, nstates
+      do jstate=1, nstates
+        do i=1, xngrid 
+          if (istate.eq.jstate) then
+            expH1(istate,jstate,i) = 1-cmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
+          else  
+            expH1(istate,jstate,i) = cmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
+          end if
+        end do
+      end do
+    end do
+  end if
 end subroutine build_expH1
 
-! diagonalize H
-subroutine diag_H_1d()
-end subroutine diag_H_1d
+!=== ADIABATIC TRANSFORMATION ===!
+subroutine adiab_trans_matrix()
+  !todo: following to be removed
+  real(DP)            :: D, norm
+  integer             :: ioerr,lwork,dim_work,liwork,dim_iwork,ldwork,dim_dwork
+  integer,allocatable :: iwork(:)
+  real(kind=8),allocatable :: work(:)
+
+  write(*,*) " Adiabatic transformation matrix calculated."
+  write(*,*) " **** Dsyevd to be implemented."
+  !todo: this must be changed with dsyevd !!!!
+  ! U_ad needs to contain the matrix that will be diagonalized, it will contain output eigenvectors
+  U_ad=H1
+
+  ! allocating dimensions for dsyevd
+  allocate(work(1),iwork(1))
+  lwork=-1
+  liwork=-1
+  call dsyevd('V','U',nstates,U_ad(:,:,1),nstates,H1_ad(:,1),&
+    work,lwork,iwork,liwork,ioerr)
+  if(ioerr/=0) write(*,*) 'ERROR: preparing matrix diagonalization'
+  dim_work=work(1)
+  dim_iwork=iwork(1)
+  deallocate(work,iwork)
+  allocate(work(dim_work),iwork(dim_iwork))
+
+  ! performing real diagonalization
+  U_ad=H1
+  do i=1, xngrid 
+    lwork=1+6*nstates+2*nstates**2
+    liwork=3+5*nstates
+    call dsyevd('V','U',nstates,U_ad(:,:,i),nstates,H1_ad(:,i),&
+      work,lwork,iwork,liwork,ioerr)
+    if(ioerr/=0) write(*,*) 'ERROR: matrix diagonalization'
+    if(i.gt.1) call check_overlap(U_ad(:,:,i),U_ad(:,:,i-1))
+  end do
+
+  ! U = from adiabatic to diabatic
+  ! invU = from diabatic to adiabatic
+  !todo: I will need to calculate inverse here
+  !todo: create U_diab which will be used here
+
+
+! !todo: remove later
+! do i=1, xngrid 
+!   D = dsqrt(4.0d0 * H1(2,1,i)**2.0d0 + (H1(1,1,i) - H1(2,2,i))**2.0d0)
+!   ! eigenval 1
+!   H1_ad(1,i) = (H1(1,1,i) + H1(2,2,i) - D)/2.0d0
+!   ! eigenval 2
+!   H1_ad(2,i) = (H1(1,1,i) + H1(2,2,i) + D)/2.0d0
+!   if (H1(2,1,i).eq.0.0d0) then
+!     U_ad(1,1,i) = 1.0d0
+!     U_ad(2,1,i) = 0.0d0
+!     U_ad(1,2,i) = 0.0d0
+!     U_ad(2,2,i) = 1.0d0
+!     cycle
+!   end if
+!   ! eigenvec 1
+!   U_ad(1,1,i) = (H1(1,1,i)-H1(2,2,i)-D)/(2.0d0*H1(2,1,i))
+!   U_ad(2,1,i) = 1.0d0
+!   write(*,*) "U1", U_ad(1,1,i), U_ad(1,2,i)
+!   norm = dsqrt(U_ad(1,1,i)**2 + U_ad(2,1,i)**2)
+!   U_ad(1,1,i) = U_ad(1,1,i) / norm
+!   U_ad(2,1,i) = U_ad(2,1,i) / norm
+!   ! eigenvec 2
+!   U_ad(1,2,i) = (H1(1,1,i)-H1(2,2,i)+D)/(2.0d0*H1(2,1,i))
+!   U_ad(2,2,i) = 1.0d0
+!   norm = dsqrt(U_ad(1,2,i)**2 + U_ad(2,2,i)**2)
+!   U_ad(1,2,i) = U_ad(1,2,i) / norm
+!   U_ad(2,2,i) = U_ad(2,2,i) / norm
+!   write(*,*) U_ad(:,:,i)
+! end do
+
+end subroutine adiab_trans_matrix
+
+subroutine check_overlap(eigenv1,eigenv2)
+
+  real(kind=8),intent(inout) :: eigenv1(nstates,nstates)
+  real(kind=8),intent(in) :: eigenv2(nstates,nstates)
+  integer :: istate
+
+  do istate=1,nstates
+    if (eigenv1(1,istate)*eigenv2(1,istate)+eigenv1(2,istate)*eigenv2(2,istate)<0.0d0) then
+      eigenv1(:,istate)=-eigenv1(:,istate)
+    end if
+  end do
+
+end subroutine check_overlap
+
+subroutine wf_adiab_trans()
+  integer      :: istate, jstate
+
+  select case(rank)
+  case(1)
+    wfx_ad = 0.0d0
+    do istate=1, nstates
+      do jstate=1, nstates
+        wfx_ad(istate,:) = wfx_ad(istate,:) + U_ad(istate,jstate,:)*wfx(jstate,:)
+      end do
+    end do
+  end select
+
+end subroutine wf_adiab_trans
 
 !=== PRINTING ===!
 subroutine printwf_1d(state)
@@ -283,6 +409,28 @@ subroutine printwf_1d(state)
     end select
 
     write(file_unit,*) x(i), real(wfx(state,i)), aimag(wfx(state,i)), real(conjg(wfx(state,i))*wfx(state,i)), v
+  end do
+
+  write(file_unit,*)
+
+end subroutine
+
+subroutine printwf_ad_1d(state)
+
+  integer, intent(in)        :: state
+  integer                    :: i
+  real(DP)                   :: v
+
+  file_unit=400+state
+
+  write(file_unit,'(A,F10.3,A)') "#time ", time, " a.u."
+
+  do i=1, size(x)
+    
+    v = H1_ad(state,i)
+
+    write(file_unit,*) x(i), real(wfx_ad(state,i)), aimag(wfx_ad(state,i)), &
+      real(conjg(wfx_ad(state,i))*wfx_ad(state,i)), v
   end do
 
   write(file_unit,*)
@@ -364,11 +512,12 @@ subroutine print_field()
 end subroutine
 
 subroutine print_pop()
-
-    call update_pop()
-
-    write(103,'(F10.3,20(F9.5))') time, diab_pop
     
+  call update_pop()
+
+  write(103,'(F10.3,10F14.9)') time, diab_pop, norm
+  write(104,'(F10.3,10F14.9)') time, ad_pop, norm
+
 end subroutine
 
 !=== ENERGIES ===!
@@ -515,14 +664,13 @@ end subroutine
 
 subroutine update_total_energy_1d()
 implicit none
-  real(DP)                      :: old_energy, norm, thresh=1.0d-5
+  real(DP)                      :: old_energy, norm, thresh=1.0d-4
   integer                       :: i, istate, jstate
 
   ! saving old energy
   old_energy = energy(1)
 
   energy = 0.0d0
-  write(*,*) "This must be all zeros"
 
   ! calculating <T>
   do istate=1, nstates

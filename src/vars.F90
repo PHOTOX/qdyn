@@ -10,13 +10,14 @@ module mod_vars
   real(DP)              :: xmin, xmax, dx, ymin, ymax, dy, zmin, zmax, dz, dtwrite, dt 
   real(DP)              :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
   real(DP)              :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
+  real(DP)              :: norm_thresh = 1.0d-1
   real(DP), dimension(:), allocatable    :: x, y, z, px, py, pz 
-  real(DP), dimension(:), allocatable    :: diab_pop
+  real(DP), dimension(:), allocatable    :: diab_pop, ad_pop
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
   character(len=10)     :: dynamics=''
   !-wave function
   complex(DP), dimension(:), allocatable :: wfp
-  complex(DP), dimension(:,:), allocatable :: wfx, wf2p
+  complex(DP), dimension(:,:), allocatable :: wfx, wfx_ad, wf2p
   complex(DP), dimension(:,:,:), allocatable :: wf2x, wf3p
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
   !-field
@@ -39,7 +40,8 @@ module mod_vars
   complex(DP), dimension(:,:,:), allocatable :: expV3
   !-real time H operators for diabatic H_el hamiltonian (V is used for IT, H is used for RT)
   ! TODO: these are prepared variables for RT propagation, not allocated yet in the init()
-  real(DP), dimension(:,:,:), allocatable     :: H1, dipole_coupling
+  real(DP), dimension(:,:), allocatable       :: H1_ad
+  real(DP), dimension(:,:,:), allocatable     :: H1, U_ad, dipole_coupling
 ! real(DP), dimension(:,:,:), allocatable   :: H2
 ! real(DP), dimension(:,:,:,:), allocatable :: H3
   complex(DP), dimension(:,:,:), allocatable      :: expH1
@@ -49,7 +51,7 @@ module mod_vars
   namelist /general/ dynamics, nstep, dt, dtwrite, xngrid, yngrid, zngrid, rank, &
     xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, wf, nstates, print_wf
   namelist /it/ pot, analytic, project_rot
-  namelist /rt/ pot, analytic, field_coupling, field
+  namelist /rt/ pot, analytic, field_coupling, field, norm_thresh
   !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -246,6 +248,15 @@ end if
 !projecting out rotated wf
 if (project_rot .and. (run == 1) .and. (nstates>1)) then
   write(*,*) "Projecting out also 90 degrees rotated wavefunctions due to numeric instabilities"
+end if
+
+!norm check threshold
+if (run.eq.0) then
+  write(*,'(a, F14.8)') "Norm conservation threshold (norm_thresh) set to ", norm_thresh
+  if (norm_thresh.le.0.0d0) then
+    write(*,*) "ERROR: norm_thresh cannot be smaller than 0"
+    stop 1
+  end if
 end if
 
 !field

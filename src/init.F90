@@ -40,7 +40,10 @@ if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,
 
 ! Hamiltonian
 if(run .eq. 0) then
-  if(rank .eq. 1) allocate(expH1(nstates,nstates,xngrid),H1(nstates,nstates,xngrid))
+  if(rank .eq. 1) then
+    allocate(H1(nstates,nstates,xngrid),H1_ad(nstates,xngrid),U_ad(nstates,nstates,xngrid))
+    allocate(expH1(nstates,nstates,xngrid), wfx_ad(nstates,xngrid))
+  end if
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
 
@@ -49,7 +52,7 @@ if(run .eq. 0) then
   end if
 
   ! allocating populations
-  if (nstates.gt.1) allocate(diab_pop(nstates))
+  if (nstates.gt.1) allocate(diab_pop(nstates), ad_pop(nstates))
 
 else if (run .eq. 1) then
   if(rank .eq. 1) allocate(expV1(xngrid),v1(xngrid))
@@ -230,29 +233,34 @@ else if (run.eq.0) then
     end if
   end if 
 
+  ! adiabatic matrix
+  if (nstates.ge.2) call adiab_trans_matrix()
+
   ! RT: creating operator
   ! if there is not field coupling (= no time-dependent part, we will built the propagators in advance)
   if (field_coupling) then
     write(*,*) "Time-dependent problem, exp(H_el) will be built every time step."
   else
     write(*,*) "Time-independent problem, exp(H_el) built."
-    ! for 1 state expH is directly diagonal
-    if (nstates.eq.1) then
-      if(rank .eq. 1) then
-        do istate=1, nstates
-          do jstate=1, nstates
-            do i=1, xngrid
-              expH1(istate,jstate,i) = cmplx(cos(-H1(istate,jstate,i)*dt/2.0d0),sin(-H1(istate,jstate,i)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
-            end do
-          end do
-        end do
-      elseif(rank .eq. 2) then
+    if(rank .eq. 1) then
+
+      call build_expH1()
+
+    else if(rank .eq. 2) then
+
+      if (nstates.eq.1) then
         do i=1, xngrid
           do j=1, yngrid
             expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
           end do
         end do
-      elseif(rank .eq. 3) then
+      else
+        write(*,*) "For rank=2, only 1 state propagation is available"
+        stop 1
+      end if
+
+    elseif(rank .eq. 3) then
+      if (nstates.eq.1) then
         do i=1, xngrid
           do j=1, yngrid
             do k=1, zngrid
@@ -260,49 +268,12 @@ else if (run.eq.0) then
             end do
           end do
         end do 
-      end if
-      ! diagonalization for two states
-    elseif (nstates.eq.2) then
-        select case(rank)
-        case(1)
-          !TODO: exact diagonalization necessary
-          write(*,*) "WARNING: expH = 1-i*H*dt"
-          do istate=1, nstates
-            do jstate=1, nstates
-              do i=1, xngrid
-                if (istate.eq.jstate) then
-                  expH1(istate,jstate,i) = 1-cmplx(0,H1(istate,jstate,i)*dt/2.0d0)
-                else
-                  expH1(istate,jstate,i) = cmplx(0,H1(istate,jstate,i)*dt/2.0d0)
-                end if
-              end do
-            end do
-          end do
-        case(2)
-          write(*,*) "Diagonalization for 2 states and dim 2 not available."
-          stop 1
-        case(3)
-          write(*,*) "Diagonalization for 2 states and dim 2 not available."
-          stop 1
-        end select
-    else
-        write(*,*) "Diagonalization for 3 or more states currently not available."
+      else
+        write(*,*) "For rank=3, only 1 state propagation is available"
         stop 1
+      end if
     end if
   end if
-end if
-
-!todo: REMOVE
-if (run.eq.0) then
-write(*,*) "H11", H1(1,1,:)
-write(*,*) "H12", H1(1,2,:)
-write(*,*) "H21", H1(2,1,:)
-write(*,*) "H22", H1(2,2,:)
-
-write(*,*) "expH11", expH1(1,1,:)
-write(*,*) "expH12", expH1(1,2,:)
-write(*,*) "expH21", expH1(2,1,:)
-write(*,*) "expH22", expH1(2,2,:)
 end if
 
 !-- KINETIC energy init        exp[-iT/h_bar tau]
@@ -401,6 +372,9 @@ end if
 !--Generating wavepacket
 call init_wavepacket()
 
+!--Calculating adiabatic wf
+if ((run.eq.0).and.(nstates.gt.1)) call wf_adiab_trans()
+
 !--Printing of WF
 if (print_wf) then
 if(rank .eq. 1) then
@@ -417,7 +391,22 @@ if(rank .eq. 1) then
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
     call printwf_1d(jstate)
-    write(*,*)"Outputing WF to file "//file_name
+    write(*,*)"Outputing diabatic WF to file "//file_name
+
+    ! printing adiabatic
+    if ((run.eq.0).and.(nstates.gt.1)) then
+      file_unit = 400+jstate
+      write(file_name,*) jstate
+      file_name='wf1d_ad.'//trim(adjustl(file_name))//'.out'
+      open(file_unit,file=file_name, action='WRITE', iostat=iost)
+      ! opening file unit
+      write(file_unit,*) "#x   REAL   IMAG   NORM    POTENTIAL"
+      close(file_unit)
+      open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+
+      call printwf_ad_1d(jstate)
+      write(*,*)"Outputing adiabatic WF to file "//file_name
+    end if
 
   end do
 
@@ -518,16 +507,23 @@ end if
 
 !--Open file with diabatic populaitons
 if ((run.eq.0).and.(nstates.gt.1)) then
+
   file_unit = 103
   file_name = 'pop_diab.dat'
   open(file_unit,file=file_name, action='WRITE', iostat=iost)
-  write(file_unit,*) "#  time     diabatic populations (1, 2, 3, ...)"
+  write(file_unit,*) "#  time     diabatic populations (1, 2, 3, ...)   norm"
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
-
-  !TODO: here open adiab. pop file
-
   write(*,'(A,A)') "Diabatic populations outputed to file: ", file_name
+
+  file_unit = 104
+  file_name = 'pop_ad.dat'
+  open(file_unit,file=file_name, action='WRITE', iostat=iost)
+  write(file_unit,*) "#  time     adiabatic populations (1, 2, 3, ...)  norm"
+  close(file_unit)
+  open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
+  write(*,'(A,A)') "Adiabatic populations outputed to file: ", file_name
+
   call print_pop()
 
 end if

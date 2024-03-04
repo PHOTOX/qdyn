@@ -9,28 +9,15 @@ CONTAINS
 
 !--REAL TIME PROPAGATION
 subroutine propag_rt_1d()
-implicit none
-  integer                                  :: i, istate, jstate
-  complex(DP), dimension(nstates,xngrid)   :: wfx_tmp ! temporary wf for propagation
 
   ! Propagating with H matrix: half step
   call propag_H_rt_1d()
-
-  write(*,*) " H1"
-  call update_norm()
 
   ! Propagating istate with T matrix: full step
   call propag_T_1d()
 
-  write(*,*) " T1"
-  call update_norm()
-
   ! Propagating with H matrix: half step
   call propag_H_rt_1d()
-
-  write(*,*) " H2"
-  call update_norm()
-  write(*,*) " end"
 
 end subroutine propag_rt_1d
 
@@ -42,20 +29,13 @@ implicit none
 
   wfx_tmp=0.0d0
 
+  if (field_coupling) call build_expH1()
+  
   do istate=1,nstates ! states to be propagated
     do jstate=1,nstates ! this loop goes through all the states contributing to propagation of istate
-      !todo: remove
-      write(*,*) "**A", istate, jstate, braket_1d(wfx_tmp(istate,:), wfx_tmp(istate,:)), &
-      braket_1d(wfx(jstate,:), wfx(jstate,:))
-
-      !todo: if field coupling is present, then diagonalization at every step
-
       do i=1, xngrid
         wfx_tmp(istate,i) = wfx_tmp(istate,i)+expH1(istate,jstate,i)*wfx(jstate,i)
       end do
-
-      !todo: remove
-      write(*,*) "**B", istate, jstate, braket_1d(wfx_tmp(istate,:), wfx_tmp(istate,:))
     end do
   end do
 

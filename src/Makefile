@@ -4,10 +4,10 @@
 FC = gfortran
 FFLAGS =
 #FFTW library needed
-# LIBS = -L/home/janos/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm 
-LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm
+# LIBS = -L/home/janos/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm -llapack
+# LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm 
+LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm -llapack
 LDLIBS = -lfftw3 # This is necessary only on clusters, not on MacOS
-#FFLAGS = -I/home/suchanj/programs/fftw-3.3.6/include/ # This was uncommented in the original make file by JS
 
 # Name of program
 OUT = qdyn
@@ -30,7 +30,6 @@ test:
 # run the quick version of the test suite
 qtest:
 	cd ../tests; /bin/bash run_test_suite.sh 0
-
 
 .PHONY: clean 
 

@@ -6,7 +6,7 @@ Program for one to three-dimensional numerical quantum propagation on a grid in 
    - `cd fftw`
    - `tar -xvf fftw.tar.gz` to extract files from the archive, two versions available (3.3.10 and 3.3.6)
    - `./compile.sh` to compile the version selected within the script (3.3.10 default)
-   - compilation will output a path of the compilation that will used in Makefile, e.g. `LIBS = -L/home/janos/Programs/fftw/fftw-3.3.6/lib -lfftw3 -lm `
+   - compilation will output a path of the compilation that will used in Makefile, e.g. `LIBS = -L/home/janos/Programs/fftw/fftw-3.3.6/lib -lfftw3 -lm -llapack`
 2) Compile Qdym
    - `cd src`
    - change the library path from the previous FFTW3 compilation in `Makefile`
@@ -70,7 +70,7 @@ Hydrogen atom test is not working well, probably too much stretch for the code. 
 ## TODO
 Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension of RT to multiple states is currently under progress.
 *1) Diagonalization of the H_el for nstates>1
-2) On the fly diag when field is used
+*2) On the fly diag when field is used
 3) Add rotation matrix for propagation expH1
 4) Add autocorrelation function to the analyze scripts
 5) Add imaginary absorption potential
@@ -80,4 +80,6 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 2) change input in README.md
 3) convert diabatic to adiabatic populations
 4) initial state selection in the input for loading wave function
+5) add -llapack to the fftw compilation script
+6) rename wf keyword to generate wf
 

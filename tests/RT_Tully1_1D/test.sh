@@ -34,14 +34,14 @@ time qdyn > qdyn.out
 
 echo
 
-test_result=$(python3 check_mean_x.py)
+test_result=$(python3 check_tully.py)
 
 if [[ $test_result == "True" ]]
 then
-  echo "Test passed - time evolution of <x> matches the analytic result." > results.dat
+  echo "Test passed - adiabatic populations match the reference." > results.dat
 elif [[ $test_result == "False" ]]
 then
-  echo "Test failed - mean position does not correspond to the exact result." > results.dat
+  echo "Test failed - .adiabatic populations don't match the reference" > results.dat
 else
   echo "Test failed - error in python script, it prints '$test_result' instead of True or False." > results.dat
 fi

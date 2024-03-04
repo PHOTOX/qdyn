@@ -46,6 +46,7 @@ select case(run)
 
       !print information
       if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
+        !update and print energies
         select case(rank)
         case(1)
           call update_total_energy_1d()
@@ -57,11 +58,20 @@ select case(run)
         call printen()
 
         write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
+
+        !if multistate problem, transform wf to adiabatic basis and print populations of ad. and diab. states
+        if (nstates.gt.1) then
+          call wf_adiab_trans()
+          call print_pop()
+        end if
+
+        !print wave function
         if (print_wf) then
           do istate=1, nstates 
             select case(rank)
             case(1)
               call printwf_1d(istate)
+              if (nstates.gt.1) call printwf_ad_1d(istate)
             case(2)
               call printwf_2d(istate)
             case(3)
@@ -70,8 +80,7 @@ select case(run)
           end do
         end if
         
-        if (nstates.gt.1) call print_pop()
-
+        !print field
         if (field_coupling) call print_field()
 
       end if
