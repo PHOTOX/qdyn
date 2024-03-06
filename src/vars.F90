@@ -41,7 +41,7 @@ module mod_vars
   !-real time H operators for diabatic H_el hamiltonian (V is used for IT, H is used for RT)
   ! TODO: these are prepared variables for RT propagation, not allocated yet in the init()
   real(DP), dimension(:,:), allocatable       :: H1_ad
-  real(DP), dimension(:,:,:), allocatable     :: H1, U_ad, dipole_coupling
+  real(DP), dimension(:,:,:), allocatable     :: H1, U1, invU1, dipole_coupling  ! U = from adiabatic to diabatic, invU = from diabatic to adiabatic 
 ! real(DP), dimension(:,:,:), allocatable   :: H2
 ! real(DP), dimension(:,:,:,:), allocatable :: H3
   complex(DP), dimension(:,:,:), allocatable      :: expH1

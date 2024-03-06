@@ -22,7 +22,7 @@ Norm conservation threshold (norm_thresh) set to     0.10000000
  * <psi_1|H_el|psi_2> = read from file
  * <psi_2|H_el|psi_1> = read from file
  * <psi_2|H_el|psi_2> = read from file
- Adiabatic energies and transformation matrix calculated.
+ Adiabatic energies and transformation matrix U calculated.
   **** Inverse matrix must be added!!! Current transformation is not probabaly correct.
  Time-independent problem, exp(H_el) built.
  Generating initial gaussian wave packet using section &init_wf.

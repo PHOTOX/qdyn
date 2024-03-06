@@ -3,7 +3,7 @@ from os.path import exists
 from numpy import genfromtxt, linspace, interp, std, abs
 
 ### inputs
-pop_thresh = 2e-1 # threshold for the populations std
+pop_thresh = 5e-5 # threshold for the populations std
 ethresh = 2e-5 # threshold for the energy std and drift
 
 ### checking populations

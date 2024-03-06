@@ -41,7 +41,7 @@ if(rank .eq. 3) allocate(wf3x(nstates,xngrid,yngrid,zngrid), wf3p(xngrid,yngrid,
 ! Hamiltonian
 if(run .eq. 0) then
   if(rank .eq. 1) then
-    allocate(H1(nstates,nstates,xngrid),H1_ad(nstates,xngrid),U_ad(nstates,nstates,xngrid))
+    allocate(H1(nstates,nstates,xngrid),H1_ad(nstates,xngrid),U1(nstates,nstates,xngrid),invU1(nstates,nstates,xngrid))
     allocate(expH1(nstates,nstates,xngrid), wfx_ad(nstates,xngrid))
   end if
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))

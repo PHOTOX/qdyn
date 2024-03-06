@@ -288,19 +288,19 @@ end subroutine build_expH1
 !=== ADIABATIC TRANSFORMATION ===!
 subroutine adiab_trans_matrix()
   integer             :: ioerr,lwork,dim_work,liwork,dim_iwork,ldwork,dim_dwork
-  integer,allocatable :: iwork(:)
+  integer,allocatable :: iwork(:), ipivot(:)
   real(kind=8),allocatable :: work(:)
 
-  write(*,*) "Adiabatic energies and transformation matrix calculated."
+  write(*,*) "Adiabatic energies and transformation matrix U calculated."
   write(*,*) " **** Inverse matrix must be added!!! Current transformation is not probabaly correct."
-  ! U_ad needs to contain the matrix that will be diagonalized, it will contain output eigenvectors
-  U_ad=H1
+  ! U1 needs to contain the matrix that will be diagonalized, it will contain output eigenvectors
+  U1=H1
 
   ! allocating dimensions for dsyevd
   allocate(work(1),iwork(1))
   lwork=-1
   liwork=-1
-  call dsyevd('V','U',nstates,U_ad(:,:,1),nstates,H1_ad(:,1),&
+  call dsyevd('V','U',nstates,U1(:,:,1),nstates,H1_ad(:,1),&
     work,lwork,iwork,liwork,ioerr)
   if(ioerr/=0) write(*,*) 'ERROR: preparing matrix diagonalization'
   dim_work=work(1)
@@ -309,20 +309,44 @@ subroutine adiab_trans_matrix()
   allocate(work(dim_work),iwork(dim_iwork))
 
   ! performing real diagonalization
-  U_ad=H1
+  U1=H1
   do i=1, xngrid 
     lwork=1+6*nstates+2*nstates**2
     liwork=3+5*nstates
-    call dsyevd('V','U',nstates,U_ad(:,:,i),nstates,H1_ad(:,i),&
+    call dsyevd('V','U',nstates,U1(:,:,i),nstates,H1_ad(:,i),&
       work,lwork,iwork,liwork,ioerr)
     if(ioerr/=0) write(*,*) 'ERROR: matrix diagonalization'
-    if(i.gt.1) call check_overlap(U_ad(:,:,i),U_ad(:,:,i-1))
+    if(i.gt.1) call check_overlap(U1(:,:,i),U1(:,:,i-1))
   end do
+  deallocate(work,iwork)
 
+  ! calculating inverse of U
   ! U = from adiabatic to diabatic
   ! invU = from diabatic to adiabatic
-  !todo: I will need to calculate inverse here
-  !todo: create U_diab which will be used here
+  ! first getting the right dimensions for arrays
+  dim_dwork=1
+  allocate(work(dim_dwork),ipivot(nstates))
+  ldwork=-1
+  invU1(:,:,1)=U1(:,:,1)
+  call dgetri(nstates,invU1,nstates,ipivot,work,ldwork,ioerr)
+  if(ioerr/=0) print*,'ERROR: preparation for inverting U'
+  dim_dwork=work(1)
+  ldwork=nstates
+  deallocate(work)
+  allocate(work(dim_dwork))
+  ! calculating the inversion
+  ! invU1=U1
+
+  do i=1,xngrid
+    invU1(:,:,i)=U1(:,:,i)
+    ! first factorizing the U matrix so that it can be inverted later
+    call dgetrf(nstates,nstates,invU1(:,:,i),nstates,ipivot,ioerr)
+    if(ioerr/=0) print*,'ERROR: factorizing error when inverting U'
+    ! now inverting the matrix using the factorized form
+    call dgetri(nstates,invU1(:,:,i),nstates,ipivot,work,ldwork,ioerr)
+    if(ioerr/=0) print*,'ERROR: inverting transformation matrix U'
+  end do
+  deallocate(work,ipivot)
 
 end subroutine adiab_trans_matrix
 
@@ -346,10 +370,8 @@ subroutine wf_adiab_trans()
   select case(rank)
   case(1)
     wfx_ad = 0.0d0
-    do istate=1, nstates
-      do jstate=1, nstates
-        wfx_ad(istate,:) = wfx_ad(istate,:) + U_ad(istate,jstate,:)*wfx(jstate,:)
-      end do
+    do i=1,xngrid
+      wfx_ad(:,i) = matmul(invU1(:,:,i),wfx(:,i))
     end do
   end select
 
