@@ -270,7 +270,9 @@ subroutine build_expH1()
 
   elseif (nstates.gt.2) then ! for more than 2 states i use 1-iH
 
-    write(*,*) "WARNING: expH = 1-i*H*dt"
+    !TODO: numerical diagonalization will be necessary
+
+    write(*,*) "WARNING: expH = 1-i*H*dt, need to add numerical diagonalization"
     do istate=1, nstates
       do jstate=1, nstates
         do i=1, xngrid 
@@ -467,14 +469,15 @@ subroutine printwf_3d(state)
 
 end subroutine
 
-subroutine print_chk()
+subroutine print_chk(state)
+  integer, intent(in)        :: state
 
   open(666,file='wf.chk', action='WRITE', iostat=iost)
-  write(666,*) "#QDYN checkpoint file for reloading WF to program"
-  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",xngrid
-  if(rank .eq. 1) write(666,*) wfx
-  if(rank .eq. 2) write(666,*) wf2x
-  if(rank .eq. 3) write(666,*) wf3x
+  write(666,'(A,I3)') "#QDYN wave function file after IT propagation for state ", state
+  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",xngrid, yngrid, zngrid
+  if(rank .eq. 1) write(666,*) wfx(state,:)
+  if(rank .eq. 2) write(666,*) wf2x(state,:,:)
+  if(rank .eq. 3) write(666,*) wf3x(state,:,:,:)
   close(666)
 
 end subroutine

@@ -7,7 +7,6 @@
     xmin = -10.0
     xmax = 20.0
     mass_x = 2000.0
-    wf = 0
     nstates = 2
     print_wf = .false.
     rank = 1

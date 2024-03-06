@@ -537,16 +537,14 @@ end subroutine init
 
 subroutine init_wavepacket()
 
-  real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0
-  real(DP)    :: prefactor, gauss, momenta, norm
-  integer     :: init_state=1
+  real(DP)    :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0 ! read in input
+  real(DP)    :: prefactor, gauss, momenta, norm ! for generating gaussian wf
+  integer     :: init_state=1 ! read from input, inital state for the dynamics
+  logical     :: gen_init_wf=.true.
 
-  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0,init_state
+  namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0,init_state,gen_init_wf
 
-if(wf .eq. 0) then                                           
-  write(*,*) "Generating initial gaussian wave packet using section &init_wf."
-
-  ! Default values
+  ! Default values for generated gaussian wavepacket
   x0 = (xmax-xmin)/2.0d0+xmin+(xmax-xmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
   y0 = (ymax-ymin)/2.0d0+ymin+(ymax-ymin)/10                      ! shifted a little bit so that the wave packet is not symmetric
   z0 = (zmax-zmin)/2.0d0+zmin+(zmax-zmin)/10                      ! shifted a little bit so that the wave packet is not symmetric
@@ -557,7 +555,7 @@ if(wf .eq. 0) then
   py0 = 0.0d0
   pz0 = 0.0d0
 
-  ! reading init_wf section in the input.q
+  ! reading &init_wf section in the input.q
   rewind(100)
   read(100, init_wf, iostat=iost)
   if (iost.ne.0) then
@@ -567,10 +565,16 @@ if(wf .eq. 0) then
   end if
   close(100)
 
+  if (run.eq.1) init_state=1 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
+
   if ((init_state.lt.1).or.(init_state.gt.nstates)) then
     write(*,*) "Initial state is greater than nstates or less than 1"
     stop 1
   end if
+
+if (gen_init_wf) then
+  write(*,*) "Generating initial gaussian wave packet."
+
   if (run.eq.0) write(*,'(A,I3)') " initial state = ", init_state
   write(*,'(A,F10.5)') " x0 = ", x0
   if (rank .ge. 2) write(*,'(A,F10.5)') " y0 = ", y0
@@ -660,21 +664,22 @@ if(wf .eq. 0) then
   end select
   write(*,'(A,F10.5)') " norm = ", norm 
 
-elseif(wf .eq. 1) then
-  !Procedure for loading WF from file
-  if(run.eq.1) then
-    read(666,*) !two empty lines
-    read(666,*)
-    if(rank .eq. 1) read(666,*)wfx
-    if(rank .eq. 2) read(666,*)wf2x
-    if(rank .eq. 3) read(666,*)wf3x
-    close(666)
-  else if(run.eq.0) then
-    write(*,*) "ERROR: reading wf from file ro RT is not ready."
+else
+  write(*,*) "WF will be read from wf.chk file."
+  open(666,file='wf.chk', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
+  if (iost.ne.0) then
+    write(*,*)'ERROR: wf.chk file must be provided'
+    write(*,*) iost
     stop 1
-    !TODO: I need to select, what state to initialze in
-    ! probably I will need to read again &init
   end if
+  
+  !Procedure for loading WF from file
+  read(666,*) !two empty lines
+  read(666,*)
+  if(rank .eq. 1) read(666,*)wfx(init_state,:)
+  if(rank .eq. 2) read(666,*)wf2x(init_state,:,:)  
+  if(rank .eq. 3) read(666,*)wf3x(init_state,:,:,:)  
+  close(666)
 end if
 
 !Normalize wf

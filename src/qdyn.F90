@@ -143,10 +143,11 @@ select case(run)
       end do
     end do
 
+  call print_chk(nstates) ! this prints last IT wave function which can be than loaded to next calculation
+
 end select
  
 !--Finalization--!
 write(*,*) "JOB DONE."
-call print_chk()
 
 end program qdyn

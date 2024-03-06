@@ -75,7 +75,4 @@ Imaginary-time propagation and real-time propagation in 1D are finished and test
 4) Add imaginary absorption potential
 
 ## small TODO list
-1) change input in README.md
-2) initial state selection in the input for loading wave function
-3) rename wf keyword to generate wf
-
+1) change input description in README.md

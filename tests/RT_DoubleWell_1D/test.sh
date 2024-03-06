@@ -46,7 +46,7 @@ else
   echo "Test failed - error in python script, it prints '$test_result' instead of True or False." > results.dat
 fi
 
-rm wf* ener*
+rm ener*
 
 cat results.dat
 
