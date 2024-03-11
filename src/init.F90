@@ -147,19 +147,19 @@ if (run.eq.1) then
 ! IT: creating exponentail operator
   if(rank .eq. 1) then
     do i=1, xngrid
-      expV1(i) = cmplx(exp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
+      expV1(i) = dcmplx(dexp(-v1(i)*dt/2.0d0),0)   !exp(-i V(x) tau/(2 h_bar))
     end do
   elseif(rank .eq. 2) then
     do i=1, xngrid
       do j=1, yngrid
-        expV2(i,j) = cmplx(exp(-v2(i,j)*dt/2.0d0),0)  
+        expV2(i,j) = dcmplx(dexp(-v2(i,j)*dt/2.0d0),0)  
       end do
     end do
   elseif(rank .eq. 3) then
     do i=1, xngrid
       do j=1, yngrid
         do k=1, zngrid
-          expV3(i,j,k) = cmplx(exp(-v3(i,j,k)*dt/2.0d0),0)
+          expV3(i,j,k) = dcmplx(dexp(-v3(i,j,k)*dt/2.0d0),0)
         end do
       end do
     end do 
@@ -251,7 +251,7 @@ else if (run.eq.0) then
       if (nstates.eq.1) then
         do i=1, xngrid
           do j=1, yngrid
-            expV2(i,j) = cmplx(cos(-v2(i,j)*dt/2.0d0),sin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
+            expV2(i,j) = dcmplx(dcos(-v2(i,j)*dt/2.0d0),dsin(-v2(i,j)*dt/2.0d0))   !exp(-i V(x) tau/(2 h_bar))
           end do
         end do
       else
@@ -264,7 +264,7 @@ else if (run.eq.0) then
         do i=1, xngrid
           do j=1, yngrid
             do k=1, zngrid
-              expV3(i,j,k) = cmplx(cos(-v3(i,j,k)*dt/2.0d0),sin(-v3(i,j,k)*dt/2.0d0))  
+              expV3(i,j,k) = dcmplx(dcos(-v3(i,j,k)*dt/2.0d0),dsin(-v3(i,j,k)*dt/2.0d0))  
             end do
           end do
         end do 
@@ -285,8 +285,8 @@ select case(rank)
      else
        px(i) = 2*pi*(i-1-xngrid)/(xngrid*dx)
      end if
-     if(run .eq. 0) expT1(i) = cmplx(dcos(-px(i)**2/(2*mass_x)*dt),dsin(-px(i)**2/(2*mass_x)*dt))
-     if(run .eq. 1) expT1(i) = cmplx(dexp(-px(i)**2/(2*mass_x)*dt),0)
+     if(run .eq. 0) expT1(i) = dcmplx(dcos(-px(i)**2/(2*mass_x)*dt),dsin(-px(i)**2/(2*mass_x)*dt))
+     if(run .eq. 1) expT1(i) = dcmplx(dexp(-px(i)**2/(2*mass_x)*dt),0)
     end do
   !2D
   case(2)
@@ -309,9 +309,9 @@ select case(rank)
 
     do i=1, xngrid
       do j=1, yngrid
-        if(run .eq. 0) expT2(i,j) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),&
-                                      sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt))
-        if(run .eq. 1) expT2(i,j) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),0)
+        if(run .eq. 0) expT2(i,j) = dcmplx(dcos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),&
+                                      dsin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt))
+        if(run .eq. 1) expT2(i,j) = dcmplx(dexp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y))*dt),0)
       end do
     end do
 
@@ -345,9 +345,9 @@ select case(rank)
     do i=1, xngrid
       do j=1, yngrid
         do k=1, zngrid
-          if(run .eq. 0) expT3(i,j,k) = cmplx(cos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),&
-                                         sin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt))
-          if(run .eq. 1) expT3(i,j,k) = cmplx(exp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),0)
+          if(run .eq. 0) expT3(i,j,k) = dcmplx(dcos(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),&
+                                         dsin(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt))
+          if(run .eq. 1) expT3(i,j,k) = dcmplx(dexp(-(px(i)**2/(2*mass_x)+py(j)**2/(2*mass_y)+pz(k)**2/(2*mass_z))*dt),0)
         end do
       end do
     end do
@@ -600,11 +600,11 @@ if (gen_init_wf) then
     select case (rank)
       case (1)
         ! Gaussian part of the wave packet depending only on positions
-        gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2))
+        gauss = prefactor * dexp(-(x(i)-x0)**2/(2*xsigma**2))
         ! momentum calculation p0*(x-x0)
         momenta = px0*(x(i)-x0)
         ! whole imaginary wf
-        wfx(init_state,i) = cmplx(gauss * cos(momenta), gauss * sin(momenta))  
+        wfx(init_state,i) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))  
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
           do jstate=1,nstates
@@ -615,11 +615,11 @@ if (gen_init_wf) then
       case (2)
         do j=1, yngrid
           ! Gaussian part of the wave packet depending only on positions
-          gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2) -(y(j)-y0)**2/(2*ysigma**2))
+          gauss = prefactor * dexp(-(x(i)-x0)**2/(2*xsigma**2) -(y(j)-y0)**2/(2*ysigma**2))
           ! momentum calculation p0*(x-x0)
           momenta = px0*(x(i)-x0) + py0*(y(j)-y0)
           ! whole imaginary wf
-          wf2x(init_state,i,j) = cmplx(gauss * cos(momenta), gauss * sin(momenta))
+          wf2x(init_state,i,j) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
         ! for the imag time, I create the came wave packet for all states
         if (run.eq.1 .and. nstates.ge.2) then
@@ -634,11 +634,11 @@ if (gen_init_wf) then
         do j=1, yngrid
           do k=1, zngrid
             ! Gaussian part of the wave packet depending only on positions
-            gauss = prefactor * exp(-(x(i)-x0)**2/(2*xsigma**2)-(y(j)-y0)**2/(2*ysigma**2)-(z(k)-z0)**2/(2*zsigma**2))
+            gauss = prefactor * dexp(-(x(i)-x0)**2/(2*xsigma**2)-(y(j)-y0)**2/(2*ysigma**2)-(z(k)-z0)**2/(2*zsigma**2))
             ! momentum calculation p0*(x-x0)
             momenta = px0*(x(i)-x0) + py0*(y(j)-y0) + pz0*(z(k)-z0)
             ! whole imaginary wf
-            wf3x(init_state,i,j,k) = cmplx(gauss * cos(momenta), gauss * sin(momenta)) 
+            wf3x(init_state,i,j,k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta)) 
 
           ! for the imag time, I create the came wave packet for all states
           if (run.eq.1 .and. nstates.ge.2) then

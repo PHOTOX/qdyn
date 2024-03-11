@@ -76,7 +76,7 @@ subroutine project_out_1d(phi_i,wfx)
   ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
   !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
   if (project_rot) then
-    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    rot = dcmplx(0.0d0, 1.0d0)*phi_i
     c_i = braket_1d(rot, wfx)
     wfx = wfx - c_i * rot
   end if
@@ -96,7 +96,7 @@ subroutine project_out_2d(phi_i,wf2x)
   ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
   !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
   if (project_rot) then
-    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    rot = dcmplx(0.0d0, 1.0d0)*phi_i
     c_i = braket_2d(rot, wf2x)
     wf2x = wf2x - c_i * rot
   end if
@@ -116,7 +116,7 @@ subroutine project_out_3d(phi_i,wf3x)
   ! WARNING: numerical instability causes optimization to lower states rotated by 90 degrees in the imaginary plane. 
   !It is purely numerical and can be removed by projecting out 90 degrees rotated wf.
   if (project_rot) then
-    rot = cmplx(0.0d0, 1.0d0)*phi_i
+    rot = dcmplx(0.0d0, 1.0d0)*phi_i
     c_i = braket_3d(rot, wf3x)
     wf3x = wf3x - c_i * rot
   end if
@@ -250,21 +250,21 @@ subroutine build_expH1()
   if (nstates.eq.1) then ! no diagonalization is necessary
 
     do i=1, xngrid
-      expH1(1,1,i) = cmplx(dcos(-H_el(1,1,i)*dt/2.0d0),dsin(-H_el(1,1,i)*dt/2.0d0)) !exp(-i H(x) tau/(2 h_bar))
+      expH1(1,1,i) = dcmplx(dcos(-H_el(1,1,i)*dt/2.0d0),dsin(-H_el(1,1,i)*dt/2.0d0)) !exp(-i H(x) tau/(2 h_bar))
     end do
 
   else if (nstates.eq.2) then ! diagonalized H and directly constructed exp, see Tannor chapter 11.7 (eq 11.204)
 
     do i=1, xngrid
       ampl = - ( H_el(1,1,i) + H_el(2,2,i) ) * dt / 4.0d0
-      prefactor = cmplx(dcos(ampl),dsin(ampl))
+      prefactor = dcmplx(dcos(ampl),dsin(ampl))
       !D = sqrt(4 * |V21|^2 + (V1-V2)^2)
       D = dsqrt(4.0d0 * H_el(2,1,i)**2.0d0 + (H_el(1,1,i) - H_el(2,2,i))**2.0d0)
 
-      expH1(1,1,i) = prefactor*cmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(2,2,i)-H_el(1,1,i)))
-      expH1(2,2,i) = prefactor*cmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(1,1,i)-H_el(2,2,i)))
-      expH1(1,2,i) = prefactor*cmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(1,2,i)))
-      expH1(2,1,i) = prefactor*cmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(2,1,i)))
+      expH1(1,1,i) = prefactor*dcmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(2,2,i)-H_el(1,1,i)))
+      expH1(2,2,i) = prefactor*dcmplx(dcos(D*dt/4.0d0),dsin(D*dt/4.0d0)/D*(H_el(1,1,i)-H_el(2,2,i)))
+      expH1(1,2,i) = prefactor*dcmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(1,2,i)))
+      expH1(2,1,i) = prefactor*dcmplx(0.0d0,dsin(D*dt/4.0d0)/D*(-2.0d0*H_el(2,1,i)))
       
     end do
 
@@ -277,9 +277,9 @@ subroutine build_expH1()
       do jstate=1, nstates
         do i=1, xngrid 
           if (istate.eq.jstate) then
-            expH1(istate,jstate,i) = 1-cmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
+            expH1(istate,jstate,i) = 1-dcmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
           else  
-            expH1(istate,jstate,i) = cmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
+            expH1(istate,jstate,i) = dcmplx(0,H_el(istate,jstate,i)*dt/2.0d0)
           end if
         end do
       end do
