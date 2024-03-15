@@ -22,7 +22,7 @@ module mod_vars
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
   !-field
   logical               :: field_coupling=.false.
-  character(len=100)    :: field=''
+  character(len=9000)   :: field=''
   !-auxiliary variables
   integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
@@ -58,6 +58,7 @@ CONTAINS
 
 subroutine read_input()
   implicit none
+  character(len=1000) :: line
 
   write(*,*)
   write(*,*) "### Reading input ###"
@@ -73,7 +74,9 @@ subroutine read_input()
   read(100, general, iostat=iost)
   if (iost.ne.0) then
     write(*,*)'ERROR: &general section missing or problematic'
-    write(*,*) iost
+    backspace(100)
+    read(100,fmt='(A)') line
+    write(*,'(A)') ' Invalid line in namelist: '//trim(line)
     stop 1
   end if
 
@@ -83,6 +86,9 @@ subroutine read_input()
     read(100, rt, iostat=iost)
     if (iost.ne.0) then
       write(*,*)'ERROR: &rt section missing or problematic'
+      backspace(100)
+      read(100,fmt='(A)') line
+      write(*,'(A)') ' Invalid line in namelist: '//trim(line)
       write(*,*) iost
       stop 1
     end if
@@ -90,7 +96,9 @@ subroutine read_input()
     read(100, it, iostat=iost)
     if (iost.ne.0) then
       write(*,*)'ERROR: &it section missing or problematic'
-      write(*,*) iost
+      backspace(100)
+      read(100,fmt='(A)') line
+      write(*,'(A)') ' Invalid line in namelist: '//trim(line)
       stop 1
     end if
   end select

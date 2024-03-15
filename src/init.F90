@@ -541,6 +541,7 @@ subroutine init_wavepacket()
   real(DP)    :: prefactor, gauss, momenta, norm ! for generating gaussian wf
   integer     :: init_state=1 ! read from input, inital state for the dynamics
   logical     :: gen_init_wf=.true.
+  character(len=1000) :: line
 
   namelist /init_wf/x0,y0,z0,xsigma,ysigma,zsigma,px0,py0,pz0,init_state,gen_init_wf
 
@@ -560,7 +561,9 @@ subroutine init_wavepacket()
   read(100, init_wf, iostat=iost)
   if (iost.ne.0) then
     write(*,*)'ERROR: &init_wf section must be provided in input.q'
-    write(*,*) iost
+    backspace(100)
+    read(100,fmt='(A)') line
+    write(*,'(A)') ' Invalid line in namelist: '//trim(line)
     stop 1
   end if
   close(100)
