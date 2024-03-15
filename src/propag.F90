@@ -11,25 +11,26 @@ CONTAINS
 subroutine propag_rt_1d()
 
   ! Propagating with H matrix: half step
-  call propag_H_rt_1d()
+  call propag_H_rt_1d(.true.)
 
   ! Propagating istate with T matrix: full step
-  call propag_T_1d()
+  call propag_T_rt_1d()
 
   ! Propagating with H matrix: half step
-  call propag_H_rt_1d()
+  call propag_H_rt_1d(.false.)
 
 end subroutine propag_rt_1d
 
-subroutine propag_H_rt_1d()
+subroutine propag_H_rt_1d(update)
 ! This function propagates wave function with the H_el hamiltonian
 implicit none
+  logical, intent(in)                      :: update ! should I update expH? If it's the first halfstep, yes, if the second, no
   integer                                  :: i, istate, jstate
   complex(DP), dimension(nstates,xngrid)   :: wfx_tmp ! temporary wf for propagation
 
   wfx_tmp=0.0d0
 
-  if (field_coupling) call build_expH1()
+  if ((field_coupling).and.update) call build_expH1()
   
   do istate=1,nstates ! states to be propagated
     do jstate=1,nstates ! this loop goes through all the states contributing to propagation of istate
@@ -43,6 +44,34 @@ implicit none
   wfx = wfx_tmp
 
 end subroutine propag_H_rt_1d
+
+subroutine propag_T_rt_1d()
+! This function propagates the wave function with kinetic operator T
+implicit none
+  integer    :: i, istate
+
+  do istate=1,nstates ! states to be propagated
+    ! FFT -> K
+    call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
+    call dfftw_destroy_plan(plan_forward)
+
+    wfp = wfp / dsqrt(real(xngrid, kind=DP))
+
+    ! p(t)
+    do i=1, xngrid
+      wfp(i) = wfp(i)*expT1(i)
+    end do
+
+    ! FFT -> x
+    call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
+    call dfftw_destroy_plan(plan_backward)
+
+    wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
+  end do
+
+end subroutine propag_T_rt_1d
 
 subroutine propag_rt_2d(wf2x)
 
@@ -144,7 +173,6 @@ implicit none
   complex(DP), intent(inout)    :: wfx(:)
   integer                       :: i
 
-  !TODO: half steps are demanding.. full steps would be better
   ! V(t/2)
   do i=1, xngrid
     wfx(i) = wfx(i)*expV1(i)
@@ -267,34 +295,5 @@ implicit none
   end do
 
 end subroutine propag_it_3d
-
-!--GENERAL TIME PROPAGATION FUNCTIONS
-subroutine propag_T_1d()
-! This function propagates the wave function with kinetic operator T
-implicit none
-  integer    :: i, istate
-
-  do istate=1,nstates ! states to be propagated
-    ! FFT -> K
-    call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-    call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
-    call dfftw_destroy_plan(plan_forward)
-
-    wfp = wfp / dsqrt(real(xngrid, kind=DP))
-
-    ! p(t)
-    do i=1, xngrid
-      wfp(i) = wfp(i)*expT1(i)
-    end do
-
-    ! FFT -> x
-    call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-    call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
-    call dfftw_destroy_plan(plan_backward)
-
-    wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
-  end do
-
-end subroutine propag_T_1d
 
 end module 

@@ -26,7 +26,7 @@ module mod_vars
   !-auxiliary variables
   integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
-  character(len=100)    :: pot=''
+  character(len=9000)   :: pot=''
   !-exp(T) operator
   complex(DP), dimension(:), allocatable :: expT1
   complex(DP), dimension(:,:), allocatable :: expT2
@@ -58,7 +58,7 @@ CONTAINS
 
 subroutine read_input()
   implicit none
-  character(len=1000) :: line
+  character(len=1000) :: line ! this line is used when namelist reading fails and stores the last input line
 
   write(*,*)
   write(*,*) "### Reading input ###"

@@ -69,10 +69,9 @@ Hydrogen atom test is not working well, probably too much stretch for the code. 
 
 ## TODO
 Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension of RT to multiple states is currently under progress.
-*1) On the fly diag when field is used - to be tested
-2) Add rotation matrix for propagation expH1
-3) Add autocorrelation function to the analyze scripts
-4) Add imaginary absorption potential
+1) Add rotation matrix for propagation expH1
+2) Add autocorrelation function to the analyze scripts
+3) Add imaginary absorption potential
 
 ## small TODO list
 1) change input description in README.md
