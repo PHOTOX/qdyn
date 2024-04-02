@@ -22,6 +22,7 @@ module mod_vars
   complex(DP), dimension(:,:,:,:), allocatable :: wf3x
   !-field
   logical               :: field_coupling=.false.
+  real(DP)              :: field_on=0.0d0, field_off ! turning on and off field
   character(len=9000)   :: field=''
   !-auxiliary variables
   integer               :: iost, i, j, k
@@ -51,7 +52,7 @@ module mod_vars
   namelist /general/ dynamics, nstep, dt, dtwrite, xngrid, yngrid, zngrid, rank, &
     xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, nstates, print_wf
   namelist /it/ pot, analytic, project_rot
-  namelist /rt/ pot, analytic, field_coupling, field, norm_thresh
+  namelist /rt/ pot, analytic, field_coupling, field, field_on, field_off, norm_thresh
   !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -83,6 +84,9 @@ subroutine read_input()
   rewind(100)
   select case(dynamics)
   case('rt')
+    ! setting field_off to max time before &rt is read
+    field_off=nstep*dt
+    ! reading &rt
     read(100, rt, iostat=iost)
     if (iost.ne.0) then
       write(*,*)'ERROR: &rt section missing or problematic'
@@ -228,11 +232,6 @@ end if
 if (nstates < 1) then
   write(*,*) "ERR: number of states must be 1 or more."
   stop 1
-!else
-!  if (run .eq. 0 .and. nstates > 1) then
-!    write(*,*) "ERR: nstates > 1 available only for imag propagation."
-!    stop 1
-!  end if
 else
     write(*,'(A,I2)') " nstates: ", nstates
 end if
@@ -253,21 +252,15 @@ end if
 
 !field
 if (field_coupling) then
-  select case(run)
-  case(0)
-    write(*,*) "Field: ON"
-    !jj
-    write(*,*) "WARNING! Field was not tested and is not fully implemented"
-    if (field == '') then
-      write(*,*) "ERR: No field function specified. Set 'field' in input.q."
-      stop 1
-    else
-      write(*,*) "|E(t)| = ", field
-    end if
-  case(1)
-    write(*,*) "ERR: Field cannot be used with imaginary time propagation."
+  write(*,*) "Electric field coupling included in the interaction Hamiltonian."
+  write(*,'(A,F12.2,A)') "Field on at  ", field_on, " a.t.u."
+  write(*,'(A,F12.2,A)') "Field off at ", field_off, " a.t.u."
+  if (field == '') then
+    write(*,*) "ERR: No field function specified. Set 'field' in input.q."
     stop 1
-  end select
+  else
+    write(*,*) "|E(t)| = ", trim(field)
+  end if
 else 
   if (run == 0) then
     write(*,*) "Field: OFF"

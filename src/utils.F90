@@ -294,7 +294,6 @@ subroutine adiab_trans_matrix()
   real(kind=8),allocatable :: work(:)
 
   write(*,*) "Adiabatic energies and transformation matrix U calculated."
-  write(*,*) " **** Inverse matrix must be added!!! Current transformation is not probabaly correct."
   ! U1 needs to contain the matrix that will be diagonalized, it will contain output eigenvectors
   U1=H1
 
@@ -336,9 +335,8 @@ subroutine adiab_trans_matrix()
   ldwork=nstates
   deallocate(work)
   allocate(work(dim_dwork))
-  ! calculating the inversion
-  ! invU1=U1
 
+  ! calculating the inversion
   do i=1,xngrid
     invU1(:,:,i)=U1(:,:,i)
     ! first factorizing the U matrix so that it can be inverted later
@@ -699,9 +697,13 @@ function elmag_field(t)
   real(DP)    :: point(1) !This is just a simple trick I use to create a 1D array out of t which is necessary for evalf
 
   point(1) = t
-  elmag_field = evalf(2, point)                   !Evaluating field at time t
-  if (EvalErrType > 0) then
-    WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+  if ((t.lt.field_on).or.(t.gt.field_off)) then
+    elmag_field = 0.0d0
+  else
+    elmag_field = evalf(2, point)                   !Evaluating field at time t
+    if (EvalErrType > 0) then
+      WRITE(*,*)'*** Error evaluating potential: ',EvalErrMsg ()
+    end if
   end if
 
 end function
