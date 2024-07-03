@@ -57,7 +57,8 @@ select case(run)
         end select
         call printen()
 
-        write(*,'(F8.1,a,F14.9,a,F9.7)') time, ' a.u.; E=', energy(1), ' a.u.; norm=', norm
+        write(*,'(a,I10,a,F8.1,a,F14.9,a,F9.7)') 'Step: ', n, ' ; ', time, ' a.u.; E=', energy(1), &
+          ' a.u.; norm=', norm
 
         !if multistate problem, transform wf to adiabatic basis and print populations of ad. and diab. states
         if (nstates.gt.1) then
@@ -128,7 +129,8 @@ select case(run)
           end select
           call printen_state(istate)
 
-          write(*,'(F8.1,a,F14.9,a,F14.9,a)') time, ' a.u.; E=', energy(1), ' a.u.; dE=', energy_diff, ' a.u.'
+          write(*,'(a,I10,a,F8.1,a,F14.9,a,F14.9,a)') 'Step: ', n, ' ; ', time, ' a.u.; E=', energy(1), &
+            ' a.u.; dE=', energy_diff, ' a.u.'
           if (print_wf) then
             select case(rank)
             case(1)

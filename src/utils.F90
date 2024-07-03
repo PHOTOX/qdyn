@@ -472,7 +472,7 @@ subroutine print_chk(state)
 
   open(666,file='wf.chk', action='WRITE', iostat=iost)
   write(666,'(A,I3)') "#QDYN wave function file after IT propagation for state ", state
-  write(666,*) "#Rank:",rank,"Pot:",pot,"Ngrid:",xngrid, yngrid, zngrid
+  write(666,*) "#Rank:",rank,"Ngrid:",xngrid, yngrid, zngrid
   if(rank .eq. 1) write(666,*) wfx(state,:)
   if(rank .eq. 2) write(666,*) wf2x(state,:,:)
   if(rank .eq. 3) write(666,*) wf3x(state,:,:,:)
