@@ -29,27 +29,27 @@ jobs:
 
     - name: Install fftw
       run: |
-        echo "ls: "; ls
-        ls ${{ github.workspace }}
-        cd fftw; echo "ls: "; ls
-        tar -xf fftw.tar.gz
+        echo "Entering FFTW folder"
         cd fftw
-        echo "ls: "; ls
+        echo "Unpacking FFTW"
+        tar -xf fftw.tar.gz
+        echo "Compiling FFTW"
+        cd fftw
         bash compile.sh
 
-#   - name: Add Intel repository
-#     run: |
-#       wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-#       sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-#       rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-#       echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-#       sudo apt-get update
+    - name: Add Intel repository
+      run: |
+        wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt-get update
 
-#   - name: Install Intel oneAPI compiler
-#     run: |
-#       sudo apt-get install ${{ env.APT_PACKAGES }}
-#       source /opt/intel/oneapi/setvars.sh
-#       printenv >> $GITHUB_ENV
+    - name: Install Intel oneAPI compiler
+      run: |
+        sudo apt-get install ${{ env.APT_PACKAGES }}
+        source /opt/intel/oneapi/setvars.sh
+        printenv >> $GITHUB_ENV
 
-#   - name: Build ABIN
-#     run: cd src/; make clean && make
+    - name: Build ABIN
+      run: cd src/; make clean && make
