@@ -42,7 +42,7 @@ jobs:
         printenv >> $GITHUB_ENV
 
     - name: Build ABIN
-      run: make clean && make
+      run: cd src/; make clean && make
 
 # test:
 #   strategy:
