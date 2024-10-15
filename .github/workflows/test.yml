@@ -29,11 +29,11 @@ jobs:
 
     - name: Install fftw
       run: |
-        ls
+        echo "ls: "; ls
         ls ${{ github.workspace }}
-        cd fftw; ls
-        tar -xf fftw/fftw.tar.gz
-        ls
+        cd fftw; echo "ls: "; ls
+        tar -xf fftw.tar.gz
+        echo "ls: "; ls
 #       cd fftw/fftw
 #       bash compile.sh
 
