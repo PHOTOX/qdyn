@@ -29,6 +29,7 @@ jobs:
 
     - name: Install fftw
       run: |
+        ls
         tar -xf fftw/fftw.tar.gz
         cd fftw/fftw
         bash compile.sh
