@@ -33,9 +33,9 @@ jobs:
         ls ${{ github.workspace }}
         cd fftw; echo "ls: "; ls
         tar -xf fftw.tar.gz
+        cd fftw
         echo "ls: "; ls
-#       cd fftw/fftw
-#       bash compile.sh
+        bash compile.sh
 
 #   - name: Add Intel repository
 #     run: |
