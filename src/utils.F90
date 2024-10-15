@@ -521,10 +521,10 @@ implicit none
   allocate(wft(xngrid))
 
   ! calculating <T>
-  ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wfx, wfp)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_1d(plan_backward, xngrid, wfx, wfp, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wfx, wfp)
+  call dfftw_destroy_plan(plan_backward)
 
   wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
@@ -570,10 +570,10 @@ implicit none
   allocate(wf2t(xngrid, yngrid))
 
   ! calculating T(psi)
-  ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf2x, wf2p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2x, wf2p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf2x, wf2p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
@@ -615,10 +615,10 @@ implicit none
 
 
   ! calculating T(psi)
-  ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf3x, wf3p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf3x, wf3p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 

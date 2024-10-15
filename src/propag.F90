@@ -51,10 +51,10 @@ implicit none
   integer    :: i, istate
 
   do istate=1,nstates ! states to be propagated
-    ! FFT -> K
-    call dfftw_plan_dft_1d(plan_forward, xngrid, wfx(istate,:), wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-    call dfftw_execute_dft(plan_forward, wfx(istate,:), wfp)
-    call dfftw_destroy_plan(plan_forward)
+    ! iFFT -> k
+    call dfftw_plan_dft_1d(plan_backward, xngrid, wfx(istate,:), wfp, FFTW_BACKWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_backward, wfx(istate,:), wfp)
+    call dfftw_destroy_plan(plan_backward)
 
     wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
@@ -64,9 +64,9 @@ implicit none
     end do
 
     ! FFT -> x
-    call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx(istate,:), FFTW_BACKWARD, FFTW_ESTIMATE )
-    call dfftw_execute_dft(plan_backward, wfp, wfx(istate,:))
-    call dfftw_destroy_plan(plan_backward)
+    call dfftw_plan_dft_1d(plan_forward, xngrid, wfp, wfx(istate,:), FFTW_FORWARD, FFTW_ESTIMATE )
+    call dfftw_execute_dft(plan_forward, wfp, wfx(istate,:))
+    call dfftw_destroy_plan(plan_forward)
 
     wfx(istate,:) = wfx(istate,:) / dsqrt(real(xngrid, kind=DP))
   end do
@@ -86,10 +86,10 @@ implicit none
    end do
   end do
 
-  ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf2x, wf2p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2x, wf2p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf2x, wf2p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
@@ -101,9 +101,9 @@ implicit none
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf2p, wf2x)
-  call dfftw_destroy_plan(plan_backward)
+  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2p, wf2x, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wf2p, wf2x)
+  call dfftw_destroy_plan(plan_forward)
 
   wf2x = wf2x / dsqrt(real(xngrid*yngrid, kind=DP))
 
@@ -131,10 +131,10 @@ implicit none
     end do
   end do
 
-  ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf3x, wf3p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf3x, wf3p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
@@ -148,9 +148,9 @@ implicit none
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf3p, wf3x)
-  call dfftw_destroy_plan(plan_backward)
+  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wf3p, wf3x)
+  call dfftw_destroy_plan(plan_forward)
 
   wf3x = wf3x / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
@@ -178,10 +178,10 @@ implicit none
     wfx(i) = wfx(i)*expV1(i)
   end do
 
-  ! FFT -> K
-  call dfftw_plan_dft_1d(plan_forward, xngrid, wfx, wfp, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wfx, wfp)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_1d(plan_backward, xngrid, wfx, wfp, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wfx, wfp)
+  call dfftw_destroy_plan(plan_backward)
 
   wfp = wfp / dsqrt(real(xngrid, kind=DP))
 
@@ -191,9 +191,9 @@ implicit none
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, wfx, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wfp, wfx)
-  call dfftw_destroy_plan(plan_backward)
+  call dfftw_plan_dft_1d(plan_forward, xngrid, wfp, wfx, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wfp, wfx)
+  call dfftw_destroy_plan(plan_forward)
 
   wfx = wfx / dsqrt(real(xngrid, kind=DP))
 
@@ -217,10 +217,10 @@ implicit none
    end do
   end do
 
-  ! FFT -> K
-  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2x, wf2p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf2x, wf2p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2x, wf2p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf2x, wf2p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf2p = wf2p / dsqrt(real(xngrid*yngrid, kind=DP))
 
@@ -232,9 +232,9 @@ implicit none
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_2d(plan_backward, xngrid, yngrid, wf2p, wf2x, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf2p, wf2x)
-  call dfftw_destroy_plan(plan_backward)
+  call dfftw_plan_dft_2d(plan_forward, xngrid, yngrid, wf2p, wf2x, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wf2p, wf2x)
+  call dfftw_destroy_plan(plan_forward)
 
   wf2x = wf2x / dsqrt(real(xngrid*yngrid, kind=DP))
 
@@ -262,10 +262,10 @@ implicit none
     end do
   end do
 
-  ! FFT -> K
-  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_FORWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_forward, wf3x, wf3p)
-  call dfftw_destroy_plan(plan_forward)
+  ! iFFT -> k
+  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3x, wf3p, FFTW_BACKWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_backward, wf3x, wf3p)
+  call dfftw_destroy_plan(plan_backward)
 
   wf3p = wf3p / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
@@ -279,9 +279,9 @@ implicit none
   end do
 
   ! FFT -> x
-  call dfftw_plan_dft_3d(plan_backward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_BACKWARD, FFTW_ESTIMATE )
-  call dfftw_execute_dft(plan_backward, wf3p, wf3x)
-  call dfftw_destroy_plan(plan_backward)
+  call dfftw_plan_dft_3d(plan_forward, xngrid, yngrid, zngrid, wf3p, wf3x, FFTW_FORWARD, FFTW_ESTIMATE )
+  call dfftw_execute_dft(plan_forward, wf3p, wf3x)
+  call dfftw_destroy_plan(plan_forward)
 
   wf3x = wf3x / dsqrt(real(xngrid*yngrid*zngrid, kind=DP))
 
