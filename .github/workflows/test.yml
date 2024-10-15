@@ -27,15 +27,15 @@ jobs:
       with:
         fetch-depth: 2
 
-    - name: Install fftw
-      run: |
-        echo "Entering FFTW folder"
-        cd fftw
-        echo "Unpacking FFTW"
-        tar -xf fftw.tar.gz
-        echo "Compiling FFTW"
-        cd fftw
-        bash compile.sh
+#   - name: Install fftw
+#     run: |
+#       echo "Entering FFTW folder"
+#       cd fftw
+#       echo "Unpacking FFTW"
+#       tar -xf fftw.tar.gz
+#       echo "Compiling FFTW"
+#       cd fftw
+#       bash compile.sh
 
     - name: Add Intel repository
       run: |
@@ -51,5 +51,15 @@ jobs:
         source /opt/intel/oneapi/setvars.sh
         printenv >> $GITHUB_ENV
 
-    - name: Build ABIN
-      run: cd src/; make clean && make
+    - name: Install fftw & build QDyn
+      run: |
+        echo "Entering FFTW folder"
+        cd fftw
+        echo "Unpacking FFTW"
+        tar -xf fftw.tar.gz
+        echo "Compiling FFTW"
+        cd fftw
+        bash compile.sh
+        echo "Compile QDyn"
+        cd ../../src
+        make clean && make
