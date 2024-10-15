@@ -32,7 +32,8 @@ jobs:
         ls
         ls ${{ github.workspace }}
         cd fftw; ls
-#       tar -xf fftw/fftw.tar.gz
+        tar -xf fftw/fftw.tar.gz
+        ls
 #       cd fftw/fftw
 #       bash compile.sh
 
