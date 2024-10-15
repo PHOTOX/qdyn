@@ -65,13 +65,4 @@ Inputs can be prepared with the help of python scripts.
 A series of python scripts is prepared for plotting the data.
 
 ## Notes
-Hydrogen atom test is not working well, probably too much stretch for the code. Spherical harmonic oscilator works so there should be no problem with spherical harmonics.
-
-## TODO
-Imaginary-time propagation and real-time propagation in 1D are finished and tested. Extension of RT to multiple states is currently under progress.
-1) Add rotation matrix for propagation expH1
-2) Add autocorrelation function to the analyze scripts
-3) Add imaginary absorption potential
-
-## small TODO list
-1) change input description in README.md
+Hydrogen atom test is not working well, probably too much stretch for the code. Spherical harmonic oscilator works so there should be no problem with spherical harmonics. A better grid point selection would be necessary for such potential.
