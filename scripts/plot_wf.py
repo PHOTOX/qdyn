@@ -10,7 +10,7 @@ import qdyn_analyze as qa
 
 ########## INPUT ##########
 # general plotting settings
-plot_online = False  # if true, plots the results on the fly, otherwise it's just the final plot
+plot_online = True  # if true, plots the results on the fly, otherwise it's just the final plot
 pause = 0.00001  # pause between frames during plotting
 frame_step = 1  # plot only frame_step instead of plotting every frame
 wf_scaling = 0.005  # scaling factor for the wf and density so that they are visible in the plots
@@ -100,21 +100,21 @@ def plot_rt_1d():
             axs_en.legend()
 
             axs_wf.set_title(f'time: {t[i]:.0f} {time_unit:s}  $E={energy[0, i]:.4f}$ a.u.')
-            axs_en.set_xlabel(f'$t$ / {time_unit:s}')
+            axs_en.set_xlabel(f'$t$ ({time_unit:s})')
 
             if use_field:
                 axs_field.cla()
                 axs_field.plot(field[0, :i], field[1, :i])
                 axs_field.set_xlim(field[0, 0], field[0, -1])
                 axs_field.set_xlim(t[0], t[-1])
-                axs_field.set_xlabel(f'$t$ / {time_unit:s}')
+                axs_field.set_xlabel(f'$t$ ({time_unit:s})')
 
             else:
                 axs_field.cla()
                 axs_field.plot(t[:i + 1], energy[0][:i + 1], color='black', label=r'$E_\mathrm{tot}$')
                 axs_field.scatter(t[i], energy[0][i], color='black')
                 axs_field.set_xlim(t[0], t[-1])
-                axs_field.set_xlabel(f'$t$ / {time_unit:s}')
+                axs_field.set_xlabel(f'$t$ ({time_unit:s})')
                 axs_field.set_ylabel(r'$E$ (a.u.)')
 
             if nstates > 1:
@@ -132,7 +132,7 @@ def plot_rt_1d():
                     axs_pop.plot(pop_diab[0, :i], pop_diab[-1, :i], label=f'norm', color='black')
 
                 axs_pop.set_xlim(t[0], t[-1])
-                axs_pop.set_xlabel(f'$t$ / {time_unit:s}')
+                axs_pop.set_xlabel(f'$t$ ({time_unit:s})')
                 axs_pop.legend(frameon=False, labelspacing=0)
 
             plt.tight_layout()
@@ -175,18 +175,18 @@ def plot_rt_1d():
         axs_en.legend()
 
         axs_wf.set_title(f'time: {t[-1]:.0f} {time_unit:s}  $E={energy[0, -1]:.4f}$ a.u.')
-        axs_en.set_xlabel(f'$t$ / {time_unit:s}')
+        axs_en.set_xlabel(f'$t$ ({time_unit:s})')
 
         if use_field:
             axs_field.plot(field[0], field[1])
             axs_field.set_xlim(field[0, 0], field[0, -1])
             axs_field.set_xlim(t[0], t[-1])
-            axs_field.set_xlabel(f'$t$ / {time_unit:s}')
+            axs_field.set_xlabel(f'$t$ ({time_unit:s})')
             axs_field.set_ylabel(r'$\vec{E}(t)$ / a.u.')
         else:
             axs_field.plot(t, energy[0], color='black', label=r'$E_\mathrm{tot}$')
             axs_field.set_xlim(t[0], t[-1])
-            axs_field.set_xlabel(f'$t$ / {time_unit:s}')
+            axs_field.set_xlabel(f'$t$ ({time_unit:s})')
             axs_field.set_ylabel(r'$E$ (a.u.)')
 
         if nstates > 1:
@@ -203,7 +203,7 @@ def plot_rt_1d():
                 axs_pop.plot(pop_diab[0], pop_diab[-1], label=f'norm', color='black')
 
             axs_pop.set_xlim(t[0], t[-1])
-            axs_pop.set_xlabel(f'$t$ / {time_unit:s}')
+            axs_pop.set_xlabel(f'$t$ ({time_unit:s})')
             axs_pop.legend(frameon=False, labelspacing=0)
 
         plt.tight_layout()
