@@ -1,0 +1,46 @@
+name: Build and Test QDyn
+# Suggestion from ChatGPT
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran make wget tar
+
+      # Download, build, and install FFTW library
+      - name: Build and install FFTW
+        run: |
+          # Specify the FFTW version
+          FFTW_VERSION=3.3.10
+          wget http://www.fftw.org/fftw-${FFTW_VERSION}.tar.gz
+          tar -xzf fftw-${FFTW_VERSION}.tar.gz
+          cd fftw-${FFTW_VERSION}
+          ./configure --enable-shared --prefix=/usr/local
+          make -j$(nproc)
+          sudo make install
+          cd ..
+
+      # Build the project using make
+      - name: Build the project
+        run: make
+
+      # Run tests using make
+      - name: Run tests
+        run: make tests
