@@ -2,3 +2,4 @@ src/*.o
 src/*.mod
 src/qdyn
 *.DS_Store
+
