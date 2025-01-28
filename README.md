@@ -7,7 +7,7 @@ Program for one to three-dimensional numerical quantum propagation on a grid in 
    - `tar -xvf fftw.tar.gz` to extract files from the archive, two versions available (3.3.10 and 3.3.6)
    - `./compile.sh` to compile the version selected within the script (3.3.10 default)
    - compilation will output a path of the compilation that will used in Makefile, e.g. `LIBS = -L/home/janos/Programs/fftw/fftw-3.3.6/lib -lfftw3 -lm -llapack`
-2) Compile Qdym
+2) Compile QDyn
    - `cd src`
    - change the library path from the previous FFTW3 compilation in `Makefile`
    - `make clean && make` for compilation
@@ -65,4 +65,6 @@ Inputs can be prepared with the help of python scripts.
 A series of python scripts is prepared for plotting the data.
 
 ## Notes
-Hydrogen atom test is not working well, probably too much stretch for the code. Spherical harmonic oscilator works so there should be no problem with spherical harmonics. A better grid point selection would be necessary for such potential.
+Hydrogen atom test is not working well, probably too much stretch for the code. 
+Spherical harmonic oscilator works so there should be no problem with spherical harmonics. 
+A better grid point selection would be necessary for such potential.

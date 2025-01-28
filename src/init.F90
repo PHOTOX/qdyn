@@ -43,6 +43,7 @@ if(run .eq. 0) then
   if(rank .eq. 1) then
     allocate(H1(nstates,nstates,xngrid),H1_ad(nstates,xngrid),U1(nstates,nstates,xngrid),invU1(nstates,nstates,xngrid))
     allocate(expH1(nstates,nstates,xngrid), wfx_ad(nstates,xngrid))
+    if (exact_factor) allocate(wfx_history(efhistory,nstates,xngrid)) ! wave function history allocated
   end if
   if(rank .eq. 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank .eq. 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
@@ -375,6 +376,10 @@ call init_wavepacket()
 !--Calculating adiabatic wf
 if ((run.eq.0).and.(nstates.gt.1)) call wf_adiab_trans()
 
+!TODO: init ef
+!--Initializing EF
+if (exact_factor) call init_ef()
+
 !--Printing of WF
 if (print_wf) then
 if(rank .eq. 1) then
@@ -500,7 +505,7 @@ if (field_coupling) then
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
-  write(*,'(A,A)') "Field outputed to file: ", file_name
+  write(*,'(A,A)') " Field outputed to file: ", file_name
   call print_field()
 
 end if
@@ -758,6 +763,12 @@ subroutine read_H1()
   end do
 
 end subroutine
+
+subroutine init_ef
+  !TODO: finish initialization of ef
+  write(*,*) "Exact factorization initialized"
+  write(*,*) "Order of time derivative: " ,efhistory
+end subroutine 
 
 end module
 

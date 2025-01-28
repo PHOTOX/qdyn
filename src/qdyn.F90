@@ -3,6 +3,7 @@ program qdyn
   use FFTW3
   use mod_init
   use mod_propag
+  use mod_exactfactor
 
 ! -------------------------------------------------------------------!
 !                               / Qdyn \                             !
@@ -35,12 +36,20 @@ select case(run)
 
       select case(rank)
         case(1)
-          call propag_rt_1d() 
+          call propag_rt_1d()
+          if (exact_factor) call ef_savehistory_1d()
         case(2)
           call propag_rt_2d(wf2x(1,:,:))
         case(3)
           call propag_rt_3d(wf3x(1,:,:,:))
       end select
+      
+      if (exact_factor) then
+        select case(rank)
+          case(1)
+            call propag_rt_1d()
+        end select
+      end if
 
       call update_norm()
 
@@ -64,6 +73,16 @@ select case(run)
         if (nstates.gt.1) then
           call wf_adiab_trans()
           call print_pop()
+        end if
+
+        !calculate exact factorization quantites and print them
+!TODO: finish exact factorization functions
+        if (exact_factor) then
+          select case(rank)
+          case(1)
+            call exact_factor_1d(n)
+          end select
+          call print_ef()
         end if
 
         !print wave function
