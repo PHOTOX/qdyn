@@ -10,6 +10,8 @@ CONTAINS
 !--REAL TIME PROPAGATION
 subroutine propag_rt_1d()
 
+  ! TODO: change order or propagations to expT1/2*expH1*expT1/2 and diagonalize only in the middle point
+
   ! Propagating with H matrix: half step
   call propag_H_rt_1d(.true.)
 
