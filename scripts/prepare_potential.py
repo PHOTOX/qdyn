@@ -1,4 +1,9 @@
-# prepare potential for QDyn
+"""prepare potential for QDyn
+
+© Jiri Janos
+"""
+
+# todo: either make this script callable from command line or split the script for analytic and precalculated potentials
 
 from os.path import exists
 

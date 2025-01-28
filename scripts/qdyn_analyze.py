@@ -1,4 +1,7 @@
-"""Functions and modules for analysis of QDyn results"""
+"""Functions and modules for analysis of QDyn results.
+
+© Jiri Janos
+"""
 
 from os import makedirs, remove, rmdir
 from os.path import exists
