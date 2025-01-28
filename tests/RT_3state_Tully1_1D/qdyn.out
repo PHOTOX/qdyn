@@ -1,0 +1,113 @@
+ ====== Qdyn =====
+
+ ### Reading input ###
+ RUN: REAL TIME PROPAGATION
+ Time step:  10.00000 a.u.
+ Number of steps:      350
+ Total time:    3500.00 a.u.
+ Grid size in x:  2048
+ Number of dimensions: 1
+ Number of steps:        1
+ xmin, xmax: -16.0000 32.0000
+ Potential: provided in file
+ nstates:  3
+Norm conservation threshold (norm_thresh) set to     0.10000000
+ Field: OFF
+ Printing WF: OFF
+
+ ### Initialization ###
+ Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
+ * <psi_1|H_el|psi_1> = read from file
+ * <psi_1|H_el|psi_2> = read from file
+ * <psi_1|H_el|psi_3> = read from file
+ * <psi_2|H_el|psi_1> = read from file
+ * <psi_2|H_el|psi_2> = read from file
+ * <psi_2|H_el|psi_3> = read from file
+ * <psi_3|H_el|psi_1> = read from file
+ * <psi_3|H_el|psi_2> = read from file
+ * <psi_3|H_el|psi_3> = read from file
+ Adiabatic energies and transformation matrix U calculated.
+ Time-independent problem, exp(H_el) built.
+ Generating initial gaussian wave packet.
+ initial state =   3
+ x0 =  -15.00000
+ xsigma =    0.70711
+ px0 =   20.00000
+ norm =    0.97850
+ Diabatic populations outputed to file: pop_diab.dat
+ Adiabatic populations outputed to file: pop_ad.dat
+
+
+ ### Propagation ###
+
+Step:          5 ;     50.0 a.u.; E=   0.111764080 a.u.; norm=1.0000000
+Step:         10 ;    100.0 a.u.; E=   0.111766828 a.u.; norm=1.0000000
+Step:         15 ;    150.0 a.u.; E=   0.111768239 a.u.; norm=1.0000000
+Step:         20 ;    200.0 a.u.; E=   0.111768922 a.u.; norm=1.0000000
+Step:         25 ;    250.0 a.u.; E=   0.111769133 a.u.; norm=1.0000000
+Step:         30 ;    300.0 a.u.; E=   0.111769002 a.u.; norm=1.0000000
+Step:         35 ;    350.0 a.u.; E=   0.111768833 a.u.; norm=1.0000000
+Step:         40 ;    400.0 a.u.; E=   0.111768672 a.u.; norm=1.0000000
+Step:         45 ;    450.0 a.u.; E=   0.111768539 a.u.; norm=1.0000000
+Step:         50 ;    500.0 a.u.; E=   0.111768322 a.u.; norm=1.0000000
+Step:         55 ;    550.0 a.u.; E=   0.111768102 a.u.; norm=1.0000000
+Step:         60 ;    600.0 a.u.; E=   0.111767819 a.u.; norm=1.0000000
+Step:         65 ;    650.0 a.u.; E=   0.111769319 a.u.; norm=1.0000000
+Step:         70 ;    700.0 a.u.; E=   0.111769294 a.u.; norm=1.0000000
+Step:         75 ;    750.0 a.u.; E=   0.111769135 a.u.; norm=1.0000000
+Step:         80 ;    800.0 a.u.; E=   0.111769284 a.u.; norm=1.0000000
+Step:         85 ;    850.0 a.u.; E=   0.111769079 a.u.; norm=1.0000000
+Step:         90 ;    900.0 a.u.; E=   0.111768913 a.u.; norm=1.0000000
+Step:         95 ;    950.0 a.u.; E=   0.111768836 a.u.; norm=1.0000000
+Step:        100 ;   1000.0 a.u.; E=   0.111768817 a.u.; norm=1.0000000
+Step:        105 ;   1050.0 a.u.; E=   0.111768840 a.u.; norm=1.0000000
+Step:        110 ;   1100.0 a.u.; E=   0.111768983 a.u.; norm=1.0000000
+Step:        115 ;   1150.0 a.u.; E=   0.111769249 a.u.; norm=1.0000000
+Step:        120 ;   1200.0 a.u.; E=   0.111769427 a.u.; norm=1.0000000
+Step:        125 ;   1250.0 a.u.; E=   0.111769654 a.u.; norm=1.0000000
+Step:        130 ;   1300.0 a.u.; E=   0.111769755 a.u.; norm=1.0000000
+Step:        135 ;   1350.0 a.u.; E=   0.111769713 a.u.; norm=1.0000000
+Step:        140 ;   1400.0 a.u.; E=   0.111769280 a.u.; norm=1.0000000
+Step:        145 ;   1450.0 a.u.; E=   0.111768643 a.u.; norm=1.0000000
+Step:        150 ;   1500.0 a.u.; E=   0.111767445 a.u.; norm=1.0000000
+Step:        155 ;   1550.0 a.u.; E=   0.111766853 a.u.; norm=1.0000000
+Step:        160 ;   1600.0 a.u.; E=   0.111766566 a.u.; norm=1.0000000
+Step:        165 ;   1650.0 a.u.; E=   0.111766587 a.u.; norm=1.0000000
+Step:        170 ;   1700.0 a.u.; E=   0.111767070 a.u.; norm=1.0000000
+Step:        175 ;   1750.0 a.u.; E=   0.111767156 a.u.; norm=1.0000000
+Step:        180 ;   1800.0 a.u.; E=   0.111767287 a.u.; norm=1.0000000
+Step:        185 ;   1850.0 a.u.; E=   0.111767494 a.u.; norm=1.0000000
+Step:        190 ;   1900.0 a.u.; E=   0.111767425 a.u.; norm=1.0000000
+Step:        195 ;   1950.0 a.u.; E=   0.111768049 a.u.; norm=1.0000000
+Step:        200 ;   2000.0 a.u.; E=   0.111767999 a.u.; norm=1.0000000
+Step:        205 ;   2050.0 a.u.; E=   0.111768007 a.u.; norm=1.0000000
+Step:        210 ;   2100.0 a.u.; E=   0.111768073 a.u.; norm=1.0000000
+Step:        215 ;   2150.0 a.u.; E=   0.111768088 a.u.; norm=1.0000000
+Step:        220 ;   2200.0 a.u.; E=   0.111767703 a.u.; norm=1.0000000
+Step:        225 ;   2250.0 a.u.; E=   0.111767373 a.u.; norm=1.0000000
+Step:        230 ;   2300.0 a.u.; E=   0.111767141 a.u.; norm=1.0000000
+Step:        235 ;   2350.0 a.u.; E=   0.111767387 a.u.; norm=1.0000000
+Step:        240 ;   2400.0 a.u.; E=   0.111767584 a.u.; norm=1.0000000
+Step:        245 ;   2450.0 a.u.; E=   0.111768346 a.u.; norm=1.0000000
+Step:        250 ;   2500.0 a.u.; E=   0.111768158 a.u.; norm=1.0000000
+Step:        255 ;   2550.0 a.u.; E=   0.111768278 a.u.; norm=1.0000000
+Step:        260 ;   2600.0 a.u.; E=   0.111768238 a.u.; norm=1.0000000
+Step:        265 ;   2650.0 a.u.; E=   0.111768322 a.u.; norm=1.0000000
+Step:        270 ;   2700.0 a.u.; E=   0.111768263 a.u.; norm=1.0000000
+Step:        275 ;   2750.0 a.u.; E=   0.111768768 a.u.; norm=1.0000000
+Step:        280 ;   2800.0 a.u.; E=   0.111768722 a.u.; norm=1.0000000
+Step:        285 ;   2850.0 a.u.; E=   0.111768637 a.u.; norm=1.0000000
+Step:        290 ;   2900.0 a.u.; E=   0.111768653 a.u.; norm=1.0000000
+Step:        295 ;   2950.0 a.u.; E=   0.111768839 a.u.; norm=1.0000000
+Step:        300 ;   3000.0 a.u.; E=   0.111768688 a.u.; norm=1.0000000
+Step:        305 ;   3050.0 a.u.; E=   0.111768316 a.u.; norm=1.0000000
+Step:        310 ;   3100.0 a.u.; E=   0.111769619 a.u.; norm=1.0000000
+Step:        315 ;   3150.0 a.u.; E=   0.111769496 a.u.; norm=1.0000000
+Step:        320 ;   3200.0 a.u.; E=   0.111771268 a.u.; norm=1.0000000
+Step:        325 ;   3250.0 a.u.; E=   0.111770401 a.u.; norm=1.0000000
+Step:        330 ;   3300.0 a.u.; E=   0.111769806 a.u.; norm=1.0000000
+Step:        335 ;   3350.0 a.u.; E=   0.111771956 a.u.; norm=1.0000000
+Step:        340 ;   3400.0 a.u.; E=   0.111770629 a.u.; norm=1.0000000
+Step:        345 ;   3450.0 a.u.; E=   0.111769889 a.u.; norm=1.0000000
+Step:        350 ;   3500.0 a.u.; E=   0.111771631 a.u.; norm=1.0000000
+ JOB DONE.
