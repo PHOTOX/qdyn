@@ -1,5 +1,8 @@
 """Plotting wave functions produced by QDyn. Versions for real-time and imaginary-time are available. Only 2D and 1D
-wave functions can be plotted."""
+wave functions can be plotted.
+
+© Jiri Janos
+"""
 
 from os.path import exists
 
