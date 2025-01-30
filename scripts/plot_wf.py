@@ -15,8 +15,8 @@ import qdyn_analyze as qa
 # general plotting settings
 plot_online = True  # if true, plots the results on the fly, otherwise it's just the final plot
 pause = 0.00001  # pause between frames during plotting
-frame_step = 1  # plot only frame_step instead of plotting every frame
-wf_scaling = 0.005  # scaling factor for the wf and density so that they are visible in the plots
+frame_step = 2  # plot only frame_step instead of plotting every frame
+wf_scaling = 0.05  # scaling factor for the wf and density so that they are visible in the plots
 
 # units for plotting
 time_unit = ['a.u.', 'fs'][1]  # time units in femtoseconds or atomic time units
@@ -32,7 +32,7 @@ plot_wf = False
 heatmap = True
 
 # gif
-gif = False
+gif = True
 dpi_gif = 100
 duration = 2  # in ms, (duration=1000 * 1/fps, fps=frames per second).
 
@@ -53,12 +53,18 @@ def plot_rt_1d():
         axs_field = axs[3]
 
     # getting ratios
-    if plot_wf:
-        vmax = 1.01 * np.max(wf)
-        vmin = np.min([np.min(wf), np.min(pot_en)])
-    else:
-        vmax = 1.01 * np.max(den)
-        vmin = np.min([np.min(den), np.min(pot_en)])
+    # if plot_wf:
+    #     vmax = 1.01 * np.max(wf)
+    #     vmin = np.min([np.min(wf), np.min(pot_en)])
+    # else:
+    #     vmax = 1.01 * np.max(den)
+    #     vmin = np.min([np.min(den), np.min(pot_en)])
+
+    # energy limits for wf plotting, this is a first guess which will be updated every step
+    vmin = np.min(pot_en)
+    vmax = vmin
+
+    # energy limits for plotting
     emin = np.min(energy[:-2])
     emax = np.max(energy[:-2])
     emin -= 0.1 * (emax - emin)
@@ -83,6 +89,21 @@ def plot_rt_1d():
                                             alpha=0.15)
                         axs_wf.fill_between(x, np.imag(wf[j][i]) * 0 + pot_en[j], np.imag(wf[j][i]) + pot_en[j],
                                             alpha=0.15)
+                # update vmin and vmax
+                nonzero_list = den[j][i] > 1e-4
+                # if nonzero_list is full of False, continue
+                if np.any(nonzero_list):
+                    if plot_wf:
+                        aux_wf_real = np.real(wf[j][i]) + pot_en[j]
+                        aux_wf_imag = np.imag(wf[j][i]) + pot_en[j]
+                        vmax = np.max([vmax, np.max(aux_wf_real[nonzero_list])])
+                        vmax = np.max([vmax, np.max(aux_wf_imag[nonzero_list])])
+                        vmin = np.min([vmin, np.min(aux_wf_real[nonzero_list])])
+                        vmin = np.min([vmin, np.min(aux_wf_imag[nonzero_list])])
+                    else:
+                        aux_dens = den[j][i]+ pot_en[j]
+                        vmax = np.max([vmax, np.max(aux_dens[nonzero_list])])
+                        vmin = np.min([vmin, np.min(aux_dens[nonzero_list])])
 
             axs_wf.set_xlim(xmin, xmax)
             axs_wf.set_ylim(vmin, vmax)
@@ -661,7 +682,7 @@ elif rank == 2:
 
 # if plot_on_the_fly:
 if plot_online:
-    plt.pause(50.0)
+    if not gif: plt.pause(50.0)
     plt.ioff()
 
 if gif:
