@@ -14,7 +14,6 @@ module mod_vars
   real(DP), dimension(:), allocatable    :: x, y, z, px, py, pz 
   real(DP), dimension(:), allocatable    :: diab_pop, ad_pop
   logical               :: project_rot=.true., analytic=.true., print_wf=.true.
-  logical               :: exact_factor=.false. !TODO: check this in the init module
   character(len=10)     :: dynamics=''
   !-wave function
   complex(DP), dimension(:), allocatable :: wfp
@@ -25,6 +24,12 @@ module mod_vars
   logical               :: field_coupling=.false.
   real(DP)              :: field_on=0.0d0, field_off ! turning on and off field
   character(len=9000)   :: field=''
+  !-exact factorization
+  !TODO: finish exact factorization derivatives
+  logical               :: exact_factor=.false.
+  character(len=2)      :: ef_gauge='S0' ! possible gauges: 'S0' (zero nuclear phase), 'A0' (zero TDVP)
+  complex(DP), dimension(:,:,:), allocatable :: wfx_history ! used to calculate time derivatives of the wave function (hist. index, state, x)
+  integer               :: efhistory=5 ! how many steps of wf we use for calcuations of wf derivative
   !-auxiliary variables
   integer               :: iost, i, j, k
   integer ( kind = 8 )  :: plan_forward, plan_backward
@@ -49,19 +54,13 @@ module mod_vars
   complex(DP), dimension(:,:,:), allocatable      :: expH1
 ! complex(DP), dimension(:,:,:,:), allocatable    :: expH2_matrix
 ! complex(DP), dimension(:,:,:,:,:), allocatable  :: expH3_matrix
-!TODO: finish exact factorization derivatives
-  !-exact factorization
-  complex(DP), dimension(:,:,:), allocatable :: wfx_history ! used to calculate time derivatives of the wave function (hist. index, state, x)
-  integer               :: efhistory=5 ! currently not possible to change in the input
-  !TODO: make efhistory changable in the input using different finite diff. formulas
-  !TODO: exact factorization section for the order of the numeric derivative
   
 
   namelist /general/ dynamics, nstep, dt, dtwrite, xngrid, yngrid, zngrid, rank, &
-    xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, nstates, print_wf, &
-    exact_factor
+    xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, nstates, print_wf
   namelist /it/ pot, analytic, project_rot
-  namelist /rt/ pot, analytic, field_coupling, field, field_on, field_off, norm_thresh
+  namelist /rt/ pot, analytic, field_coupling, field, field_on, field_off, norm_thresh, &
+     exact_factor, ef_gauge
   !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -75,14 +74,14 @@ subroutine read_input()
 
 !-- Reading input file
   open(100,file='input.q', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
-  if (iost.ne.0) then
+  if (iost/=0) then
     write(*,*)'ERROR: input.q file must be provided'
     write(*,*) iost
     stop 1
   end if
 
   read(100, general, iostat=iost)
-  if (iost.ne.0) then
+  if (iost/=0) then
     write(*,*)'ERROR: &general section missing or problematic'
     backspace(100)
     read(100,fmt='(A)') line
@@ -97,7 +96,7 @@ subroutine read_input()
     field_off=nstep*dt
     ! reading &rt
     read(100, rt, iostat=iost)
-    if (iost.ne.0) then
+    if (iost/=0) then
       write(*,*)'ERROR: &rt section missing or problematic'
       backspace(100)
       read(100,fmt='(A)') line
@@ -107,7 +106,7 @@ subroutine read_input()
     end if
   case('it')
     read(100, it, iostat=iost)
-    if (iost.ne.0) then
+    if (iost/=0) then
       write(*,*)'ERROR: &it section missing or problematic'
       backspace(100)
       read(100,fmt='(A)') line
@@ -129,10 +128,10 @@ subroutine check()
 ! run case (imag/real)
 select case(dynamics)
   case('rt')
-    write(*,*) "RUN: REAL TIME PROPAGATION"
+    write(*,*) "* REAL TIME PROPAGATION *"
     run = 0
   case('it')
-    write(*,*) "RUN: IMAGINARY TIME PROPAGATION"
+    write(*,*) "* IMAGINARY TIME PROPAGATION *"
     run = 1
   case default
     write(*,*) "ERR: Unrecongnized 'dynamics' option. Choose either 'rt' or 'it'. Exiting"
@@ -140,83 +139,86 @@ select case(dynamics)
 end select
 
 ! writing time step and number of steps
-write(*,'(A25,F9.5,A)') " Time step:                ", dt, " a.u."
-write(*,'(A25,I8)') " Number of steps:        ", nstep
+write(*,'(A25,F10.5,A)') " Time step:                ", dt, " a.u."
+write(*,'(A25,I10)') " Number of steps:        ", nstep
 write(*,'(A25,F10.2,A)') " Total time:              ", dt*nstep, " a.u."
 
 ! ngrid is power of 2
-write(*,'(A25,I5)') " Grid size in x:            ",xngrid
-if ((xngrid .le. 0) .or. (IAND(xngrid, xngrid-1) .ne. 0))  then
+write(*,'(A25,I10)') " Grid size in x:            ",xngrid
+if ((xngrid <= 0) .or. (IAND(xngrid, xngrid-1) /= 0))  then
   write(*,*) "ERR: Grid size must be power of two."
   stop 1
 end if 
 
-if (rank .ge. 2) then
-  write(*,'(A25,I5)') " Grid size in y:           ",yngrid
-  if ((yngrid .le. 0) .or. (IAND(yngrid, yngrid-1) .ne. 0))  then
+if (rank >= 2) then
+  write(*,'(A25,I10)') " Grid size in y:           ",yngrid
+  if ((yngrid <= 0) .or. (IAND(yngrid, yngrid-1) /= 0))  then
     write(*,*) "ERR: Grid size must be power of two."
     stop 1
   end if 
 end if
 
-if (rank .ge. 3) then
-  write(*,'(A25,I5)') " Grid size in z:           ",zngrid
-  if ((zngrid .le. 0) .or. (IAND(zngrid, zngrid-1) .ne. 0))  then
+if (rank >= 3) then
+  write(*,'(A25,I10)') " Grid size in z:           ",zngrid
+  if ((zngrid <= 0) .or. (IAND(zngrid, zngrid-1) /= 0))  then
     write(*,*) "ERR: Grid size must be power of two."
     stop 1
   end if 
 end if
 
 ! dimensionality
-if ((rank .lt. 1) .or. (rank .gt. 3)) then
+if ((rank < 1) .or. (rank > 3)) then
   write(*,*) "ERR: Dimensionality must be 1,2 or 3."
   stop 1
 else
-  write(*,'(A25,I3)') " Number of dimensions:       ", rank
+  write(*,'(A25,I10)') " Number of dimensions:       ", rank
 end if
 
 ! number of steps
-if (nstep .lt. 1) then
+if (nstep < 1) then
   write(*,*) "ERR: Number of steps must be bigger than 1."
   stop 1
 else
-write(*,'(A25,I8)') " Number of steps:          ",nstep
+write(*,'(A25,I10)') " Number of steps:          ",nstep
 end if
 
 ! masses
-if (mass_x .le. 0.0) then
+if (mass_x <= 0.0) then
   write(*,*) "ERR: mass_x was either not set or set negative."
   stop 1
 end if
 
-if ((rank .ge. 2) .and. (mass_y .le. 0.0)) then
+if ((rank >= 2) .and. (mass_y <= 0.0)) then
   write(*,*) "ERR: mass_y was either not set or set negative."
   stop 1
 end if
 
-if ((rank .ge. 3) .and. (mass_z .le. 0.0)) then
+if ((rank >= 3) .and. (mass_z <= 0.0)) then
   write(*,*) "ERR: mass_z was either not set or set negative."
   stop 1
 end if
 
 ! params of grid
-write(*,'(A,F8.4,F8.4)') " xmin, xmax: ", xmin, xmax
-if (xmin .ge. xmax) then
+write(*,'(A25,F10.4,A)') " xmin:                   ", xmin, " a.u."
+write(*,'(A25,F10.4,A)') " xmax:                   ", xmax, " a.u."
+if (xmin >= xmax) then
   write(*,*) "ERR: xmin must be smaller than xmax."
   stop 1
 end if
 
-if (rank .ge. 2) then
-write(*,'(A,F8.4,F8.4)') " ymin, ymax: ", ymin, ymax
-  if (ymin .ge. ymax) then
+if (rank >= 2) then
+write(*,'(A25,F10.4,A)') " ymin:                   ", ymin, " a.u."
+write(*,'(A25,F10.4,A)') " ymax:                   ", ymax, " a.u."
+  if (ymin >= ymax) then
     write(*,*) "ERR: ymin must be smaller than ymax."
     stop 1
   end if
 end if
 
-if (rank .ge. 3) then
-write(*,'(A,F8.4,F8.4)') " zmin, zmax: ", zmin, zmax
-  if (zmin .ge. zmax) then
+if (rank >= 3) then
+write(*,'(A25,F10.4,A)') " zmin:                   ", zmin, " a.u."
+write(*,'(A25,F10.4,A)') " zmax:                   ", zmax, " a.u."
+  if (zmin >= zmax) then
     write(*,*) "ERR: zmin must be smaller than zmax."
     stop 1
   end if
@@ -224,17 +226,17 @@ end if
 
 ! potential
 if (analytic) then
-  if ((run .eq. 0).and.(nstates.gt.1)) then
-    write(*,*) "Analytic potention cannot be used for RT dynamics with nstates>1"
+  if ((run == 0).and.(nstates>1)) then
+    write(*,*) "ERROR: Analytic potention cannot be used for RT dynamics with nstates>1"
     stop 1
   end if
-  write(*,*) "Potential: analytic"
+  write(*,*) "Potential:                analytic"
   if (pot == "") then
     write(*,*) "Potential not provided! Use analytical form. x,y,z for corresponding rank "
     stop 1
   end if
 else
-  write(*,*) "Potential: provided in file"
+  write(*,*) "Potential:                    file"
 end if
                
 ! number of states
@@ -242,7 +244,45 @@ if (nstates < 1) then
   write(*,*) "ERR: number of states must be 1 or more."
   stop 1
 else
-    write(*,'(A25,I2)') " nstates:      ", nstates
+    write(*,'(A25,I10)') " Number of states:          ", nstates
+end if
+
+!exact factorization
+if (exact_factor) then
+  if ((run /= 0) .or. (rank /= 1) .or. (nstates /= 2)) then
+    write(*,*) "ERROR: Exact factorization available only for 1D two-state RT dynamics."
+    stop 1
+  end if
+  write(*,*) "Exact factorization:            ON"
+   if (ef_gauge == 'S0') then
+      write(*,*) "Gauge:                          S0 (zero nuclear phase)"
+   else if (ef_gauge == 'A0') then
+      write(*,*) "Gauge:                          A0 (zero TDVP)"
+   end if
+end if
+
+!printing wavefunction
+if (print_wf) then
+  write(*,*) "Printing WF:                    ON"
+else
+  write(*,*) "Printing WF:                   OFF"
+end if
+
+!field
+if (field_coupling) then
+  write(*,*) "Electric field:                 ON"
+  write(*,'(A25,F10.2,A)') " Field on at              ", field_on, " a.t.u."
+  write(*,'(A25,F10.2,A)') " Field off at             ", field_off, " a.t.u."
+  if (field == '') then
+    write(*,*) "ERR: No field function specified. Set 'field' in input.q."
+    stop 1
+  else
+    write(*,*) "|E(t)| = ", trim(field)
+  end if
+else
+  if (run == 0) then
+    write(*,*) "Field: OFF"
+  end if
 end if
 
 !projecting out rotated wf
@@ -251,47 +291,17 @@ if (project_rot .and. (run == 1) .and. (nstates>1)) then
 end if
 
 !norm check threshold
-if (run.eq.0) then
+if (run==0) then
   write(*,'(a, F14.8)') " Norm conservation threshold (norm_thresh) set to ", norm_thresh
-  if (norm_thresh.le.0.0d0) then
+  if (norm_thresh<=0.0d0) then
     write(*,*) "ERROR: norm_thresh cannot be smaller than 0"
     stop 1
   end if
 end if
 
-!field
-if (field_coupling) then
-  write(*,*) "Electric field coupling included in the interaction Hamiltonian."
-  write(*,'(A25,F12.2,A)') " Field on at       ", field_on, " a.t.u."
-  write(*,'(A25,F12.2,A)') " Field off at      ", field_off, " a.t.u."
-  if (field == '') then
-    write(*,*) "ERR: No field function specified. Set 'field' in input.q."
-    stop 1
-  else
-    write(*,*) "|E(t)| = ", trim(field)
-  end if
-else 
-  if (run == 0) then
-    write(*,*) "Field: OFF"
-  end if
-end if
 
-!exact factorization
-if (exact_factor) then
-  if ((run .ne. 0) .or. (rank .ne. 1) .or. (nstates .ne. 2)) then
-    write(*,*) "ERROR: Exact factorization available only for 1D two-state RT dynamics."
-    stop 1
-  end if
-  write(*,*) "Exact factorization quantities calculated."
-end if
 
-!printing wavefunction
-if (print_wf) then
-  write(*,*) "Printing WF: ON"
-else
-  write(*,*) "Printing WF: OFF"
-end if
 
 end subroutine check
 
-end module
+end module mod_vars

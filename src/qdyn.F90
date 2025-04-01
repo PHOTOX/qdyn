@@ -54,7 +54,7 @@ select case(run)
       call update_norm()
 
       !print information
-      if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
+      if ((modulo(time,dtwrite)==0).or.(n==nstep)) then
         !update and print energies
         select case(rank)
         case(1)
@@ -70,19 +70,9 @@ select case(run)
           ' a.u.; norm=', norm
 
         !if multistate problem, transform wf to adiabatic basis and print populations of ad. and diab. states
-        if (nstates.gt.1) then
+        if (nstates>1) then
           call wf_adiab_trans()
           call print_pop()
-        end if
-
-        !calculate exact factorization quantites and print them
-!TODO: finish exact factorization functions
-        if (exact_factor) then
-          select case(rank)
-          case(1)
-            call exact_factor_1d(n)
-          end select
-          call print_ef()
         end if
 
         !print wave function
@@ -91,7 +81,7 @@ select case(run)
             select case(rank)
             case(1)
               call printwf_1d(istate)
-              if (nstates.gt.1) call printwf_ad_1d(istate)
+              if (nstates>1) call printwf_ad_1d(istate)
             case(2)
               call printwf_2d(istate)
             case(3)
@@ -99,11 +89,37 @@ select case(run)
             end select
           end do
         end if
-        
+
         !print field
         if (field_coupling) call print_field()
 
+        !calculate GI exact factorization quantites and print them
+        !TODO: finish GI exact factorization functions
+        if (exact_factor) then
+          select case(rank)
+          case(1)
+            call exact_factor_1d(n, 'gi')
+          end select
+          call print_ef('gi')
+        end if
+
       end if
+
+      !calculate GD exact factorization quantites and print them
+      !time derivative of wf is necessary for GD-TDPES which can be calculated only two steps later using central difference formula
+      !the calcualtion comes two steps after the beginning because this cannot be done during initialization and also for the
+      !last step of the dynamics
+      !TODO: finish GD exact factorization functions
+      if (exact_factor) then
+        if ((n==efhistory/2).or.(modulo((n-efhistory/2)*dt,dtwrite)==0).or.(n==nstep)) then
+          select case(rank)
+          case(1)
+            call exact_factor_1d(n, 'gd')
+          end select
+          call print_ef('gd')
+        end if
+      end if
+
     end do
 
   case(1)
@@ -137,7 +153,7 @@ select case(run)
         end select
 
         !print information
-        if ((modulo(time,dtwrite).eq.0).or.(n.eq.nstep)) then
+        if ((modulo(time,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
             call update_energy_1d(wfx(istate,:))
