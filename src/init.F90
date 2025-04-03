@@ -44,7 +44,6 @@ if(run == 0) then
   if(rank == 1) then
     allocate(H1(nstates,nstates,xngrid),H1_ad(nstates,xngrid),U1(nstates,nstates,xngrid),invU1(nstates,nstates,xngrid))
     allocate(expH1(nstates,nstates,xngrid), wfx_ad(nstates,xngrid))
-    if (exact_factor) allocate(wfx_history(efhistory,nstates,xngrid)) ! wave function history allocated
   end if
   if(rank == 2) allocate(expV2(xngrid,yngrid),v2(xngrid,yngrid))
   if(rank == 3) allocate(expV3(xngrid,yngrid,zngrid),v3(xngrid,yngrid,zngrid))
@@ -133,7 +132,7 @@ if (run==1) then
     end select
   ! reading potential from file pot.dat
   else 
-    write(*,*) "Potential read from file: pot.dat"
+    write(*,*) "Potential read from file:     pot.dat"
     open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
     select case(rank)
     case(1)
@@ -223,7 +222,7 @@ else if (run==0) then
     end select
     !TODO: this is the old version for 2D and 3D that work only with 1 state now
     if (rank>1) then
-    write(*,*) "Potential read from file: pot.dat"
+    write(*,*) "Potential read from file:     pot.dat"
     open(667,file='pot.dat', status='OLD', action='READ',delim='APOSTROPHE', iostat=iost)
     select case(rank)
     case(2)
@@ -377,7 +376,6 @@ call init_wavepacket()
 !--Calculating adiabatic wf
 if ((run==0).and.(nstates>1)) call wf_adiab_trans()
 
-!TODO: init ef
 !--Initializing EF
 if (exact_factor) call init_ef()
 
@@ -391,7 +389,7 @@ if (print_wf) then
 
     file_unit = 200+jstate
     write(file_name,*) jstate
-    file_name='wf1d.'//trim(adjustl(file_name))//'.out'
+    file_name='wf1d.'//trim(adjustl(file_name))//'.dat'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
     write(file_unit,*) "#x   REAL   IMAG   NORM    POTENTIAL"
@@ -399,13 +397,14 @@ if (print_wf) then
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
     call printwf_1d(jstate)
-    write(*,*)"Outputing diabatic WF to file "//file_name
+    write(*,*)"Diabatic wave function file:    "//file_name
+
 
     ! printing adiabatic
     if ((run==0).and.(nstates>1)) then
       file_unit = 400+jstate
       write(file_name,*) jstate
-      file_name='wf1d_ad.'//trim(adjustl(file_name))//'.out'
+      file_name='wf1d_ad.'//trim(adjustl(file_name))//'.dat'
       open(file_unit,file=file_name, action='WRITE', iostat=iost)
       ! opening file unit
       write(file_unit,*) "#x   REAL   IMAG   NORM    POTENTIAL"
@@ -413,7 +412,8 @@ if (print_wf) then
       open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
       call printwf_ad_1d(jstate)
-      write(*,*)"Outputing adiabatic WF to file "//file_name
+      write(*,*)"Adiabatic wave function file:   "//file_name
+
     end if
 
   end do
@@ -424,7 +424,7 @@ elseif(rank == 2) then
 
     file_unit = 200+jstate
     write(file_name,*) jstate
-    file_name='wf2d.'//trim(adjustl(file_name))//'.out'
+    file_name='wf2d.'//trim(adjustl(file_name))//'.dat'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
     write(file_unit,*) "#x  y   REAL   IMAG   NORM    POTENTIAL"
@@ -432,7 +432,8 @@ elseif(rank == 2) then
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
     call printwf_2d(jstate)
-    write(*,*)"Outputing WF to file "//file_name
+    write(*,*)"Diabatic wave function file:    "//file_name
+
 
   end do
 
@@ -442,7 +443,7 @@ elseif(rank == 3) then
 
     file_unit = 200+jstate
     write(file_name,*) jstate
-    file_name='wf3d.'//trim(adjustl(file_name))//'.out'
+    file_name='wf3d.'//trim(adjustl(file_name))//'.dat'
     open(file_unit,file=file_name, action='WRITE', iostat=iost)
     ! opening file unit
     write(file_unit,*) "#x  y   z   REAL   IMAG   NORM    POTENTIAL"
@@ -450,7 +451,7 @@ elseif(rank == 3) then
     open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
     call printwf_3d(jstate)
-    write(*,*)"Outputing WF to file wf3d.out"
+    write(*,*)"Diabatic wave function file:    "//file_name
   end do
 
 end if
@@ -508,7 +509,8 @@ if (field_coupling) then
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
 
-  write(*,'(A,A)') " Field outputed to file: ", file_name
+  write(*,'(A,A)') " Electric field file:            ", file_name
+
   call print_field()
 
 end if
@@ -522,7 +524,7 @@ if ((run==0).and.(nstates>1)) then
   write(file_unit,*) "#  time     diabatic populations (1, 2, 3, ...)   norm"
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
-  write(*,'(A,A)') " Diabatic populations outputed to file: ", trim(file_name)
+  write(*,'(A,A)') " Diabatic populations file:      ", trim(file_name)
 
   file_unit = 104
   file_name = 'pop_ad.dat'
@@ -530,7 +532,7 @@ if ((run==0).and.(nstates>1)) then
   write(file_unit,*) "#  time     adiabatic populations (1, 2, 3, ...)  norm"
   close(file_unit)
   open(file_unit,file=file_name, status='old', position='append', action='WRITE', iostat=iost)
-  write(*,'(A,A)') " Adiabatic populations outputed to file: ", trim(file_name)
+  write(*,'(A,A)') " Adiabatic populations file:     ", trim(file_name)
 
   call print_pop()
 

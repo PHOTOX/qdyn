@@ -1,0 +1,259 @@
+"""Extracting exact factorization quantities from QDyn simulations.
+The code is currently suitable only for 1D (RT-)dynamics with various gauges.
+
+© Jiri Janos
+"""
+
+from os.path import exists
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+import qdyn_analyze as qa
+
+########## INPUT ##########
+# general plotting settings
+pause = 0.00001  # pause between frames during plotting todo: check if necessary
+frame_step = 1  # plot only frame_step instead of plotting every frame todo: check if necessary
+wf_scaling = 0.12  # scaling factor for the wf and density so that they are visible in the plots todo: check if necessary
+plot_online = True  # if true, plots the results on the fly, otherwise it's just the final plot todo: check if necessary
+adiabatic = True  # todo: check if necessary
+plot_density = True  # todo: check if necessary
+xplotrange = [0, 4]  # if empty array, it takes xmin and xmax from the input file
+
+# gif
+gif = False
+dpi_gif = 100
+duration = 2  # in ms, (duration=1000 * 1/fps, fps=frames per second).
+
+# units for plotting
+time_unit = ['a.u.', 'fs'][1]  # time units in femtoseconds or atomic time units
+
+
+########## functions ##########
+def plot_ef_1d():
+    """Plotting the exact factorization results in 1D."""
+    # todo: go through the whole code
+    # setting canvas
+    fig, axs = plt.subplots(3, 2, figsize=(10, 9), gridspec_kw={'height_ratios': [4, 4, 1]})
+    axs_bh = axs[0, 0]
+    axs_ef = axs[1, 0]
+    axs_field = axs[2, 0]
+    axs_S = axs[0, 1]
+    axs_tdpes = axs[1, 1]
+
+    # getting axis ranges
+    if len(xplotrange) == 2:
+        xminplot = xplotrange[0]
+        xmaxplot = xplotrange[1]
+    else:
+        xminplot = xmin
+        xmaxplot = xmax
+    if plot_density:
+        vmax = 1.01 * np.max(den_bh)+np.min(pot_en[-1])
+        vmin = np.min([np.min(den_bh), np.min(pot_en)])
+    else:
+        vmax = 1.01 * np.max(wf_bh)
+        vmin = np.min([np.min(wf_bh), np.min(pot_en)])
+
+    for i in range(0, nframes, frame_step):
+        # cleaning canvas
+        axs_bh.cla()
+        axs_ef.cla()
+        axs_field.cla()
+        axs_S.cla()
+        axs_tdpes.cla()
+
+        fig.suptitle(f'Time: {t[i]:.0f} {time_unit:s}  Energy: {energy[0, i]:.4f} a.u.')
+
+        # plotting Born-Huang quantities
+        for j in range(0, nstates):
+            axs_bh.plot(x, pot_en[j], color='black')
+
+            if plot_density:
+                axs_bh.plot(x, den_bh[j][i] + pot_en[j], linewidth=0.5, label=rf'$|\psi_{j:d}|^2$')
+                axs_bh.fill_between(x, den_bh[j][i] * 0 + pot_en[j], den_bh[j][i] + pot_en[j], alpha=0.35)
+            else:
+                axs_bh.plot(x, np.real(wf_bh[j][i]) + pot_en[j], linewidth=0.5, label=rf'Re[$\psi_{j:d}$]')
+                axs_bh.plot(x, np.imag(wf_bh[j][i]) + pot_en[j], linewidth=0.5, label=rf'Im[$\psi_{j:d}$]')
+
+        axs_bh.set_xlim(xminplot, xmaxplot)
+        axs_bh.set_ylim(vmin, vmax)
+        axs_bh.set_ylabel(r'$E$ (a.u.)')
+        axs_bh.set_xlabel(r'$x$ (a.u.)')
+        axs_bh.legend(labelspacing=0)
+
+        # plotting EF quantities
+        for j in range(0, nstates):  # BH states
+            axs_ef.plot(x, pot_en[j], color='black', alpha=0.2)
+
+        if plot_density:
+            # axs_ef.plot(x, nucdens[i], linewidth=0.5, label=rf'$|\chi|^2$')
+            # axs_ef.fill_between(x, nucdens[i], 0, alpha=0.35)
+            axs_ef.plot(x, nucdens[i] + gitdpes[i, -1], linewidth=0.5, label=rf'$|\chi|^2$')
+            axs_ef.fill_between(x, nucdens[i] + gitdpes[i, -1],  gitdpes[i, -1], alpha=0.35)
+
+
+            # todo: add nuclear wave function |omega|exp(-iS\hbar)
+        axs_ef.set_xlim(xminplot, xmaxplot)
+        axs_ef.set_ylim(vmin, vmax)
+        axs_ef.set_ylabel(r'$E$ (a.u.)')
+        axs_ef.set_xlabel(r'$x$ (a.u.)')
+        axs_ef.legend(labelspacing=0)
+
+        # plotting nuclear phase
+        axs_S.plot(x, nucphase[i, 0], linewidth=1, label=f'$S$')
+        axs_S.plot(x, nucphase[i, 1], linewidth=1, label=r'$\nabla S$')
+        axs_S.axhline(0, linewidth=0.5, color='black')
+        axs_S.set_xlim(xminplot, xmaxplot)
+        axs_S.set_ylim(np.min(nucphase), np.max(nucphase))
+        axs_S.set_ylabel(r'$S$ (a.u.)')
+        axs_S.set_xlabel(r'$x$ (a.u.)')
+        axs_S.legend(labelspacing=0)
+
+        # plotting nuclear phase
+        axs_tdpes.plot(x, gitdpes[i, 0], linewidth=1, label=r'$H_{el}$')
+        axs_tdpes.plot(x, gitdpes[i, 1], linewidth=1, label=r'$V_{int}$')
+        axs_tdpes.plot(x, gitdpes[i, 2], linewidth=1, label=r'$|\nabla C|^2$')
+        axs_tdpes.plot(x, gitdpes[i, 3], linewidth=1, label=r'$A^2$')
+        axs_tdpes.plot(x, gitdpes[i, 4], linewidth=1, label=r'$\varepsilon_{GI}$')
+        axs_tdpes.axhline(0, linewidth=0.5, color='black')
+        axs_tdpes.set_xlim(xminplot, xmaxplot)
+        axs_tdpes.set_ylim(np.min(gitdpes), np.max(gitdpes))
+        # axs_tdpes.set_ylim(np.min(gitdpes[:, 1]), np.max(gitdpes[:, 1]))
+        axs_tdpes.set_ylabel(r'$\varepsilon(t,x)$ (a.u.)')
+        axs_tdpes.set_xlabel(r'$x$ (a.u.)')
+        axs_tdpes.legend(labelspacing=0)
+
+        if use_field:
+            axs_field.plot(field[0, :i], field[1, :i])
+            axs_field.set_xlim(field[0, 0], field[0, -1])
+            axs_field.set_xlim(t[0], t[-1])
+            axs_field.set_xlabel(f'$t$ ({time_unit:s})')
+        else:
+            axs_field.plot(t[:i + 1], energy[0][:i + 1], color='black', label=r'$E_\mathrm{tot}$')
+            axs_field.scatter(t[i], energy[0][i], color='black')
+            axs_field.set_xlim(t[0], t[-1])
+            axs_field.set_xlabel(f'$t$ ({time_unit:s})')
+            axs_field.set_ylabel(r'$E$ (a.u.)')
+
+            axs_ef.set_xlim(t[0], t[-1])
+            axs_ef.set_xlabel(f'$t$ ({time_unit:s})')
+            axs_ef.legend(frameon=False, labelspacing=0)
+
+        plt.tight_layout()
+        # for gif
+        if gif:
+            qa.gif.save_frame(gif_frames, dpi_gif=dpi_gif)
+
+        plt.show()
+        plt.pause(pause)
+
+
+########## reading input.q ##########
+input_file = 'input.q'
+if exists(input_file):
+    print(qa.read.input_file.__doc__)
+    namelist = qa.read.input_file(input_file)
+else:
+    print(qa.read.manual_input.__doc__)
+    namelist = qa.read.manual_input()
+
+dynamics = namelist['general']['dynamics']
+rank = namelist['general']['rank']
+nstates = namelist['general']['nstates']
+xngrid = namelist['general']['xngrid']
+xmin = namelist['general']['xmin']
+xmax = namelist['general']['xmax']
+yngrid, zngrid = 0, 0
+if rank >= 2:
+    yngrid = namelist['general']['yngrid']
+    ymin = namelist['general']['ymin']
+    ymax = namelist['general']['ymax']
+if rank >= 3:
+    zngrid = namelist['general']['zngrid']
+    zmin = namelist['general']['zmin']
+    zmax = namelist['general']['zmax']
+if (dynamics == 'rt') and 'field_coupling' in namelist['rt']:
+    use_field = namelist['rt']['field_coupling']
+else:
+    use_field = False
+
+########## initialize ##########
+if dynamics == 'rt' and nstates == 2 and rank == 1:
+    print("\nCalculating exact factorization quantities from 1D quantum dynamics on two states.\n")
+else:
+    print(
+        "ERROR: Exact factorization can be performec only for 1D two-state dynamics in the current implementation! Exiting...")
+    exit(1)
+
+# reading wave function and all other important data
+wf_bh, pot_en, [x, y, z], nframes_wf = qa.read.wf(rank=rank, nstates=nstates, xngrid=xngrid, yngrid=yngrid,
+                                                  adiabatic=adiabatic)
+# calculating Born-Huang densities from nuclear wave functions
+den_bh = np.array(np.real(np.conjugate(wf_bh) * wf_bh), dtype=float)
+
+# reading energies and time
+en_states, nframes = qa.read.energies(dynamics=dynamics, nstates=nstates)
+energy = en_states[0][1:]
+t = en_states[0][0]
+
+# reading populations
+pop_ad, pop_diab = qa.read.pop()
+
+# reading field
+if use_field:
+    field = qa.read.field()
+
+# check consistency of the number of frames
+if nframes != nframes_wf:
+    print("Number of data in wf files and energy files is not matching. Exiting..")
+    exit(1)
+
+# reading exact factorization quantities
+nucdens, nucphase, gitdpes, [ef_x, ef_y] = qa.read.ef(rank=rank, xngrid=xngrid, yngrid=yngrid)
+
+# check consistency of the number of frames
+if nframes != len(nucdens):
+    print("Number of data in wf files and ef files is not matching. Exiting..")
+    exit(1)
+
+########## code ##########
+
+
+########## plotting ##########
+plt.rcParams["font.family"] = 'Helvetica'
+# setting up online plotting
+if plot_online:
+    print("*plotting on-the-fly")
+    plt.ion()
+else:
+    gif = False
+
+# gifs for plotting
+if gif:
+    gif_frames = qa.gif.init_gif()
+
+# converting time units
+if time_unit == 'fs':
+    pop_ad[0] *= qa.units.autofs
+    pop_diab[0] *= qa.units.autofs
+    en_states[:, 0] *= qa.units.autofs
+    if use_field: field[0] *= qa.units.autofs
+
+# scaling wf and density for plotting purposes
+# note that this might cause troubles during analysis in not renormalized
+wf_bh *= wf_scaling
+den_bh *= wf_scaling ** 2
+nucdens *= wf_scaling ** 2
+
+if rank == 1:
+    plot_ef_1d()
+
+# if plot_on_the_fly:
+if plot_online:
+    plt.pause(50.0)
+    plt.ioff()
+
+if gif:
+    qa.gif.make_gif(gif_frames, duration)

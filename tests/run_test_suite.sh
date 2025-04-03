@@ -57,10 +57,10 @@ then
     # coloured printing for different systems
     if [ "$(uname)" == "Darwin" ] # MacOS
     then 
-      echo -e "\033[0;31mSKIP found: $i"
+      echo -e "\033[0;31mSKIP found: $i\033[0m"
     elif [ "$(uname)" == "Linux" ] # Linux
     then
-      echo -e "\e[0;31mSKIP found: $i"
+      echo -e "\e[0;31mSKIP found: $i\e[0m"
     else
       echo -e "SKIP found: $i"
     fi
@@ -77,15 +77,21 @@ then
     # coloured printing for different systems
     if [ "$(uname)" == "Darwin" ] # MacOS
     then 
-      echo -e "\033[0;31mERROR found: $i"
+      echo -e "\033[0;31mERROR found: $i\033[0m"
     elif [ "$(uname)" == "Linux" ] # Linux
     then
-      echo -e "\e[0;31mERROR found: $i"
+      echo -e "\e[0;31mERROR found: $i\e[0m"
     else
       echo -e "ERROR found: $i"
     fi
   done
   rm ERROR
 else
-  echo -e "\n\033[0;32mAll tests passed!\n"
+  if [ "$(uname)" == "Darwin" ] # MacOS
+  then
+    echo -e "\n\033[0;32mAll tests passed!\033[0m\n"
+  elif [ "$(uname)" == "Linux" ] # Linux
+  then
+    echo -e "\n\e[0;32mAll tests passed!\e[0m\n"
+  fi
 fi

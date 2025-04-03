@@ -6,7 +6,7 @@ from numpy import genfromtxt, linspace, interp, std, trapz, sqrt, array, reshape
 xngrid = 256
 
 # reading calculated data
-wf = genfromtxt('wf1d_ad.1.out')
+wf = genfromtxt('wf1d_ad.1.dat')
 nframes_wf = int(shape(wf)[0]/xngrid)
 wf = reshape(wf, (nframes_wf, xngrid, 5)).transpose((0, 2, 1))
 energy = genfromtxt('energies.dat').T

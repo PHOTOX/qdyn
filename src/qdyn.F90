@@ -44,12 +44,12 @@ select case(run)
           call propag_rt_3d(wf3x(1,:,:,:))
       end select
       
-      if (exact_factor) then
-        select case(rank)
-          case(1)
-            call propag_rt_1d()
-        end select
-      end if
+!      if (exact_factor) then
+!        select case(rank)
+!          case(1)
+!            call propag_rt_1d()
+!        end select
+!      end if
 
       call update_norm()
 
@@ -93,30 +93,32 @@ select case(run)
         !print field
         if (field_coupling) call print_field()
 
+      end if
+
+      ! calculate and print exact factorization
+      if (exact_factor) then
         !calculate GI exact factorization quantites and print them
+        ! this is done during every printing step and then at the end of the simualtion
         !TODO: finish GI exact factorization functions
-        if (exact_factor) then
+        if ((modulo(time,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
             call exact_factor_1d(n, 'gi')
+            call print_ef_1d('gi')
           end select
-          call print_ef('gi')
         end if
 
-      end if
-
-      !calculate GD exact factorization quantites and print them
-      !time derivative of wf is necessary for GD-TDPES which can be calculated only two steps later using central difference formula
-      !the calcualtion comes two steps after the beginning because this cannot be done during initialization and also for the
-      !last step of the dynamics
-      !TODO: finish GD exact factorization functions
-      if (exact_factor) then
+        !calculate GD exact factorization quantites and print them
+        !time derivative of wf is necessary for GD-TDPES which can be calculated only two steps later using central difference formula
+        !the calcualtion comes two steps after the beginning because this cannot be done during initialization and also for the
+        !last step of the dynamics
+        !TODO: finish GD exact factorization functions
         if ((n==efhistory/2).or.(modulo((n-efhistory/2)*dt,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
             call exact_factor_1d(n, 'gd')
+            call print_ef_1d('gd')
           end select
-          call print_ef('gd')
         end if
       end if
 

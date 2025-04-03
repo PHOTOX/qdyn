@@ -8,7 +8,7 @@ thresh = 1e-4 # threshold for the error
 ethresh = 2e-5 # threshold for the energy std and drift 
 
 # reading the wave function and reshaping
-wf = np.genfromtxt('wf1d.1.out')
+wf = np.genfromtxt('wf1d.1.dat')
 nframes_wf = int(np.shape(wf)[0] / grid_size)
 wf = np.reshape(wf, (nframes_wf, grid_size, 5)).transpose((0, 2, 1))
 
