@@ -1,36 +1,40 @@
  ====== Qdyn =====
 
  ### Reading input ###
- RUN: IMAGINARY TIME PROPAGATION
- Time step:   1.00000 a.u.
- Number of steps:      500
- Total time:     500.00 a.u.
- Grid size in x:    32
- Grid size in y:    32
- Grid size in z:    32
- Number of dimensions: 3
- Number of steps:        3
- xmin, xmax: -14.0000 14.0000
- ymin, ymax: -13.0000 13.0000
- zmin, zmax: -13.0000 13.0000
- Potential: analytic
- nstates: 12
+ * IMAGINARY TIME PROPAGATION *
+ Time step:                 1.00000 a.u.
+ Number of steps:               500
+ Total time:                 500.00 a.u.
+ Grid size in x:                 32
+ Grid size in y:                 32
+ Grid size in z:                 32
+ Number of dimensions:            3
+ Number of steps:               500
+ xmin:                     -14.0000 a.u.
+ xmax:                      14.0000 a.u.
+ ymin:                     -13.0000 a.u.
+ ymax:                      13.0000 a.u.
+ zmin:                     -13.0000 a.u.
+ zmax:                      13.0000 a.u.
+ Potential:                analytic
+ Number of states:               12
+ Printing WF:                   OFF
  Projecting out also 90 degrees rotated wavefunctions due to numeric instabilities
- Printing WF: OFF
 
  ### Initialization ###
  Potential: 0.01*(x**2 + y**2 + z**2)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+ ---------
  Generating initial gaussian wave packet.
- x0 =    2.80000
- y0 =    2.60000
- z0 =    2.60000
- xsigma =    0.56000
- ysigma =    0.52000
- zsigma =    0.52000
- px0 =    0.00000
- py0 =    0.00000
- pz0 =    0.00000
- norm =    0.89467
+ x0:                2.80000
+ y0:                2.60000
+ z0:                2.60000
+ xsigma:            0.56000
+ ysigma:            0.52000
+ zsigma:            0.52000
+ px0:               0.00000
+ py0:               0.00000
+ pz0:               0.00000
+ norm:              0.89467
 
 
  ### Propagation ###
