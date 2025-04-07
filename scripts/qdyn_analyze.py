@@ -205,7 +205,7 @@ class read:
 
         return pop_ad, pop_diab
 
-    def ef(rank, xngrid, yngrid=0, folder='.'):
+    def ef(rank, nstates, xngrid, yngrid=0, folder='.'):
         """Reading Exact Factorization quantities."""
 
         # get grid size
@@ -287,7 +287,57 @@ class read:
             print("File '%s' does not exist. Exiting.." % gitdpes_file)
             exit(1)
 
-        return nucdens, nucphase, gitdpes, grid  # , ef_wf
+        # TDVP
+        tdvp_file = f'{folder:s}/tdvp.dat'
+        if exists(tdvp_file):
+            tdvp = np.genfromtxt(tdvp_file)
+
+            # estimate number of frames
+            if np.shape(tdvp)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {tdvp_file:s}. Exiting..")
+                exit(1)
+            nframes = int(np.shape(tdvp)[0] / grid_size)
+
+            if rank == 1:
+                tdvp = np.reshape(tdvp, (nframes, grid_size, 2)).transpose((0, 2, 1))
+                tdvp = tdvp[:, 1]
+            elif rank == 2:
+                tdvp = np.reshape(tdvp, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                tdvp = tdvp[:, 2]
+            print(f"'{tdvp_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % tdvp_file)
+            exit(1)
+
+        # electronic coefficients
+        C_file = f'{folder:s}/el_coefficients_ef.dat'
+        if exists(C_file):
+            C = np.genfromtxt(C_file)
+
+            # estimate number of frames
+            if np.shape(C)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {C_file:s}. Exiting..")
+                exit(1)
+            nframes = int(np.shape(C)[0] / grid_size)
+
+            if rank == 1:
+                C = np.reshape(C, (nframes, grid_size, 1 + nstates*2)).transpose((0, 2, 1))
+                C = C[:, 1:]
+            elif rank == 2:
+                C = np.reshape(C, (nframes, grid_size, + nstates*2)).transpose((0, 2, 1))
+                C = C[:, 2:]
+            el_coeff = np.zeros(shape=(nframes, nstates, grid_size), dtype=complex)
+            for step in range(nframes):
+                for state in range(nstates):
+                    el_coeff[step, state] = C[step, 2*state] + 1j*C[step, 2*state+1]
+            print(f"'{C_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % C_file)
+            exit(1)
+
+        # todo: read GD-TDPES
+
+        return nucdens, nucphase, gitdpes, tdvp, el_coeff, grid
 
 
 class gif:

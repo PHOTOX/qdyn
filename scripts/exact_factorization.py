@@ -118,11 +118,11 @@ def plot_ef_1d():
         axs_S.legend(labelspacing=0)
 
         # plotting GI-TDPES
+        axs_tdpes.plot(x, gitdpes[i, 4], lw=2, label=r'$\varepsilon_{GI}$', zorder=-1)
         axs_tdpes.plot(x, gitdpes[i, 0], linewidth=1, label=r'$H_{el}$')
         axs_tdpes.plot(x, gitdpes[i, 1], linewidth=1, label=r'$V_{int}$')
         axs_tdpes.plot(x, gitdpes[i, 2], linewidth=1, label=r'$|\nabla C|^2$')
         axs_tdpes.plot(x, gitdpes[i, 3], linewidth=1, label=r'$A^2$')
-        axs_tdpes.plot(x, gitdpes[i, 4], linewidth=1, label=r'$\varepsilon_{GI}$')
         axs_tdpes.axhline(0, linewidth=0.5, color='black')
         axs_tdpes.set_xlim(xminplot, xmaxplot)
         axs_tdpes.set_ylim(np.min(gitdpes), np.max(gitdpes))
@@ -145,7 +145,7 @@ def plot_ef_1d():
             axs_elcoef.plot(x, np.abs(el_coeff[i, j])**2, label=rf'$|C_{j:d}|^2$')
         axs_elcoef.axhline(0, linewidth=0.5, color='black')
         axs_elcoef.set_xlim(xminplot, xmaxplot)
-        # axs_elcoef.set_ylim(0, 1)
+        axs_elcoef.set_ylim(-0.05, 1.05)
         axs_elcoef.set_ylabel(r'$\vec{A}$ (a.u.)')
         axs_elcoef.set_xlabel(r'$x$ (a.u.)')
         axs_elcoef.legend(labelspacing=0)
