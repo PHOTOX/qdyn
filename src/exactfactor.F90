@@ -112,10 +112,14 @@ CONTAINS
 
       ! calculating the expectation value with i*px operator
       do istate = 1, nstates ! states to be propagated
-         ! iFFT -> k
-         call dfftw_plan_dft_1d(plan_backward, xngrid, wf(istate, :), wfp, FFTW_BACKWARD, FFTW_ESTIMATE)
-         call dfftw_execute_dft(plan_backward, wf(istate, :), wfp)
-         call dfftw_destroy_plan(plan_backward)
+         ! NOTE: Normally, one should do iFFT to k space and then FFT to get back. However, for this I nee to use FFT to k-space
+         ! and then iFFT back, otherwise I get opposite sign of the phase and its derivative or I need to use -i*px.
+         ! I wasn't able to rationalize it at the moment but Fede's code does that and when I compared in python with position
+         ! derivative using np.gradient, the FFT and iFFT version appeared to be the correct one.
+         ! FFT -> k
+         call dfftw_plan_dft_1d(plan_forward, xngrid, wf(istate, :), wfp, FFTW_FORWARD, FFTW_ESTIMATE)
+         call dfftw_execute_dft(plan_forward, wf(istate, :), wfp)
+         call dfftw_destroy_plan(plan_forward)
 
          wfp = wfp / dsqrt(real(xngrid, kind = DP))
 
@@ -124,10 +128,10 @@ CONTAINS
             wfp(i) = cmplx(0.0D0, 1.0D0) * px(i) * wfp(i) !i*px*psi
          end do
 
-         ! FFT -> x
-         call dfftw_plan_dft_1d(plan_forward, xngrid, wfp, tmp_wf(istate, :), FFTW_FORWARD, FFTW_ESTIMATE)
-         call dfftw_execute_dft(plan_forward, wfp, tmp_wf(istate, :))
-         call dfftw_destroy_plan(plan_forward)
+         ! iFFT -> x
+         call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, tmp_wf(istate, :), FFTW_BACKWARD, FFTW_ESTIMATE)
+         call dfftw_execute_dft(plan_backward, wfp, tmp_wf(istate, :))
+         call dfftw_destroy_plan(plan_backward)
 
          tmp_wf(istate, :) = tmp_wf(istate, :) / dsqrt(real(xngrid, kind = DP))
 
@@ -168,7 +172,6 @@ CONTAINS
          end do
          do i = 1, xngrid
             dC(istate, :) = dfdx_1d(C(istate, :), xngrid, dx, i) ! performing derivative in the extended range
-
          end do
       end do
 
@@ -206,7 +209,6 @@ CONTAINS
    end function
 
    !=== GI-TDPES ===!
-   ! todo: finish the calculation of GI-TDPES
    subroutine calc_gitdpes_1d(wf, nucdens, C, dC, A, gi_tdpes)
       real(DP), dimension(xngrid), intent(in) :: nucdens, A
       complex(DP), dimension(nstates, xngrid), intent(in) :: wf, C, dC
@@ -231,24 +233,6 @@ CONTAINS
       gi_tdpes(4, :) = - 0.5D0 / mass_x * A(:)**2
       ! sum up all the terms in to the total GI-TDPES
       gi_tdpes(5, :) = gi_tdpes(1, :) + gi_tdpes(2, :) + gi_tdpes(3, :) + gi_tdpes(4, :)
-
-      ! todo: remove if the previous version with (:) works
-      !      do i = 1, xngrid
-      !         do istate = 1, nstates
-      !            do jstate = 1, nstates
-      !               ! calculate <psi|H_el|psi> term
-      !               gi_tdpes(1, i) = gi_tdpes(1, i) + REAL(CONJG(C(istate, i)) * H1(istate, jstate, i) * C(jstate, i))
-      !               ! calculate <psi|V_int|psi> term
-      !               gi_tdpes(2, i) = gi_tdpes(2, i) + REAL(CONJG(C(istate, i)) * Vint(istate, jstate, i) * C(jstate, i))
-      !            end do
-      !            ! calculate Sum_k [<grad_k psi| grad_k psi> / 2M_k] term
-      !            gi_tdpes(3, i) = gi_tdpes(3, i) + 0.5D0 / mass_x * ABS(dC(istate, i))**2
-      !         end do
-      !         ! calculate Sum_k [A_k^2 / 2M_k] term
-      !         gi_tdpes(4, i) = gi_tdpes(4, i) - 0.5D0 / mass_x * A(i)**2
-      !         ! sum up all the terms in to the total GI-TDPES
-      !         gi_tdpes(5, i) = gi_tdpes(1, i) + gi_tdpes(2, i) + gi_tdpes(3, i) + gi_tdpes(4, i)
-      !      end do
 
    end subroutine
 
@@ -417,7 +401,6 @@ CONTAINS
    end subroutine
 
    !=== PRINTING ===!
-   ! todo: finish printing
    subroutine print_ef_1d(gaugedep)
       character(len = 2), intent(in) :: gaugedep
 
@@ -443,14 +426,13 @@ CONTAINS
             write(file_unit, *) x(i), vecpot_1d(i)
          end do
 
-         ! print TDVP
+         ! print el. coefficients
          file_unit = 505
          write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
          do i = 1, size(x)
             write(file_unit, '(F21.16, 30(E20.10, E20.10))') x(i), C_ef_1d(:, i)
          end do
 
-         ! todo: print GI-TDPES
          ! print GI-TDPES
          file_unit = 503
          write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
@@ -460,6 +442,9 @@ CONTAINS
          end do
 
       elseif (gaugedep=='gd') then
+
+         ! todo: print GD-TDPES
+
       end if
 
    end subroutine

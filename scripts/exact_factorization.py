@@ -35,12 +35,16 @@ def plot_ef_1d():
     """Plotting the exact factorization results in 1D."""
     # todo: go through the whole code
     # setting canvas
-    fig, axs = plt.subplots(3, 2, figsize=(10, 9), gridspec_kw={'height_ratios': [4, 4, 1]})
+    fig, axs = plt.subplots(3, 3, figsize=(13, 9), gridspec_kw={'height_ratios': [4, 4, 1]})
     axs_bh = axs[0, 0]
     axs_ef = axs[1, 0]
     axs_field = axs[2, 0]
     axs_S = axs[0, 1]
     axs_tdpes = axs[1, 1]
+    axs_pop = axs[2, 1]
+    axs_tdvp = axs[0, 2]
+    axs_elcoef = axs[1, 2]
+
 
     # getting axis ranges
     if len(xplotrange) == 2:
@@ -50,7 +54,7 @@ def plot_ef_1d():
         xminplot = xmin
         xmaxplot = xmax
     if plot_density:
-        vmax = 1.01 * np.max(den_bh)+np.min(pot_en[-1])
+        vmax = 1.01 * np.max(den_bh) + np.min(pot_en[-1])
         vmin = np.min([np.min(den_bh), np.min(pot_en)])
     else:
         vmax = 1.01 * np.max(wf_bh)
@@ -63,6 +67,9 @@ def plot_ef_1d():
         axs_field.cla()
         axs_S.cla()
         axs_tdpes.cla()
+        axs_tdvp.cla()
+        axs_elcoef.cla()
+        axs_pop.cla()
 
         fig.suptitle(f'Time: {t[i]:.0f} {time_unit:s}  Energy: {energy[0, i]:.4f} a.u.')
 
@@ -71,11 +78,11 @@ def plot_ef_1d():
             axs_bh.plot(x, pot_en[j], color='black')
 
             if plot_density:
-                axs_bh.plot(x, den_bh[j][i] + pot_en[j], linewidth=0.5, label=rf'$|\psi_{j:d}|^2$')
+                axs_bh.plot(x, den_bh[j][i] + pot_en[j], label=rf'$|\psi_{j:d}|^2$')
                 axs_bh.fill_between(x, den_bh[j][i] * 0 + pot_en[j], den_bh[j][i] + pot_en[j], alpha=0.35)
             else:
-                axs_bh.plot(x, np.real(wf_bh[j][i]) + pot_en[j], linewidth=0.5, label=rf'Re[$\psi_{j:d}$]')
-                axs_bh.plot(x, np.imag(wf_bh[j][i]) + pot_en[j], linewidth=0.5, label=rf'Im[$\psi_{j:d}$]')
+                axs_bh.plot(x, np.real(wf_bh[j][i]) + pot_en[j], label=rf'Re[$\psi_{j:d}$]')
+                axs_bh.plot(x, np.imag(wf_bh[j][i]) + pot_en[j], label=rf'Im[$\psi_{j:d}$]')
 
         axs_bh.set_xlim(xminplot, xmaxplot)
         axs_bh.set_ylim(vmin, vmax)
@@ -88,10 +95,9 @@ def plot_ef_1d():
             axs_ef.plot(x, pot_en[j], color='black', alpha=0.2)
 
         if plot_density:
-            # axs_ef.plot(x, nucdens[i], linewidth=0.5, label=rf'$|\chi|^2$')
-            # axs_ef.fill_between(x, nucdens[i], 0, alpha=0.35)
-            axs_ef.plot(x, nucdens[i] + gitdpes[i, -1], linewidth=0.5, label=rf'$|\chi|^2$')
-            axs_ef.fill_between(x, nucdens[i] + gitdpes[i, -1],  gitdpes[i, -1], alpha=0.35)
+            axs_ef.plot(x, nucdens[i] + gitdpes[i, -1], color='C2', label=r'$|\chi|^2 + \varepsilon_{GI}$')
+            axs_ef.fill_between(x, nucdens[i] + gitdpes[i, -1], gitdpes[i, -1], color='C2', alpha=0.35)
+            axs_ef.plot(x, gitdpes[i, -1], color='C3', label=r'$\varepsilon_{GI}$')
 
 
             # todo: add nuclear wave function |omega|exp(-iS\hbar)
@@ -111,7 +117,7 @@ def plot_ef_1d():
         axs_S.set_xlabel(r'$x$ (a.u.)')
         axs_S.legend(labelspacing=0)
 
-        # plotting nuclear phase
+        # plotting GI-TDPES
         axs_tdpes.plot(x, gitdpes[i, 0], linewidth=1, label=r'$H_{el}$')
         axs_tdpes.plot(x, gitdpes[i, 1], linewidth=1, label=r'$V_{int}$')
         axs_tdpes.plot(x, gitdpes[i, 2], linewidth=1, label=r'$|\nabla C|^2$')
@@ -125,11 +131,40 @@ def plot_ef_1d():
         axs_tdpes.set_xlabel(r'$x$ (a.u.)')
         axs_tdpes.legend(labelspacing=0)
 
+        # TDVP
+        axs_tdvp.plot(x, tdvp[i], label=r'$\vec{A}$')
+        axs_tdvp.axhline(0, linewidth=0.5, color='black')
+        axs_tdvp.set_xlim(xminplot, xmaxplot)
+        axs_tdvp.set_ylim(np.min(tdvp), np.max(tdvp))
+        axs_tdvp.set_ylabel(r'$\vec{A}$ (a.u.)')
+        axs_tdvp.set_xlabel(r'$x$ (a.u.)')
+        axs_tdvp.legend(labelspacing=0)
+
+        # el. coefficients
+        for j in range(0, nstates):
+            axs_elcoef.plot(x, np.abs(el_coeff[i, j])**2, label=rf'$|C_{j:d}|^2$')
+        axs_elcoef.axhline(0, linewidth=0.5, color='black')
+        axs_elcoef.set_xlim(xminplot, xmaxplot)
+        # axs_elcoef.set_ylim(0, 1)
+        axs_elcoef.set_ylabel(r'$\vec{A}$ (a.u.)')
+        axs_elcoef.set_xlabel(r'$x$ (a.u.)')
+        axs_elcoef.legend(labelspacing=0)
+
+        # populations
+        for state in range(1, nstates+1):
+            axs_pop.plot(t[:i + 1], pop_ad[state][:i + 1], color='C' + str(state-1), label=rf'$P_{state-1:d}$')
+        axs_pop.set_xlim(-0.01, 1.01)
+        axs_pop.set_xlim(t[0], t[-1])
+        axs_pop.set_xlabel(f'$t$ ({time_unit:s})')
+        axs_pop.set_ylabel(f'populations')
+
+        # field
         if use_field:
             axs_field.plot(field[0, :i], field[1, :i])
             axs_field.set_xlim(field[0, 0], field[0, -1])
             axs_field.set_xlim(t[0], t[-1])
             axs_field.set_xlabel(f'$t$ ({time_unit:s})')
+            axs_field.set_ylabel(f'el. field (a.u.)')
         else:
             axs_field.plot(t[:i + 1], energy[0][:i + 1], color='black', label=r'$E_\mathrm{tot}$')
             axs_field.scatter(t[i], energy[0][i], color='black')
@@ -211,7 +246,8 @@ if nframes != nframes_wf:
     exit(1)
 
 # reading exact factorization quantities
-nucdens, nucphase, gitdpes, [ef_x, ef_y] = qa.read.ef(rank=rank, xngrid=xngrid, yngrid=yngrid)
+nucdens, nucphase, gitdpes, tdvp, el_coeff, [ef_x, ef_y] = qa.read.ef(rank=rank, nstates=nstates, xngrid=xngrid,
+                                                                      yngrid=yngrid)
 
 # check consistency of the number of frames
 if nframes != len(nucdens):
