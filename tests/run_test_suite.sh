@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # tests to be run
-if [[ $1 == 0 ]] # this option serves for quick testing
+if [[ $1 == 0 ]] # this option serves for quick testing (skips expensive 2D and 3D tests)
 then
   tests="IT_HarmOsc_1D IT_HarmOsc_1D_project_rot IT_Morse_1D IT_HarmOsc_2D_asym IT_HarmOsc_3D_asym RT_HarmOsc_1D RT_Tully1_1D
-  RT_DoubleWell_1D RT_LaserPulse_CH3I_1D RT_3state_Tully1_1D"
+  RT_DoubleWell_1D RT_LaserPulse_CH3I_1D RT_3state_Tully1_1D EF_LaserPulse_OH_1D"
 else
   tests="IT_HarmOsc_1D IT_HarmOsc_1D_project_rot IT_Morse_1D IT_HarmOsc_2D_sym IT_HarmOsc_2D_asym IT_HarmOsc_3D_sym
-  IT_HarmOsc_3D_asym IT_HarmOsc_3D_spherical RT_HarmOsc_1D RT_Tully1_1D RT_DoubleWell_1D RT_LaserPulse_CH3I_1D RT_3state_Tully1_1D"
+  IT_HarmOsc_3D_asym IT_HarmOsc_3D_spherical RT_HarmOsc_1D RT_Tully1_1D RT_DoubleWell_1D RT_LaserPulse_CH3I_1D RT_3state_Tully1_1D
+  EF_LaserPulse_OH_1D"
 fi
 
 echo -e "\nRunning test suite"
