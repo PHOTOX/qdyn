@@ -87,7 +87,7 @@ CONTAINS
                gd_tdpes_1d(i) = gd_tdpes_1d(i) &
                      - imag_unit * conjg(wfx_history(current_time_index, state, 1)) * td_wf(state, 1) / nucdens_1d(i) &
                      - abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * td_phase(i) &
-                     - imag_unit * abs(wfx_history(current_time_index, state, 1))**2 / nucdens_1d(i) * sum_over_states(i)
+                     + imag_unit * abs(wfx_history(current_time_index, state, 1))**2 / nucdens_1d(i) * sum_over_states(i)
 
             end if
          end do
