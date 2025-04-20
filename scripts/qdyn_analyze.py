@@ -336,8 +336,31 @@ class read:
             exit(1)
 
         # todo: read GD-TDPES
+        # GD-TDPES
+        gdtdpes_file = f'{folder:s}/gd-tdpes.dat'
+        if exists(gdtdpes_file):
+            gdtdpes = np.genfromtxt(gdtdpes_file)
 
-        return nucdens, nucphase, gitdpes, tdvp, el_coeff, grid
+            if np.shape(gdtdpes)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {gdtdpes_file:s}. Exiting..")
+                exit(1)
+            elif nframes != int(np.shape(gdtdpes)[0] / grid_size):
+                print(
+                    f"Number of time frames in {nucdens_file:s} is not consistent with {gdtdpes_file:s}. Exiting..")
+                exit(1)
+
+            if rank == 1:
+                gdtdpes = np.reshape(gdtdpes, (nframes, grid_size, 2)).transpose((0, 2, 1))
+                gdtdpes = gdtdpes[:, 1]
+            elif rank == 2:
+                gdtdpes = np.reshape(gdtdpes, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                gdtdpes = gdtdpes[:, 2]
+            print(f"'{gdtdpes_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % gdtdpes_file)
+            exit(1)
+
+        return nucdens, nucphase, gitdpes, gdtdpes, tdvp, el_coeff, grid
 
 
 class gif:

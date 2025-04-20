@@ -103,12 +103,12 @@ select case(run)
         if ((modulo(time,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
-            call exact_factor_1d(n, 'gi')
-            call print_ef_1d('gi')
+            call exact_factor_1d(n)
+            call print_ef_1d()
           end select
         end if
 
-        !calculate GD exact factorization quantites and print them
+        !calculate GD-TDPES and print it
         !time derivative of wf is necessary for GD-TDPES which can be calculated only two steps later using central difference formula
         !the calcualtion comes two steps after the beginning because this cannot be done during initialization and also for the
         !last step of the dynamics
@@ -116,8 +116,8 @@ select case(run)
         if ((n==efhistory/2).or.(modulo((n-efhistory/2)*dt,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
-            call exact_factor_1d(n, 'gd')
-            call print_ef_1d('gd')
+            call exact_factor_gd_tdpes_1d(n)
+            call print_ef_gd_tdpes_1d(n)
           end select
         end if
       end if

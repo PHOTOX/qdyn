@@ -31,8 +31,8 @@ module mod_vars
    integer :: efhistory = 5 ! how many steps of wf we use for calcuations of wf derivative
    complex(DP), dimension(:, :, :), allocatable :: wfx_history ! used to calculate time derivatives of the wave function (hist. index, state, x)
    complex(DP), dimension(:, :), allocatable :: C_ef_1d, grad_C_ef_1d ! electronic state coeficients
-   real(DP), dimension(:), allocatable :: nucdens_1d, phase_1d, grad_phase_1d, vecpot_1d ! nuc. density, nuc. phase S, gradient of
-   ! nuc. phase, vector potential
+   real(DP), dimension(:), allocatable :: nucdens_1d, phase_1d, grad_phase_1d, vecpot_1d, gd_tdpes_1d ! nuc. density, nuc. phase S,
+   ! gradient of nuc. phase, vector potential, GD-TDPES
    real(DP), dimension(:, :), allocatable :: gi_tdpes_1d ! GI-TDPES (H_el comp., V_int comp., deriv comp., A^2 comp., total)
    !-auxiliary variables
    integer :: iost, i, j, k

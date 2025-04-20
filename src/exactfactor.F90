@@ -4,58 +4,96 @@ module mod_exactfactor
    use mod_utils
 
    implicit none
+   complex(DP), parameter :: imag_unit = cmplx(0.0d0, 1.0d0)
    real(DP), parameter :: ef_zero = 0.00000001D0
    integer, private :: file_unit
    character(len = 50), private :: file_name
 
-   ! TODO: define the time derivative variable here since it won't be used in any other module. Or the question is allocation
-
 CONTAINS
 
    !=== EXACT FACTORIZATION ===!
-   subroutine exact_factor_1d(step, gaugedep)
+   ! calculation of all Exact Factorization quantities but GD-TDPES
+   subroutine exact_factor_1d(step)
       integer, intent(in) :: step
-      character(len = 2), intent(in) :: gaugedep
-      complex(DP), dimension(nstates, xngrid) :: wf_td_1d, grad_C_ef_1d
+      complex(DP), dimension(nstates, xngrid) :: grad_C_ef_1d
 
       ! nuclear density
       nucdens_1d = calc_nucdens_1d(wfx)
 
-      if (gaugedep=='gi') then ! calculation of gauge-independent EF quantities
-         write(*, *) '* GI EF, step = ', step
+      ! set the gauge
+      call set_gauge_1d(wfx, nucdens_1d, phase_1d, grad_phase_1d)
 
-         ! set the gauge
-         call set_gauge_1d(wfx, nucdens_1d, phase_1d, grad_phase_1d)
+      ! calculate vector potential
+      call calc_vecpot_1d(wfx, nucdens_1d, vecpot_1d)
 
-         ! calculate vector potential
-         call calc_vecpot_1d(wfx, nucdens_1d, vecpot_1d)
+      ! calculate electronc coefficients
+      call calc_elcoef_1d(wfx, nucdens_1d, phase_1d, C_ef_1d, grad_C_ef_1d)
 
-         ! calculate electronc coefficients
-         call calc_elcoef_1d(wfx, nucdens_1d, phase_1d, C_ef_1d, grad_C_ef_1d)
-
-         ! calculate gi-tdpes
-         call calc_gitdpes_1d(wfx, nucdens_1d, C_ef_1d, grad_C_ef_1d, vecpot_1d, gi_tdpes_1d)
-
-      elseif (gaugedep=='gd') then ! calculation of gauge-dependent EF quantities
-         write(*, *) '* GD EF, step = ', step
-
-         ! calculate time derivative of wf
-         wf_td_1d = 0.0d0
-         if ((step >= efhistory) .and. (step < nstep)) then
-            ! fifth-order central difference formula for steps during propagation
-            call wf_time_der_1d(wf_td_1d, '5th-order_cent')
-         elseif (step < efhistory) then
-            ! third-order forward difference formula for initialization
-            call wf_time_der_1d(wf_td_1d, '3th-order_forw')
-         elseif (step==nstep) then
-            ! fifth-order backward difference formula for the last step
-            call wf_time_der_1d(wf_td_1d, '5th-order_back')
-         end if
-
-      end if
+      ! calculate gi-tdpes
+      call calc_gitdpes_1d(wfx, nucdens_1d, C_ef_1d, grad_C_ef_1d, vecpot_1d, gi_tdpes_1d)
 
    end subroutine
 
+   ! todo: finish GD TDPES
+   ! calculation of GD-TDPES only
+   subroutine exact_factor_gd_tdpes_1d(step)
+      integer, intent(in) :: step
+      integer :: current_time_index ! center of the history arrays to get the actual wf for which we calculate GD-TDPES
+      integer :: hindex, state
+      character(len = 14) :: deriv_order
+      complex(DP), dimension(nstates, xngrid) :: td_wf ! wave function time derivative
+      complex(DP), dimension(xngrid) :: sum_over_states ! the summation of derivatives over all states appearing in GD-TDPES
+      real(DP), dimension(efhistory, xngrid) :: nucdens_hist, phase_hist
+      real(DP), dimension(xngrid) :: td_phase, grad_phase ! nuclear phase time derivative, history of phase gradient is not
+      ! necessary but we need some variable to go to the function set_gauge_1d()
+
+      ! assess the history available and the numerical formula used for the derivative and set the current index in the history
+      if ((step >= efhistory) .and. (step < nstep)) then
+         ! fifth-order central difference formula for steps during propagation
+         deriv_order = '5th-order_cent'
+         ! center of the history arrays to get the actual wf for which we calculate GD-TDPES,
+         ! if efhistory=5 -> current_time_index=3 (center of the history array)
+         current_time_index = efhistory - efhistory / 2 ! maybe unnecesarly difficult but works for now
+      elseif (step < efhistory) then
+         ! third-order forward difference formula for initialization
+         deriv_order = '3th-order_forw'
+         current_time_index = 1 ! here the current_time_index is the first because we use forward formula
+      elseif (step==nstep) then
+         ! fifth-order backward difference formula for the last step
+         deriv_order = '5th-order_back'
+         current_time_index = efhistory ! here the current_time_index is the last because we use backward formula
+      end if
+
+      ! calculate nuclear density
+      nucdens_1d = calc_nucdens_1d(wfx_history(current_time_index, :, :))
+
+      ! calculate nuclear phase history
+      do hindex = 1, efhistory
+         call set_gauge_1d(wfx_history(hindex, :, :), nucdens_hist(hindex, :), phase_hist(hindex, :), grad_phase)
+      end do
+
+      ! calculate nuclear phase time derivative
+      call phase_time_der_1d(td_phase, phase_hist, deriv_order)
+
+      ! calculate time derivative of wf
+      call wf_time_der_1d(td_wf, sum_over_states, deriv_order)
+
+      ! construct GD-TDPES
+      gd_tdpes_1d = 0.0d0
+
+      do state = 1, nstates
+         do i = 1, xngrid
+            if (nucdens_1d(i) > ef_zero) then
+               gd_tdpes_1d(i) = gd_tdpes_1d(i) &
+                     - imag_unit * conjg(wfx_history(current_time_index, state, 1)) * td_wf(state, 1) / nucdens_1d(i) &
+                     - abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * td_phase(i) &
+                     - imag_unit * abs(wfx_history(current_time_index, state, 1))**2 / nucdens_1d(i) * sum_over_states(i)
+
+            end if
+         end do
+      end do
+
+   end subroutine
 
    !=== SET GAUGE ===!
    subroutine set_gauge_1d(wf, nucdens, S, gradS)
@@ -155,7 +193,6 @@ CONTAINS
       complex(DP), dimension(nstates, xngrid), intent(in) :: wf
       complex(DP), dimension(nstates, xngrid), intent(inout) :: C, dC
       integer :: istate
-      complex(DP), parameter :: imag_unit = cmplx(0.0d0, 1.0d0)
 
       C = 0.0d0
       dC = 0.0d0
@@ -237,19 +274,68 @@ CONTAINS
    end subroutine
 
    !=== TIME DERIVATIVES ===!
-   ! todo finish
-   subroutine wf_time_der_1d(wf_td_1d, order)
+   subroutine wf_time_der_1d(td_wf, sum_over_states, order)
       character(len = 14), intent(in) :: order
-      complex(DP), dimension(nstates, xngrid), intent(inout) :: wf_td_1d
+      complex(DP), dimension(nstates, xngrid), intent(inout) :: td_wf
+      complex(DP), dimension(xngrid), intent(out) :: sum_over_states ! the summation of derivatives over all states in GD-TDPES
 
-      !TODO: calculate time derivative of wf
-      write(*, *) " - Calculating time derivative of wf: ", order
-      if (order == '5th-order_cent') then
-      elseif (order == '3th-order_forw') then
-      elseif (order == '5th-order_back') then
-      end if
+      integer :: state
+
+      td_wf = 0.0d0
+      sum_over_states = 0.0D0
+      do state = 1, nstates
+         ! there could be check if nuc_density_1d>efzero but I will do that once calculating gd_tdpes_1d
+         ! checking for division by zero and calculating vecpot
+         do i = 1, xngrid
+            if (nucdens_1d(i) > ef_zero) then
+               if (order == '5th-order_cent') then
+                  td_wf(state, i) = ((-1.0D0 / 12.0D0) * (wfx_history(5, state, i) - wfx_history(1, state, i)) + &
+                        (8.0D0 / 12.0D0) * (wfx_history(4, state, i) - wfx_history(2, state, i))) / dt
+               elseif (order == '3th-order_forw') then
+                  ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
+                  ! 	f_x = (-3*f[i+0]+4*f[i+1]-1*f[i+2])/(2*1.0*h**1)
+                  td_wf(state, i) = (-3.0d0 * wfx_history(1, state, i) + 4.0d0 * wfx_history(2, state, i)&
+                        - 1.0d0 * wfx_history(3, state, i)) / (2.0d0 * dt)
+               elseif (order == '5th-order_back') then
+                  ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
+                  ! f_x = (3*f[i-4]-16*f[i-3]+36*f[i-2]-48*f[i-1]+25*f[i+0])/(12*1.0*h**1)
+                  td_wf(state, i) = (3.0d0 * wfx_history(1, state, i) - 16.0d0 * wfx_history(2, state, i) &
+                        + 36.0d0 * wfx_history(3, state, i) - 48.0d0 * wfx_history(4, state, i) &
+                        + 25.0d0 * wfx_history(5, state, i)) / (12.0d0 * dt)
+               end if
+               sum_over_states(i) = sum_over_states(i) + 0.5D0 * (conjg(td_wf(state, i)) * wfx_history(3, state, i) + &
+                     conjg(wfx_history(3, state, i)) * td_wf(state, i)) / nucdens_1d(i)
+            end if ! else it's zero which is achieve byt defining the variables as zero above
+         end do
+      end do
 
    end subroutine
+
+   subroutine phase_time_der_1d(td_phase, phase_hist, order)
+      real(DP), dimension(xngrid), intent(inout) :: td_phase
+      real(DP), dimension(efhistory, xngrid), intent(in) :: phase_hist
+      character(len = 14), intent(in) :: order
+
+      td_phase = 0.0D0
+      do i = 1, xngrid
+         if (nucdens_1d(i) > ef_zero) then
+            if (order == '5th-order_cent') then
+               td_phase(i) = ((-1.0D0 / 12.0D0) * (phase_hist(5, i) - phase_hist(1, i)) + &
+                     (8.0D0 / 12.0D0) * (phase_hist(4, i) - phase_hist(2, i))) / dt
+            elseif (order == '3th-order_forw') then
+               ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
+               ! 	f_x = (-3*f[i+0]+4*f[i+1]-1*f[i+2])/(2*1.0*h**1)
+               td_phase(i) = (-3.0d0 * phase_hist(1, i) + 4.0d0 * phase_hist(2, i) - 1.0d0 * phase_hist(3, i)) / (2.0d0 * dt)
+            elseif (order == '5th-order_back') then
+               ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
+               ! f_x = (3*f[i-4]-16*f[i-3]+36*f[i-2]-48*f[i-1]+25*f[i+0])/(12*1.0*h**1)
+               td_phase(i) = (3.0d0 * phase_hist(1, i) - 16.0d0 * phase_hist(2, i) + 36.0d0 * phase_hist(3, i)&
+                     - 48.0d0 * phase_hist(4, i) + 25.0d0 * phase_hist(5, i)) / (12.0d0 * dt)
+            end if
+         end if
+      end do
+   end subroutine
+
 
    !=== SAVE HISTORY ===!
    subroutine ef_savehistory_1d()
@@ -265,14 +351,13 @@ CONTAINS
    end subroutine
 
    !=== INITIALIZATION ===!
-   !TODO: finish initialization of ef
    subroutine init_ef()
       write(*, *) "---------"
       write(*, *) "Exact factorization initialization"
 
       if(rank == 1) then
          allocate(wfx_history(efhistory, nstates, xngrid), nucdens_1d(xngrid), phase_1d(xngrid), grad_phase_1d(xngrid))
-         allocate(vecpot_1d(xngrid), C_ef_1d(nstates, xngrid), gi_tdpes_1d(5, xngrid))
+         allocate(vecpot_1d(xngrid), C_ef_1d(nstates, xngrid), gi_tdpes_1d(5, xngrid), gd_tdpes_1d(xngrid))
       end if
 
       ! nuclear density file initialization
@@ -354,7 +439,7 @@ CONTAINS
       open(file_unit, file = file_name, status = 'old', position = 'append', action = 'WRITE', iostat = iost)
       write(*, *)"Gauge-indep. TDPES file:        " // file_name
 
-      ! gauge-independent TDPES file initialization
+      ! gauge-dependent TDPES file initialization
       file_unit = 504
       file_name = 'gd-tdpes.dat'
       open(file_unit, file = file_name, action = 'WRITE', iostat = iost)
@@ -394,60 +479,72 @@ CONTAINS
 
       select case(rank)
       case(1)
-         call exact_factor_1d(0, 'gi')
-         call print_ef_1d('gi')
+         call exact_factor_1d(0)
+         call print_ef_1d()
       end select
 
    end subroutine
 
    !=== PRINTING ===!
-   subroutine print_ef_1d(gaugedep)
-      character(len = 2), intent(in) :: gaugedep
+   ! Print everything but GD-TDPES
+   subroutine print_ef_1d()
 
-      if (gaugedep=='gi') then
-         ! print nuclear density
-         file_unit = 500
-         write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
-         do i = 1, size(x)
-            write(file_unit, *) x(i), nucdens_1d(i)
-         end do
+      ! print nuclear density
+      file_unit = 500
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, *) x(i), nucdens_1d(i)
+      end do
 
-         ! print nuclear phase and its gradient
-         file_unit = 501
-         write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
-         do i = 1, size(x)
-            write(file_unit, *) x(i), phase_1d(i), grad_phase_1d(i)
-         end do
+      ! print nuclear phase and its gradient
+      file_unit = 501
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, *) x(i), phase_1d(i), grad_phase_1d(i)
+      end do
 
-         ! print TDVP
-         file_unit = 502
-         write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
-         do i = 1, size(x)
-            write(file_unit, *) x(i), vecpot_1d(i)
-         end do
+      ! print TDVP
+      file_unit = 502
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, *) x(i), vecpot_1d(i)
+      end do
 
-         ! print el. coefficients
-         file_unit = 505
-         write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
-         do i = 1, size(x)
-            write(file_unit, '(F21.16, 30(E20.10, E20.10))') x(i), C_ef_1d(:, i)
-         end do
+      ! print el. coefficients
+      file_unit = 505
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, '(F21.16, 30(E20.10, E20.10))') x(i), C_ef_1d(:, i)
+      end do
 
-         ! print GI-TDPES
-         file_unit = 503
-         write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
-         do i = 1, size(x)
-            write(file_unit, '(F23.16,5E28.12)') x(i), gi_tdpes_1d(1, i), gi_tdpes_1d(2, i), gi_tdpes_1d(3, i), &
-                  gi_tdpes_1d(4, i), gi_tdpes_1d(5, i)
-         end do
-
-      elseif (gaugedep=='gd') then
-
-         ! todo: print GD-TDPES
-
-      end if
+      ! print GI-TDPES
+      file_unit = 503
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, '(F23.16,5E28.12)') x(i), gi_tdpes_1d(1, i), gi_tdpes_1d(2, i), gi_tdpes_1d(3, i), &
+               gi_tdpes_1d(4, i), gi_tdpes_1d(5, i)
+      end do
 
    end subroutine
 
+   ! Print everything GD-TDPES only
+   subroutine print_ef_gd_tdpes_1d(step)
+      integer, intent(in) :: step
+      real(DP) :: time
+
+      if (step/=nstep) then ! time for GD-TDPES when we are calculating the time-derivative two steps later
+         time = (step - efhistory / 2) * dt
+      else ! for the last step, the time is the same
+         time = step * dt
+      end if
+
+      ! print GD-TDPES
+      file_unit = 504
+      write(file_unit, '(A,F10.3,A)') " # time ", time, " a.u."
+      do i = 1, size(x)
+         write(file_unit, '(F23.16,E28.12)') x(i), gd_tdpes_1d(i)
+      end do
+
+   end subroutine
 
 end module
