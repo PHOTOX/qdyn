@@ -69,6 +69,7 @@ CONTAINS
 
       ! calculate nuclear phase history
       do hindex = 1, efhistory
+         nucdens_hist(hindex, :) = calc_nucdens_1d(wfx_history(hindex, :, :))
          call set_gauge_1d(wfx_history(hindex, :, :), nucdens_hist(hindex, :), phase_hist(hindex, :), grad_phase)
       end do
 
@@ -85,10 +86,9 @@ CONTAINS
          do i = 1, xngrid
             if (nucdens_1d(i) > ef_zero) then
                gd_tdpes_1d(i) = gd_tdpes_1d(i) &
-                     - imag_unit * conjg(wfx_history(current_time_index, state, 1)) * td_wf(state, 1) / nucdens_1d(i) &
+                     - imag_unit * conjg(wfx_history(current_time_index, state, i)) * td_wf(state, i) / nucdens_1d(i) &
                      - abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * td_phase(i) &
-                     + imag_unit * abs(wfx_history(current_time_index, state, 1))**2 / nucdens_1d(i) * sum_over_states(i)
-
+                     + imag_unit * abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * sum_over_states(i)
             end if
          end do
       end do

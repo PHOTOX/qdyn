@@ -25,7 +25,6 @@ module mod_vars
    real(DP) :: field_on = 0.0d0, field_off ! turning on and off field
    character(len = 9000) :: field = ''
    !-exact factorization
-   !TODO: finish exact factorization derivatives
    logical :: exact_factor = .false.
    character(len = 2) :: ef_gauge = 'A0' ! possible gauges: 'S0' (zero nuclear phase), 'A0' (zero TDVP)
    integer :: efhistory = 5 ! how many steps of wf we use for calcuations of wf derivative

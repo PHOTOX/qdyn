@@ -99,7 +99,6 @@ select case(run)
       if (exact_factor) then
         !calculate GI exact factorization quantites and print them
         ! this is done during every printing step and then at the end of the simualtion
-        !TODO: finish GI exact factorization functions
         if ((modulo(time,dtwrite)==0).or.(n==nstep)) then
           select case(rank)
           case(1)
