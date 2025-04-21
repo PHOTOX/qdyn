@@ -14,7 +14,7 @@ import qdyn_analyze as qa
 ########## INPUT ##########
 # general plotting settings
 pause = 0.00001  # pause between frames during plotting
-frame_step = 10  # plot only frame_step instead of plotting every frame
+frame_step = 2  # plot only frame_step instead of plotting every frame
 wf_scaling = 0.12  # scaling factor for the wf and density so that they are visible in the plots
 plot_online = True  # if true, plots the results on the fly, otherwise it's just the final plot
 adiabatic = True  # adiabatic vs diabatic BH states
@@ -22,7 +22,7 @@ plot_density = True  # if true, plot density instead of wave function, false plo
 xplotrange = [1, 3.5]  # if empty array, it takes xmin and xmax from the input file
 
 # gif
-gif = False
+gif = True  # if true, saves the frames for gif
 dpi_gif = 100
 duration = 2  # in ms, (duration=1000 * 1/fps, fps=frames per second).
 
@@ -39,10 +39,14 @@ def plot_ef_1d():
     axs_ef = axs[1, 0]
     axs_field = axs[2, 0]
     axs_S = axs[0, 1]
-    axs_tdpes = axs[1, 1]
+    axs_gdtdpes = axs[1, 1]
     axs_pop = axs[2, 1]
-    axs_gdtdpes = axs[1, 2]
     axs_elcoef = axs[0, 2]
+    axs_tdpes = axs[1, 2]
+    axs_en = axs[2, 2]
+
+    # define colors
+    colors = plt.cm.viridis([0.0, 0.4, 0.8, 0.2, 0.6, 1.0])
 
     # getting axis ranges
     if len(xplotrange) == 2:
@@ -68,6 +72,7 @@ def plot_ef_1d():
         axs_gdtdpes.cla()
         axs_elcoef.cla()
         axs_pop.cla()
+        axs_en.cla()
 
         fig.suptitle(f'Time: {t[i]:.0f} {time_unit:s}  Energy: {energy[0, i]:.4f} a.u.')
 
@@ -76,11 +81,12 @@ def plot_ef_1d():
             axs_bh.plot(x, pot_en[j], color='black')
 
             if plot_density:
-                axs_bh.plot(x, den_bh[j][i] + pot_en[j], label=rf'$|\psi_{j:d}|^2$')
-                axs_bh.fill_between(x, den_bh[j][i] * 0 + pot_en[j], den_bh[j][i] + pot_en[j], alpha=0.35)
+                axs_bh.plot(x, den_bh[j][i] + pot_en[j], color=colors[j], label=rf'$|\psi_{j:d}|^2$')
+                axs_bh.fill_between(x, den_bh[j][i] * 0 + pot_en[j], den_bh[j][i] + pot_en[j], color=colors[j],
+                                    alpha=0.35)
             else:
-                axs_bh.plot(x, np.real(wf_bh[j][i]) + pot_en[j], label=rf'Re[$\psi_{j:d}$]', color=f'C{j:d}')
-                axs_bh.plot(x, np.imag(wf_bh[j][i]) + pot_en[j], label=rf'Im[$\psi_{j:d}$]', color=f'C{j:d}', ls='--')
+                axs_bh.plot(x, np.real(wf_bh[j][i]) + pot_en[j], label=rf'Re[$\psi_{j:d}$]', color=colors[j])
+                axs_bh.plot(x, np.imag(wf_bh[j][i]) + pot_en[j], label=rf'Im[$\psi_{j:d}$]', color=colors[j], ls='--')
 
         axs_bh.set_xlim(xminplot, xmaxplot)
         axs_bh.set_ylim(vmin, vmax)
@@ -95,14 +101,14 @@ def plot_ef_1d():
         if plot_density:
             # axs_ef.plot(x, nucdens[i] + gitdpes[i, -1], color='C2', label=r'$|\chi|^2 + \varepsilon_{GI}$')
             # axs_ef.fill_between(x, nucdens[i] + gitdpes[i, -1], gitdpes[i, -1], color='C2', alpha=0.35)
-            axs_ef.plot(x, nucdens[i] + energy[0, i], color='C2', label=r'$|\chi|^2 + \varepsilon_{GI}$')
-            axs_ef.fill_between(x, nucdens[i] + energy[0, i], energy[0, i], color='C2', alpha=0.35)
+            axs_ef.plot(x, nucdens[i] + energy[0, i], color=colors[0], label=r'$|\chi|^2$')
+            axs_ef.fill_between(x, nucdens[i] + energy[0, i], energy[0, i], color=colors[0], alpha=0.35)
         else:
             nucwf = np.sqrt(nucdens[i]) * np.exp(1j * nucphase[i, 0])
-            axs_ef.plot(x, np.real(nucwf) + gitdpes[i, -1], color='C2', label=r'Re$[\chi] + \varepsilon_{GI}$')
-            axs_ef.plot(x, np.imag(nucwf) + gitdpes[i, -1], color='C2', ls='--', label=r'Im$[\chi] + \varepsilon_{GI}$')
+            axs_ef.plot(x, np.real(nucwf) + energy[0, i], color=colors[0], label=r'Re$[\chi]$')
+            axs_ef.plot(x, np.imag(nucwf) + energy[0, i], color=colors[0], ls='--', label=r'Im$[\chi]$')
 
-        axs_ef.plot(x, gitdpes[i, -1], color='C3', label=r'$\varepsilon_{GI}$')
+        axs_ef.plot(x, gitdpes[i, -1], color=colors[1], label=r'$\varepsilon_{GI}$')
 
         axs_ef.set_xlim(xminplot, xmaxplot)
         axs_ef.set_ylim(vmin, vmax)
@@ -113,18 +119,17 @@ def plot_ef_1d():
         # plotting nuclear phase of TDVP based on the gauge
         if ef_gauge == 'A0':
             # nuclear phase
-            axs_S.plot(x, nucphase[i, 0], linewidth=1, label=f'$S$')
-            axs_S.plot(x, nucphase[i, 1], linewidth=1, label=r'$\nabla S$')
+            axs_S.plot(x, nucphase[i, 0], linewidth=1, color=colors[0], label=f'$S$')
+            axs_S.plot(x, nucphase[i, 1], linewidth=1, color=colors[1], label=r'$\nabla S$')
             axs_S.axhline(0, linewidth=0.5, color='black')
             axs_S.set_xlim(xminplot, xmaxplot)
-            axs_S.set_ylim(np.min(nucphase))
-            # axs_S.set_ylim(np.min(nucphase), np.max(nucphase))
+            # axs_S.set_ylim(np.min(nucphase))
             axs_S.set_ylabel(r'$S$ (a.u.)')
             axs_S.set_xlabel(r'$x$ (a.u.)')
             axs_S.legend(labelspacing=0)
         elif ef_gauge == 'S0':
             # TDVP
-            axs_S.plot(x, tdvp[i], label=r'$\vec{A}$')
+            axs_S.plot(x, tdvp[i], color=colors[0], label=r'$\vec{A}$')
             axs_S.axhline(0, linewidth=0.5, color='black')
             axs_S.set_xlim(xminplot, xmaxplot)
             axs_S.set_ylim(np.min(tdvp), np.max(tdvp))
@@ -133,32 +138,45 @@ def plot_ef_1d():
             axs_S.legend(labelspacing=0)
 
         # plotting GI-TDPES
-        axs_tdpes.plot(x, gitdpes[i, 4], lw=2, label=r'$\varepsilon_{GI}$', zorder=-1)
-        axs_tdpes.plot(x, gitdpes[i, 0], linewidth=1, label=r'$H_{el}$')
-        axs_tdpes.plot(x, gitdpes[i, 1], linewidth=1, label=r'$V_{int}$')
-        axs_tdpes.plot(x, gitdpes[i, 2], linewidth=1, label=r'$|\nabla C|^2$')
-        axs_tdpes.plot(x, gitdpes[i, 3], linewidth=1, label=r'$A^2$')
+        axs_tdpes.plot(x, gitdpes[i, 4], lw=2, ls='-', color=colors[0], label=r'$\varepsilon_{GI}$', zorder=-1)
+        axs_tdpes.plot(x, gitdpes[i, 0], lw=1, ls='-', color=colors[1], label=r'$H_{el}$')
+        axs_tdpes.plot(x, gitdpes[i, 1], lw=1, ls='-', color=colors[2], label=r'$V_{int}$')
+        axs_tdpes.plot(x, gitdpes[i, 2], lw=1, ls='--', color=colors[5], label=r'$|\nabla C|^2$')
+        axs_tdpes.plot(x, gitdpes[i, 3], lw=1, ls='--', color=colors[4], label=r'$A^2$')
         axs_tdpes.axhline(0, linewidth=0.5, color='black')
         axs_tdpes.set_xlim(xminplot, xmaxplot)
-        # axs_tdpes.set_ylim(np.min(gitdpes), np.max(gitdpes))
         axs_tdpes.set_ylim(np.min(gitdpes))
-        axs_tdpes.set_ylabel(r'$\varepsilon_{GI}(t,x)$ (a.u.)')
+        axs_tdpes.set_ylabel(r'$\varepsilon_{GI}$ (a.u.)')
         axs_tdpes.set_xlabel(r'$x$ (a.u.)')
         axs_tdpes.legend(labelspacing=0)
 
         # GD-TDPES
-        axs_gdtdpes.plot(x, gdtdpes[i], lw=2, label=r'$\varepsilon_{GD}$', zorder=-1)
+        axs_gdtdpes.plot(x, gdtdpes[i], color=colors[0], lw=2, label=r'$\varepsilon_{GD}$', zorder=0)
+        tdpes = gdtdpes[i] + gitdpes[i, 4]
+        axs_gdtdpes.plot(x, tdpes, color=colors[1], lw=2, label=r'$\varepsilon$', zorder=-1)
+        averageE = np.trapz(nucdens[i] * tdpes, x)
+        if plot_density:
+            axs_gdtdpes.plot(x, nucdens[i] + averageE, color=colors[2],
+                             label=r'$|\chi|^2 + \langle\chi|\varepsilon|\chi\rangle$')
+            axs_gdtdpes.fill_between(x, nucdens[i] + averageE, averageE, color=colors[2], alpha=0.35)
+        else:
+            nucwf = np.sqrt(nucdens[i]) * np.exp(1j * nucphase[i, 0])
+            axs_gdtdpes.plot(x, np.real(nucwf) + averageE, color=colors[2],
+                             label=r'Re$[\chi] + \langle\chi|\varepsilon|\chi\rangle$')
+            axs_gdtdpes.plot(x, np.imag(nucwf) + averageE, color=colors[2], ls='--',
+                             label=r'Im$[\chi] + \langle\chi|\varepsilon|\chi\rangle$')
         axs_gdtdpes.axhline(0, linewidth=0.5, color='black')
         axs_gdtdpes.set_xlim(xminplot, xmaxplot)
-        axs_gdtdpes.set_ylim(np.min(gitdpes))
-        axs_gdtdpes.set_ylabel(r'$\varepsilon_{GD}(t,x)$ (a.u.)')
+        axs_gdtdpes.set_ylim(min([np.min(tdpes), np.min(gdtdpes)]) - 0.2 * np.max(nucdens),
+                             max([np.max(nucdens + averageE), np.max(gdtdpes)]) + 0.2 * np.max(nucdens))
+        axs_gdtdpes.set_ylabel(r'$\varepsilon_{GD}$ (a.u.)')
         axs_gdtdpes.set_xlabel(r'$x$ (a.u.)')
         axs_gdtdpes.legend(labelspacing=0)
 
         # el. coefficients
         for j in range(0, nstates):
-            axs_elcoef.plot(x, np.abs(el_coeff[i, j]) ** 2, label=rf'$|C_{j:d}|^2$')
-        axs_elcoef.axhline(0, linewidth=0.5, color='black')
+            axs_elcoef.plot(x, np.abs(el_coeff[i, j]) ** 2, color=colors[j], label=rf'$|C_{j:d}|^2$')
+        axs_elcoef.axhline(0, lw=0.5, color='black')
         axs_elcoef.set_xlim(xminplot, xmaxplot)
         axs_elcoef.set_ylim(-0.05, 1.05)
         axs_elcoef.set_ylabel(r'$\vec{A}$ (a.u.)')
@@ -167,22 +185,31 @@ def plot_ef_1d():
 
         # populations
         for state in range(1, nstates + 1):
-            axs_pop.plot(t[:i + 1], pop_ad[state][:i + 1], color='C' + str(state - 1), label=rf'$P_{state - 1:d}$')
-        axs_pop.set_xlim(-0.01, 1.01)
+            axs_pop.plot(t[:i + 1], pop_ad[state][:i + 1], color=colors[state-1], label=rf'$P_{state - 1:d}$')
+        axs_pop.set_ylim(-0.1, 1.1)
         axs_pop.set_xlim(t[0], t[-1])
         axs_pop.set_xlabel(f'$t$ ({time_unit:s})')
-        axs_pop.set_ylabel(f'populations')
+        axs_pop.set_ylabel(f'Adiab. pop.')
+
+        # energies
+        axs_en.plot(t[:i + 1], energy[0][:i + 1], color=colors[0], label=r'$E_\mathregular{tot}$')
+        axs_en.set_xlim(t[0], t[-1])
+        xde = (np.max(energy[0]) - np.min(energy[0]))
+        axs_en.set_ylim(np.min(energy[0]) - 0.1 * xde, np.max(energy[0]) + 0.1 * xde)
+        axs_en.set_xlabel(f'$t$ ({time_unit:s})')
+        axs_en.set_ylabel(f'$E$ (a.u.)')
+        axs_en.legend()
 
         # field
         if use_field:
-            axs_field.plot(field[0, :i], field[1, :i])
+            axs_field.plot(field[0, :i], field[1, :i], color=colors[0])
             axs_field.set_xlim(field[0, 0], field[0, -1])
             axs_field.set_xlim(t[0], t[-1])
             axs_field.set_xlabel(f'$t$ ({time_unit:s})')
             axs_field.set_ylabel(f'el. field (a.u.)')
         else:
-            axs_field.plot(t[:i + 1], energy[0][:i + 1], color='black', label=r'$E_\mathrm{tot}$')
-            axs_field.scatter(t[i], energy[0][i], color='black')
+            axs_field.plot(t[:i + 1], energy[0][:i + 1], color=colors[0], label=r'$E_\mathrm{tot}$')
+            axs_field.scatter(t[i], energy[0][i], color=colors[0])
             axs_field.set_xlim(t[0], t[-1])
             axs_field.set_xlabel(f'$t$ ({time_unit:s})')
             axs_field.set_ylabel(r'$E$ (a.u.)')
@@ -198,6 +225,7 @@ def plot_ef_1d():
 
         plt.show()
         plt.pause(pause)
+
 
 ########## reading input.q ##########
 input_file = 'input.q'
