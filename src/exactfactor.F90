@@ -85,10 +85,11 @@ CONTAINS
       do state = 1, nstates
          do i = 1, xngrid
             if (nucdens_1d(i) > ef_zero) then
+               !todo: check why the sign is opposite
+               !todo: seems there are small problems at the first and last step
                gd_tdpes_1d(i) = gd_tdpes_1d(i) &
-                     - imag_unit * conjg(wfx_history(current_time_index, state, i)) * td_wf(state, i) / nucdens_1d(i) &
-                     - abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * td_phase(i) &
-                     + imag_unit * abs(wfx_history(current_time_index, state, i))**2 / nucdens_1d(i) * sum_over_states(i)
+                     + (aimag(conjg(wfx_history(current_time_index, state, i)) * td_wf(state, i)) &
+                           - abs(wfx_history(current_time_index, state, i))**2 * td_phase(i)) / nucdens_1d(i)
             end if
          end do
       end do
