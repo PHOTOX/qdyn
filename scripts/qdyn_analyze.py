@@ -110,15 +110,15 @@ class read:
         for i in range(0, nstates):
             if rank == 1:
                 if adiabatic:
-                    wf_file = f'{folder:s}/wf1d_ad.{i + 1:d}.out'
+                    wf_file = f'{folder:s}/wf1d_ad.{i + 1:d}.dat'
                 else:
-                    wf_file = f'{folder:s}/wf1d.{i + 1:d}.out'
+                    wf_file = f'{folder:s}/wf1d.{i + 1:d}.dat'
                 grid_size = xngrid
             elif rank == 2:
                 if adiabatic:
-                    wf_file = f'{folder:s}/wf2d_ad.{i + 1:d}.out'
+                    wf_file = f'{folder:s}/wf2d_ad.{i + 1:d}.dat'
                 else:
-                    wf_file = f'{folder:s}/wf2d.{i + 1:d}.out'
+                    wf_file = f'{folder:s}/wf2d.{i + 1:d}.dat'
                 grid_size = xngrid * yngrid
 
             if exists(wf_file):
@@ -204,6 +204,162 @@ class read:
         pop_diab = np.genfromtxt(input_file).T
 
         return pop_ad, pop_diab
+
+    def ef(rank, nstates, xngrid, yngrid=0, folder='.'):
+        """Reading Exact Factorization quantities."""
+
+        # get grid size
+        if rank == 1:
+            grid_size = xngrid
+        elif rank == 2:
+            grid_size = xngrid * yngrid
+
+        # nuclear density
+        nucdens_file = f'{folder:s}/nuclear_density.dat'
+        if exists(nucdens_file):
+            nucdens = np.genfromtxt(nucdens_file)
+
+            # estimate number of frames
+            if np.shape(nucdens)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {nucdens_file:s}. Exiting..")
+                exit(1)
+            nframes = int(np.shape(nucdens)[0] / grid_size)
+
+            if rank == 1:
+                nucdens = np.reshape(nucdens, (nframes, grid_size, 2)).transpose((0, 2, 1))
+                x, y = nucdens[0, 0], np.zeros(shape=(xngrid))
+                nucdens = nucdens[:, 1]
+            elif rank == 2:
+                nucdens = np.reshape(nucdens, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                x, y = nucdens[0, 0], nucdens[0, 1]
+                nucdens = nucdens[:, 2]
+            print(f"'{nucdens_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % nucdens_file)
+            exit(1)
+
+        grid = [x, y]
+
+        # nuclear phase and gradient
+        nucphase_file = f'{folder:s}/nuclear_phase.dat'
+        if exists(nucphase_file):
+            nucphase = np.genfromtxt(nucphase_file)
+
+            if np.shape(nucphase)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {nucphase_file:s}. Exiting..")
+                exit(1)
+            elif nframes != int(np.shape(nucphase)[0] / grid_size):
+                print(f"Number of time frames in {nucdens_file:s} is not consistent with {nucphase_file:s}. Exiting..")
+                exit(1)
+
+            if rank == 1:
+                nucphase = np.reshape(nucphase, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                nucphase = nucphase[:, 1:]
+            elif rank == 2:
+                nucphase = np.reshape(nucphase, (nframes, grid_size, 4)).transpose((0, 2, 1))
+                nucphase = nucphase[:, 2:]
+            print(f"'{nucphase_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % nucphase_file)
+            exit(1)
+
+        # GI-TDPES
+        gitdpes_file = f'{folder:s}/gi-tdpes.dat'
+        if exists(gitdpes_file):
+            gitdpes = np.genfromtxt(gitdpes_file)
+
+            if np.shape(gitdpes)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {gitdpes_file:s}. Exiting..")
+                exit(1)
+            elif nframes != int(np.shape(gitdpes)[0] / grid_size):
+                print(
+                    f"Number of time frames in {nucdens_file:s} is not consistent with {gitdpes_file:s}. Exiting..")
+                exit(1)
+
+            if rank == 1:
+                gitdpes = np.reshape(gitdpes, (nframes, grid_size, 6)).transpose((0, 2, 1))
+                gitdpes = gitdpes[:, 1:]
+            elif rank == 2:
+                gitdpes = np.reshape(gitdpes, (nframes, grid_size, 7)).transpose((0, 2, 1))
+                gitdpes = gitdpes[:, 2:]
+            print(f"'{gitdpes_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % gitdpes_file)
+            exit(1)
+
+        # TDVP
+        tdvp_file = f'{folder:s}/tdvp.dat'
+        if exists(tdvp_file):
+            tdvp = np.genfromtxt(tdvp_file)
+
+            # estimate number of frames
+            if np.shape(tdvp)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {tdvp_file:s}. Exiting..")
+                exit(1)
+            nframes = int(np.shape(tdvp)[0] / grid_size)
+
+            if rank == 1:
+                tdvp = np.reshape(tdvp, (nframes, grid_size, 2)).transpose((0, 2, 1))
+                tdvp = tdvp[:, 1]
+            elif rank == 2:
+                tdvp = np.reshape(tdvp, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                tdvp = tdvp[:, 2]
+            print(f"'{tdvp_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % tdvp_file)
+            exit(1)
+
+        # electronic coefficients
+        C_file = f'{folder:s}/el_coefficients_ef.dat'
+        if exists(C_file):
+            C = np.genfromtxt(C_file)
+
+            # estimate number of frames
+            if np.shape(C)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {C_file:s}. Exiting..")
+                exit(1)
+            nframes = int(np.shape(C)[0] / grid_size)
+
+            if rank == 1:
+                C = np.reshape(C, (nframes, grid_size, 1 + nstates*2)).transpose((0, 2, 1))
+                C = C[:, 1:]
+            elif rank == 2:
+                C = np.reshape(C, (nframes, grid_size, + nstates*2)).transpose((0, 2, 1))
+                C = C[:, 2:]
+            el_coeff = np.zeros(shape=(nframes, nstates, grid_size), dtype=complex)
+            for step in range(nframes):
+                for state in range(nstates):
+                    el_coeff[step, state] = C[step, 2*state] + 1j*C[step, 2*state+1]
+            print(f"'{C_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % C_file)
+            exit(1)
+
+        # GD-TDPES
+        gdtdpes_file = f'{folder:s}/gd-tdpes.dat'
+        if exists(gdtdpes_file):
+            gdtdpes = np.genfromtxt(gdtdpes_file)
+
+            if np.shape(gdtdpes)[0] % grid_size != 0:
+                print(f"Number of lines and number of grid point are not matching in {gdtdpes_file:s}. Exiting..")
+                exit(1)
+            elif nframes != int(np.shape(gdtdpes)[0] / grid_size):
+                print(
+                    f"Number of time frames in {nucdens_file:s} is not consistent with {gdtdpes_file:s}. Exiting..")
+                exit(1)
+
+            if rank == 1:
+                gdtdpes = np.reshape(gdtdpes, (nframes, grid_size, 2)).transpose((0, 2, 1))
+                gdtdpes = gdtdpes[:, 1]
+            elif rank == 2:
+                gdtdpes = np.reshape(gdtdpes, (nframes, grid_size, 3)).transpose((0, 2, 1))
+                gdtdpes = gdtdpes[:, 2]
+            print(f"'{gdtdpes_file:s}' read")
+        else:
+            print("File '%s' does not exist. Exiting.." % gdtdpes_file)
+            exit(1)
+
+        return nucdens, nucphase, gitdpes, gdtdpes, tdvp, el_coeff, grid
 
 
 class gif:

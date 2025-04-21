@@ -1,0 +1,94 @@
+ ====== Qdyn =====
+
+ ### Reading input ###
+ * REAL TIME PROPAGATION *
+ Time step:                 1.00000 a.u.
+ Number of steps:              4000
+ Total time:                4000.00 a.u.
+ Grid size in x:               1024
+ Number of dimensions:            1
+ Number of steps:              4000
+ xmin:                       0.5000 a.u.
+ xmax:                       8.0000 a.u.
+ Potential:                    file
+ Number of states:                2
+ Exact factorization:            ON
+ Gauge:                          A0 (zero TDVP)
+ Printing WF:                   OFF
+ Electric field:                 ON
+ Field on at                   0.00 a.t.u.
+ Field off at               4135.00 a.t.u.
+ |E(t)| = 0.0715*sin(3.141592653589793*t/4135)**2*cos(0.17346*t)
+ Norm conservation threshold (norm_thresh) set to     0.10000000
+
+ ### Initialization ###
+ Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
+ * <psi_1|H_el|psi_1> = read from file
+ * <psi_1|H_el|psi_2> = 0
+ * <psi_2|H_el|psi_1> = 0
+ * <psi_2|H_el|psi_2> = read from file
+ Adiabatic energies and transformation matrix U calculated.
+ Time-dependent problem, exp(H_el) will be built every time step.
+ Parsing field
+ Reading dipole couplings (file names expected to be dipole_coup.i.j.dat)
+ * <psi_1|mu|psi_1> = 0
+ * <psi_1|mu|psi_2> = read from file
+ * <psi_2|mu|psi_1> = read from file
+ * <psi_2|mu|psi_2> = 0
+ WF will be read from wf.chk file.
+ ---------
+ Exact factorization initialization
+ Nuclear density file:           nuclear_density.dat                               
+ Nuclear phase file:             nuclear_phase.dat                                 
+ TD vector potential file:       tdvp.dat                                          
+ Gauge-indep. TDPES file:        gi-tdpes.dat                                      
+ Gauge-dep. TDPES file:          gd-tdpes.dat                                      
+ El. coefficients file:          el_coefficients_ef.dat                            
+ Electric field file:            field.dat                                         
+ Diabatic populations file:      pop_diab.dat
+ Adiabatic populations file:     pop_ad.dat
+
+
+ ### Propagation ###
+
+Step:        100 ;    100.0 a.u.; E=  -0.160740475 a.u.; norm=1.0000000
+Step:        200 ;    200.0 a.u.; E=  -0.160737629 a.u.; norm=1.0000000
+Step:        300 ;    300.0 a.u.; E=  -0.160719587 a.u.; norm=1.0000000
+Step:        400 ;    400.0 a.u.; E=  -0.160666563 a.u.; norm=1.0000000
+Step:        500 ;    500.0 a.u.; E=  -0.160529221 a.u.; norm=1.0000000
+Step:        600 ;    600.0 a.u.; E=  -0.160299361 a.u.; norm=1.0000000
+Step:        700 ;    700.0 a.u.; E=  -0.159846450 a.u.; norm=1.0000000
+Step:        800 ;    800.0 a.u.; E=  -0.159084608 a.u.; norm=1.0000000
+Step:        900 ;    900.0 a.u.; E=  -0.157873851 a.u.; norm=1.0000000
+Step:       1000 ;   1000.0 a.u.; E=  -0.155928003 a.u.; norm=1.0000000
+Step:       1100 ;   1100.0 a.u.; E=  -0.153498259 a.u.; norm=1.0000000
+Step:       1200 ;   1200.0 a.u.; E=  -0.149715628 a.u.; norm=1.0000000
+Step:       1300 ;   1300.0 a.u.; E=  -0.145512610 a.u.; norm=1.0000000
+Step:       1400 ;   1400.0 a.u.; E=  -0.139088034 a.u.; norm=1.0000000
+Step:       1500 ;   1500.0 a.u.; E=  -0.132590328 a.u.; norm=1.0000000
+Step:       1600 ;   1600.0 a.u.; E=  -0.123424607 a.u.; norm=1.0000000
+Step:       1700 ;   1700.0 a.u.; E=  -0.114696080 a.u.; norm=1.0000000
+Step:       1800 ;   1800.0 a.u.; E=  -0.103280399 a.u.; norm=1.0000000
+Step:       1900 ;   1900.0 a.u.; E=  -0.092487256 a.u.; norm=1.0000000
+Step:       2000 ;   2000.0 a.u.; E=  -0.079864822 a.u.; norm=1.0000000
+Step:       2100 ;   2100.0 a.u.; E=  -0.068038805 a.u.; norm=1.0000000
+Step:       2200 ;   2200.0 a.u.; E=  -0.055874544 a.u.; norm=1.0000000
+Step:       2300 ;   2300.0 a.u.; E=  -0.044230457 a.u.; norm=1.0000000
+Step:       2400 ;   2400.0 a.u.; E=  -0.033673268 a.u.; norm=1.0000000
+Step:       2500 ;   2500.0 a.u.; E=  -0.023473926 a.u.; norm=1.0000000
+Step:       2600 ;   2600.0 a.u.; E=  -0.015406774 a.u.; norm=1.0000000
+Step:       2700 ;   2700.0 a.u.; E=  -0.007638391 a.u.; norm=1.0000000
+Step:       2800 ;   2800.0 a.u.; E=  -0.002147445 a.u.; norm=1.0000000
+Step:       2900 ;   2900.0 a.u.; E=   0.003002320 a.u.; norm=1.0000000
+Step:       3000 ;   3000.0 a.u.; E=   0.006275433 a.u.; norm=1.0000000
+Step:       3100 ;   3100.0 a.u.; E=   0.009125444 a.u.; norm=1.0000000
+Step:       3200 ;   3200.0 a.u.; E=   0.010779899 a.u.; norm=1.0000000
+Step:       3300 ;   3300.0 a.u.; E=   0.012059218 a.u.; norm=1.0000000
+Step:       3400 ;   3400.0 a.u.; E=   0.012740206 a.u.; norm=1.0000000
+Step:       3500 ;   3500.0 a.u.; E=   0.013173234 a.u.; norm=1.0000000
+Step:       3600 ;   3600.0 a.u.; E=   0.013377846 a.u.; norm=1.0000000
+Step:       3700 ;   3700.0 a.u.; E=   0.013472015 a.u.; norm=1.0000000
+Step:       3800 ;   3800.0 a.u.; E=   0.013506817 a.u.; norm=1.0000000
+Step:       3900 ;   3900.0 a.u.; E=   0.013514638 a.u.; norm=1.0000000
+Step:       4000 ;   4000.0 a.u.; E=   0.013515236 a.u.; norm=1.0000000
+ JOB DONE.
