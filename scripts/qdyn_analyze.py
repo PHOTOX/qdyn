@@ -335,7 +335,6 @@ class read:
             print("File '%s' does not exist. Exiting.." % C_file)
             exit(1)
 
-        # todo: read GD-TDPES
         # GD-TDPES
         gdtdpes_file = f'{folder:s}/gd-tdpes.dat'
         if exists(gdtdpes_file):
