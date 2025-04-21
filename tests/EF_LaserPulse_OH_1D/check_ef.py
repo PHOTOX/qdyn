@@ -31,8 +31,7 @@ for file in files:
     # compare max difference to threshold
     if max_difference > 1e-10:
         result = False
-        output.write(f"Mismatch found in '{data_file}'!\n")
-        # print(f"ERROR found in '{data_file}'!")
+        output.write(f"Mismatch found in '{data_file}'! (max difference: {max_difference:.2e})\n")
 
 # close output file
 output.close()

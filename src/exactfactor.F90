@@ -151,26 +151,21 @@ CONTAINS
 
       ! calculating the expectation value with i*px operator
       do istate = 1, nstates ! states to be propagated
-         ! NOTE: Normally, one should do iFFT to k space and then FFT to get back. However, for this I nee to use FFT to k-space
-         ! and then iFFT back, otherwise I get opposite sign of the phase and its derivative or I need to use -i*px.
-         ! I wasn't able to rationalize it at the moment but Fede's code does that and when I compared in python with position
-         ! derivative using np.gradient, the FFT and iFFT version appeared to be the correct one.
-         ! FFT -> k
-         call dfftw_plan_dft_1d(plan_forward, xngrid, wf(istate, :), wfp, FFTW_FORWARD, FFTW_ESTIMATE)
-         call dfftw_execute_dft(plan_forward, wf(istate, :), wfp)
-         call dfftw_destroy_plan(plan_forward)
+         ! iFFT -> k
+         call dfftw_plan_dft_1d(plan_backward, xngrid, wf(istate, :), wfp, FFTW_BACKWARD, FFTW_ESTIMATE)
+         call dfftw_execute_dft(plan_backward, wf(istate, :), wfp)
+         call dfftw_destroy_plan(plan_backward)
 
          wfp = wfp / dsqrt(real(xngrid, kind = DP))
 
-         ! p(t)
          do i = 1, xngrid
-            wfp(i) = cmplx(0.0D0, 1.0D0) * px(i) * wfp(i) !i*px*psi
+            wfp(i) = - cmplx(0.0D0, 1.0D0) * px(i) * wfp(i) !hbar d\dx psi = - i*px*psi
          end do
 
-         ! iFFT -> x
-         call dfftw_plan_dft_1d(plan_backward, xngrid, wfp, tmp_wf(istate, :), FFTW_BACKWARD, FFTW_ESTIMATE)
-         call dfftw_execute_dft(plan_backward, wfp, tmp_wf(istate, :))
-         call dfftw_destroy_plan(plan_backward)
+         ! FFT -> x
+         call dfftw_plan_dft_1d(plan_forward, xngrid, wfp, tmp_wf(istate, :), FFTW_FORWARD, FFTW_ESTIMATE)
+         call dfftw_execute_dft(plan_forward, wfp, tmp_wf(istate, :))
+         call dfftw_destroy_plan(plan_forward)
 
          tmp_wf(istate, :) = tmp_wf(istate, :) / dsqrt(real(xngrid, kind = DP))
 
@@ -261,7 +256,11 @@ CONTAINS
             ! calculate <psi|H_el|psi> term
             gi_tdpes(1, :) = gi_tdpes(1, :) + REAL(CONJG(C(istate, :)) * H1(istate, jstate, :) * C(jstate, :))
             ! calculate <psi|V_int|psi> term
-            Vint = - dipole_coupling(istate, jstate, :) * elmag_field(time)
+            if (field_coupling) then
+               Vint = - dipole_coupling(istate, jstate, :) * elmag_field(time)
+            else ! if the field is off, we don't have elmag_field, thus, we need to set up manually
+               Vint = 0.0d0
+            end if
             gi_tdpes(2, :) = gi_tdpes(2, :) + REAL(CONJG(C(istate, :)) * Vint(:) * C(jstate, :))
          end do
          ! calculate Sum_k [<grad_k psi| grad_k psi> / 2M_k] term
