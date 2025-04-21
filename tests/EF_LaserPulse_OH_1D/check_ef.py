@@ -2,9 +2,7 @@ from os.path import exists
 from numpy import genfromtxt, max, abs
 
 # Exact factorization files to be compared
-# todo: add gd-tdpes to tests
-files = ['el_coefficients_ef', 'gi-tdpes', 'nuclear_density', 'nuclear_phase']
-# files = ['el_coefficients_ef', 'gd-tdpes', 'gi-tdpes', 'nuclear_density', 'nuclear_phase']
+files = ['el_coefficients_ef', 'gd-tdpes', 'gi-tdpes', 'nuclear_density', 'nuclear_phase']
 
 
 result = True  # if mismatch between result and reference appear, it's overwritten with False

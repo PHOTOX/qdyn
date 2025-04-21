@@ -51,126 +51,44 @@
 
  ### Propagation ###
 
- * GD EF, step =            2
-  - Calculating time derivative of wf: 3th-order_forw
 Step:        100 ;    100.0 a.u.; E=  -0.160740475 a.u.; norm=1.0000000
- * GD EF, step =          102
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        200 ;    200.0 a.u.; E=  -0.160737629 a.u.; norm=1.0000000
- * GD EF, step =          202
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        300 ;    300.0 a.u.; E=  -0.160719587 a.u.; norm=1.0000000
- * GD EF, step =          302
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        400 ;    400.0 a.u.; E=  -0.160666563 a.u.; norm=1.0000000
- * GD EF, step =          402
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        500 ;    500.0 a.u.; E=  -0.160529221 a.u.; norm=1.0000000
- * GD EF, step =          502
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        600 ;    600.0 a.u.; E=  -0.160299361 a.u.; norm=1.0000000
- * GD EF, step =          602
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        700 ;    700.0 a.u.; E=  -0.159846450 a.u.; norm=1.0000000
- * GD EF, step =          702
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        800 ;    800.0 a.u.; E=  -0.159084608 a.u.; norm=1.0000000
- * GD EF, step =          802
-  - Calculating time derivative of wf: 5th-order_cent
 Step:        900 ;    900.0 a.u.; E=  -0.157873851 a.u.; norm=1.0000000
- * GD EF, step =          902
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1000 ;   1000.0 a.u.; E=  -0.155928003 a.u.; norm=1.0000000
- * GD EF, step =         1002
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1100 ;   1100.0 a.u.; E=  -0.153498259 a.u.; norm=1.0000000
- * GD EF, step =         1102
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1200 ;   1200.0 a.u.; E=  -0.149715628 a.u.; norm=1.0000000
- * GD EF, step =         1202
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1300 ;   1300.0 a.u.; E=  -0.145512610 a.u.; norm=1.0000000
- * GD EF, step =         1302
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1400 ;   1400.0 a.u.; E=  -0.139088034 a.u.; norm=1.0000000
- * GD EF, step =         1402
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1500 ;   1500.0 a.u.; E=  -0.132590328 a.u.; norm=1.0000000
- * GD EF, step =         1502
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1600 ;   1600.0 a.u.; E=  -0.123424607 a.u.; norm=1.0000000
- * GD EF, step =         1602
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1700 ;   1700.0 a.u.; E=  -0.114696080 a.u.; norm=1.0000000
- * GD EF, step =         1702
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1800 ;   1800.0 a.u.; E=  -0.103280399 a.u.; norm=1.0000000
- * GD EF, step =         1802
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       1900 ;   1900.0 a.u.; E=  -0.092487256 a.u.; norm=1.0000000
- * GD EF, step =         1902
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2000 ;   2000.0 a.u.; E=  -0.079864822 a.u.; norm=1.0000000
- * GD EF, step =         2002
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2100 ;   2100.0 a.u.; E=  -0.068038805 a.u.; norm=1.0000000
- * GD EF, step =         2102
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2200 ;   2200.0 a.u.; E=  -0.055874544 a.u.; norm=1.0000000
- * GD EF, step =         2202
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2300 ;   2300.0 a.u.; E=  -0.044230457 a.u.; norm=1.0000000
- * GD EF, step =         2302
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2400 ;   2400.0 a.u.; E=  -0.033673268 a.u.; norm=1.0000000
- * GD EF, step =         2402
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2500 ;   2500.0 a.u.; E=  -0.023473926 a.u.; norm=1.0000000
- * GD EF, step =         2502
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2600 ;   2600.0 a.u.; E=  -0.015406774 a.u.; norm=1.0000000
- * GD EF, step =         2602
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2700 ;   2700.0 a.u.; E=  -0.007638391 a.u.; norm=1.0000000
- * GD EF, step =         2702
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2800 ;   2800.0 a.u.; E=  -0.002147445 a.u.; norm=1.0000000
- * GD EF, step =         2802
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       2900 ;   2900.0 a.u.; E=   0.003002320 a.u.; norm=1.0000000
- * GD EF, step =         2902
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3000 ;   3000.0 a.u.; E=   0.006275433 a.u.; norm=1.0000000
- * GD EF, step =         3002
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3100 ;   3100.0 a.u.; E=   0.009125444 a.u.; norm=1.0000000
- * GD EF, step =         3102
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3200 ;   3200.0 a.u.; E=   0.010779899 a.u.; norm=1.0000000
- * GD EF, step =         3202
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3300 ;   3300.0 a.u.; E=   0.012059218 a.u.; norm=1.0000000
- * GD EF, step =         3302
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3400 ;   3400.0 a.u.; E=   0.012740206 a.u.; norm=1.0000000
- * GD EF, step =         3402
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3500 ;   3500.0 a.u.; E=   0.013173234 a.u.; norm=1.0000000
- * GD EF, step =         3502
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3600 ;   3600.0 a.u.; E=   0.013377846 a.u.; norm=1.0000000
- * GD EF, step =         3602
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3700 ;   3700.0 a.u.; E=   0.013472015 a.u.; norm=1.0000000
- * GD EF, step =         3702
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3800 ;   3800.0 a.u.; E=   0.013506817 a.u.; norm=1.0000000
- * GD EF, step =         3802
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       3900 ;   3900.0 a.u.; E=   0.013514638 a.u.; norm=1.0000000
- * GD EF, step =         3902
-  - Calculating time derivative of wf: 5th-order_cent
 Step:       4000 ;   4000.0 a.u.; E=   0.013515236 a.u.; norm=1.0000000
- * GD EF, step =         4000
-  - Calculating time derivative of wf: 5th-order_back
  JOB DONE.

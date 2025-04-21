@@ -36,8 +36,8 @@
  xsigma:            0.70711
  px0:              20.00000
  norm:              0.97850
- Diabatic populations outputed to file: pop_diab.dat
- Adiabatic populations outputed to file: pop_ad.dat
+ Diabatic populations file:      pop_diab.dat
+ Adiabatic populations file:     pop_ad.dat
 
 
  ### Propagation ###
