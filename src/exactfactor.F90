@@ -34,7 +34,6 @@ CONTAINS
 
    end subroutine
 
-   ! todo: finish GD TDPES
    ! calculation of GD-TDPES only
    subroutine exact_factor_gd_tdpes_1d(step)
       integer, intent(in) :: step
@@ -85,7 +84,6 @@ CONTAINS
       do state = 1, nstates
          do i = 1, xngrid
             if (nucdens_1d(i) > ef_zero) then
-               !todo: check why the sign is opposite
                gd_tdpes_1d(i) = gd_tdpes_1d(i) &
                      + (aimag(conjg(wfx_history(current_time_index, state, i)) * td_wf(state, i)) &
                            - abs(wfx_history(current_time_index, state, i))**2 * td_phase(i)) / nucdens_1d(i)
@@ -288,19 +286,19 @@ CONTAINS
          do i = 1, xngrid
             if (nucdens_1d(i) > ef_zero) then
                if (order == '5th-order_cent') then
-                  td_wf(state, i) = ((-1.0D0 / 12.0D0) * (wfx_history(5, state, i) - wfx_history(1, state, i)) + &
-                        (8.0D0 / 12.0D0) * (wfx_history(4, state, i) - wfx_history(2, state, i))) / dt
+                  td_wf(state, i) = ((-1.0D0 / 12.0D0) * (wfx_history(1, state, i) - wfx_history(5, state, i)) + &
+                        (8.0D0 / 12.0D0) * (wfx_history(2, state, i) - wfx_history(4, state, i))) / dt
                elseif (order == '3th-order_forw') then
                   ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
                   ! 	f_x = (-3*f[i+0]+4*f[i+1]-1*f[i+2])/(2*1.0*h**1)
-                  td_wf(state, i) = (-3.0d0 * wfx_history(1, state, i) + 4.0d0 * wfx_history(2, state, i)&
-                        - 1.0d0 * wfx_history(3, state, i)) / (2.0d0 * dt)
+                  td_wf(state, i) = (-3.0d0 * wfx_history(3, state, i) + 4.0d0 * wfx_history(2, state, i)&
+                        - 1.0d0 * wfx_history(1, state, i)) / (2.0d0 * dt)
                elseif (order == '5th-order_back') then
                   ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
                   ! f_x = (3*f[i-4]-16*f[i-3]+36*f[i-2]-48*f[i-1]+25*f[i+0])/(12*1.0*h**1)
-                  td_wf(state, i) = (3.0d0 * wfx_history(1, state, i) - 16.0d0 * wfx_history(2, state, i) &
-                        + 36.0d0 * wfx_history(3, state, i) - 48.0d0 * wfx_history(4, state, i) &
-                        + 25.0d0 * wfx_history(5, state, i)) / (12.0d0 * dt)
+                  td_wf(state, i) = (3.0d0 * wfx_history(5, state, i) - 16.0d0 * wfx_history(4, state, i) &
+                        + 36.0d0 * wfx_history(3, state, i) - 48.0d0 * wfx_history(2, state, i) &
+                        + 25.0d0 * wfx_history(1, state, i)) / (12.0d0 * dt)
                end if
                sum_over_states(i) = sum_over_states(i) + 0.5D0 * (conjg(td_wf(state, i)) * wfx_history(3, state, i) + &
                      conjg(wfx_history(3, state, i)) * td_wf(state, i)) / nucdens_1d(i)
@@ -319,17 +317,17 @@ CONTAINS
       do i = 1, xngrid
          if (nucdens_1d(i) > ef_zero) then
             if (order == '5th-order_cent') then
-               td_phase(i) = ((-1.0D0 / 12.0D0) * (phase_hist(5, i) - phase_hist(1, i)) + &
-                     (8.0D0 / 12.0D0) * (phase_hist(4, i) - phase_hist(2, i))) / dt
+               td_phase(i) = ((-1.0D0 / 12.0D0) * (phase_hist(1, i) - phase_hist(5, i)) + &
+                     (8.0D0 / 12.0D0) * (phase_hist(2, i) - phase_hist(4, i))) / dt
             elseif (order == '3th-order_forw') then
                ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
                ! 	f_x = (-3*f[i+0]+4*f[i+1]-1*f[i+2])/(2*1.0*h**1)
-               td_phase(i) = (-3.0d0 * phase_hist(1, i) + 4.0d0 * phase_hist(2, i) - 1.0d0 * phase_hist(3, i)) / (2.0d0 * dt)
+               td_phase(i) = (-3.0d0 * phase_hist(3, i) + 4.0d0 * phase_hist(2, i) - 1.0d0 * phase_hist(1, i)) / (2.0d0 * dt)
             elseif (order == '5th-order_back') then
                ! comes from https://web.media.mit.edu/~crtaylor/calculator.html
                ! f_x = (3*f[i-4]-16*f[i-3]+36*f[i-2]-48*f[i-1]+25*f[i+0])/(12*1.0*h**1)
-               td_phase(i) = (3.0d0 * phase_hist(1, i) - 16.0d0 * phase_hist(2, i) + 36.0d0 * phase_hist(3, i)&
-                     - 48.0d0 * phase_hist(4, i) + 25.0d0 * phase_hist(5, i)) / (12.0d0 * dt)
+               td_phase(i) = (3.0d0 * phase_hist(5, i) - 16.0d0 * phase_hist(4, i) + 36.0d0 * phase_hist(3, i)&
+                     - 48.0d0 * phase_hist(2, i) + 25.0d0 * phase_hist(1, i)) / (12.0d0 * dt)
             end if
          end if
       end do

@@ -8,7 +8,7 @@ program qdyn
    ! -------------------------------------------------------------------!
    !                               / Qdyn \                             !
    ! Program for N-dimensional numerical quantum propagation on a grid. !
-   ! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2024)             !
+   ! Authors: Jiri Janos, Jiri Suchan, Petr Slavicek (2025)             !
    ! Copyright PHOTOX group                                             !
    ! -------------------------------------------------------------------!
 
@@ -104,7 +104,6 @@ program qdyn
             !time derivative of wf is necessary for GD-TDPES which can be calculated only two steps later using central difference formula
             !the calcualtion comes two steps after the beginning because this cannot be done during initialization and also for the
             !last step of the dynamics
-            !TODO: finish GD exact factorization functions
             if ((n==efhistory / 2).or.(modulo((n - efhistory / 2) * dt, dtwrite)==0).or.(n==nstep)) then
                select case(rank)
                case(1)
