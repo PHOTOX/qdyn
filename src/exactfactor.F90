@@ -86,7 +86,6 @@ CONTAINS
          do i = 1, xngrid
             if (nucdens_1d(i) > ef_zero) then
                !todo: check why the sign is opposite
-               !todo: seems there are small problems at the first and last step
                gd_tdpes_1d(i) = gd_tdpes_1d(i) &
                      + (aimag(conjg(wfx_history(current_time_index, state, i)) * td_wf(state, i)) &
                            - abs(wfx_history(current_time_index, state, i))**2 * td_phase(i)) / nucdens_1d(i)
@@ -359,6 +358,9 @@ CONTAINS
          allocate(wfx_history(efhistory, nstates, xngrid), nucdens_1d(xngrid), phase_1d(xngrid), grad_phase_1d(xngrid))
          allocate(vecpot_1d(xngrid), C_ef_1d(nstates, xngrid), gi_tdpes_1d(5, xngrid), gd_tdpes_1d(xngrid))
       end if
+
+      ! the initial wave function to the history, note that this would turn problematic if wf initialization comes after ef init
+      call ef_savehistory_1d()
 
       ! nuclear density file initialization
       file_unit = 500
