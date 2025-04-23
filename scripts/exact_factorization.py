@@ -123,7 +123,6 @@ def plot_ef_1d():
             axs_S.plot(x, nucphase[i, 1], linewidth=1, color=colors[1], label=r'$\nabla S$')
             axs_S.axhline(0, linewidth=0.5, color='black')
             axs_S.set_xlim(xminplot, xmaxplot)
-            # axs_S.set_ylim(np.min(nucphase))
             axs_S.set_ylabel(r'$S$ (a.u.)')
             axs_S.set_xlabel(r'$x$ (a.u.)')
             axs_S.legend(labelspacing=0)

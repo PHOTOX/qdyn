@@ -41,7 +41,6 @@ CONTAINS
       integer :: hindex, state
       character(len = 14) :: deriv_order
       complex(DP), dimension(nstates, xngrid) :: td_wf ! wave function time derivative
-      complex(DP), dimension(xngrid) :: sum_over_states ! the summation of derivatives over all states appearing in GD-TDPES
       real(DP), dimension(efhistory, xngrid) :: nucdens_hist, phase_hist
       real(DP), dimension(xngrid) :: td_phase, grad_phase ! nuclear phase time derivative, history of phase gradient is not
       ! necessary but we need some variable to go to the function set_gauge_1d()
@@ -76,7 +75,7 @@ CONTAINS
       call phase_time_der_1d(td_phase, phase_hist, deriv_order)
 
       ! calculate time derivative of wf
-      call wf_time_der_1d(td_wf, sum_over_states, deriv_order)
+      call wf_time_der_1d(td_wf, deriv_order)
 
       ! construct GD-TDPES
       gd_tdpes_1d = 0.0d0
@@ -271,15 +270,13 @@ CONTAINS
    end subroutine
 
    !=== TIME DERIVATIVES ===!
-   subroutine wf_time_der_1d(td_wf, sum_over_states, order)
+   subroutine wf_time_der_1d(td_wf, order)
       character(len = 14), intent(in) :: order
       complex(DP), dimension(nstates, xngrid), intent(inout) :: td_wf
-      complex(DP), dimension(xngrid), intent(out) :: sum_over_states ! the summation of derivatives over all states in GD-TDPES
 
       integer :: state
 
       td_wf = 0.0d0
-      sum_over_states = 0.0D0
       do state = 1, nstates
          ! there could be check if nuc_density_1d>efzero but I will do that once calculating gd_tdpes_1d
          ! checking for division by zero and calculating vecpot
@@ -300,8 +297,6 @@ CONTAINS
                         + 36.0d0 * wfx_history(3, state, i) - 48.0d0 * wfx_history(2, state, i) &
                         + 25.0d0 * wfx_history(1, state, i)) / (12.0d0 * dt)
                end if
-               sum_over_states(i) = sum_over_states(i) + 0.5D0 * (conjg(td_wf(state, i)) * wfx_history(3, state, i) + &
-                     conjg(wfx_history(3, state, i)) * td_wf(state, i)) / nucdens_1d(i)
             end if ! else it's zero which is achieve byt defining the variables as zero above
          end do
       end do
