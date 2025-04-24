@@ -178,7 +178,7 @@ def plot_ef_1d():
         axs_elcoef.axhline(0, lw=0.5, color='black')
         axs_elcoef.set_xlim(xminplot, xmaxplot)
         axs_elcoef.set_ylim(-0.05, 1.05)
-        axs_elcoef.set_ylabel(r'$\vec{A}$ (a.u.)')
+        axs_elcoef.set_ylabel(r'Electronic coefficients (a.u.)')
         axs_elcoef.set_xlabel(r'$x$ (a.u.)')
         axs_elcoef.legend(labelspacing=0)
 
@@ -259,11 +259,10 @@ ef = namelist['rt']['exact_factor']
 ef_gauge = namelist['rt']['ef_gauge']
 
 ########## initialize ##########
-if dynamics == 'rt' and ef and nstates == 2 and rank == 1:
+if ef:
     print("\nCalculating exact factorization quantities from 1D quantum dynamics on two states.\n")
 else:
-    print(
-        "ERROR: Exact factorization can be performec only for 1D two-state dynamics in the current implementation! Exiting...")
+    print("ERROR: Exact factorization quantities not calculated! Exiting...")
     exit(1)
 
 # reading wave function and all other important data

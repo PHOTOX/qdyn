@@ -250,8 +250,8 @@ CONTAINS
 
       !exact factorization
       if (exact_factor) then
-         if ((run /= 0) .or. (rank /= 1) .or. (nstates /= 2)) then
-            write(*, *) "ERROR: Exact factorization available only for 1D two-state RT dynamics."
+         if ((run /= 0) .or. (rank /= 1)) then
+            write(*, *) "ERROR: Exact factorization available only for 1D RT dynamics."
             stop 1
          end if
          write(*, *) "Exact factorization:            ON"
