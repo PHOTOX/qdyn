@@ -5,7 +5,6 @@ module mod_exactfactor
 
    implicit none
    complex(DP), parameter :: imag_unit = cmplx(0.0d0, 1.0d0)
-   real(DP), parameter :: ef_zero = 0.00000001D0
    integer, private :: file_unit
    character(len = 50), private :: file_name
 

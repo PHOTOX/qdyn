@@ -27,6 +27,7 @@ module mod_vars
    !-exact factorization
    logical :: exact_factor = .false.
    character(len = 2) :: ef_gauge = 'A0' ! possible gauges: 'S0' (zero nuclear phase), 'A0' (zero TDVP)
+   real(DP) :: ef_zero = 0.00000001D0 ! effective zero for EF, regions with density lower than ef_zero aren't calculated
    integer :: efhistory = 5 ! how many steps of wf we use for calcuations of wf derivative
    complex(DP), dimension(:, :, :), allocatable :: wfx_history ! used to calculate time derivatives of the wave function (hist. index, state, x)
    complex(DP), dimension(:, :), allocatable :: C_ef_1d, grad_C_ef_1d ! electronic state coeficients
@@ -62,7 +63,7 @@ module mod_vars
          xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, nstates, print_wf
    namelist /it/ pot, analytic, project_rot
    namelist /rt/ pot, analytic, field_coupling, field, field_on, field_off, norm_thresh, &
-         exact_factor, ef_gauge
+         exact_factor, ef_gauge, ef_zero
    !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -262,6 +263,12 @@ CONTAINS
          else
             write(*, *) "ERR: Unrecognized gauge. Choose either 'S0' or 'A0'. Exiting"
             stop 1
+         end if
+         if (ef_zero <= 0.0d0) then
+            write(*, *) "ERR: ef_zero must be positive."
+            stop 1
+         else
+            write(*, '(A25,E10.2,A)') " Effective zero:           ", ef_zero, " a.u."
          end if
       end if
 
