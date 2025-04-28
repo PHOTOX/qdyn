@@ -1,13 +1,12 @@
 from os.path import exists
 
-import matplotlib.pyplot as plt
 from numpy import genfromtxt, linspace, interp, std, trapz, sqrt, array, reshape, shape
 
 xngrid = 256
 
 # reading calculated data
 wf = genfromtxt('wf1d_ad.1.dat')
-nframes_wf = int(shape(wf)[0]/xngrid)
+nframes_wf = int(shape(wf)[0] / xngrid)
 wf = reshape(wf, (nframes_wf, xngrid, 5)).transpose((0, 2, 1))
 energy = genfromtxt('energies.dat').T
 t = energy[0]
@@ -33,12 +32,12 @@ ref_x = genfromtxt(input_file).T
 # calculating mean <x> and <delta x>
 x = [[], [], []]
 for i in range(0, nframes_wf, 10):
-    x[0].append(t[i]*0.02418884254)
+    x[0].append(t[i] * 0.02418884254)
     dx = wf[i][0][1] - wf[i][0][1]
     norm = trapz(wf[i][3], wf[i][0], dx=dx)
-    aver_x = trapz(wf[i][3]*wf[i][0], wf[i][0], dx=dx)/norm
+    aver_x = trapz(wf[i][3] * wf[i][0], wf[i][0], dx=dx) / norm
     x[1].append(aver_x)
-    aver_dx = sqrt(trapz(wf[i][3]*wf[i][0]**2, wf[i][0], dx=dx)/norm - aver_x**2)
+    aver_dx = sqrt(trapz(wf[i][3] * wf[i][0] ** 2, wf[i][0], dx=dx) / norm - aver_x ** 2)
     x[2].append(aver_dx)
 x = array(x)
 
