@@ -3,9 +3,8 @@
 # Compiler
 FC = gfortran
 FFLAGS =
-# FFTW library needed
-LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm -llapack
-LDLIBS = -lfftw3 # This is necessary only on clusters, not on MacOS
+LIBS = -L/Users/janosj/Documents/Programs/fftw/fftw-3.3.10/lib -lfftw3 -lm -llapack # FFTW and lapack libraries needed
+LDLIBS =
 
 # Name of program
 OUT = qdyn
@@ -16,7 +15,7 @@ OUT = qdyn
 OBJS = vars.o fparser.o fftw.o utils.o exactfactor.o init.o propag.o qdyn.o
 
 myprogram: $(OBJS) 
-	   $(FC) -o $(OUT) ${LIBS} ${FFLAGS} $(OBJS) ${LDLIBS}
+	   $(FC) -o $(OUT) ${FFLAGS} $(OBJS) ${LIBS} ${LDLIBS}
 
 clean:
 	/bin/rm -f *.o *.mod $(OUT)

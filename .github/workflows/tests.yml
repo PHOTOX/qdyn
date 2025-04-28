@@ -1,0 +1,46 @@
+# test based on ChatGPT's suggestion
+name: CI
+
+on:
+  push:
+    branches: [ master ]                # run for every push to master
+  pull_request:                         # run for every PR
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest              # GitHub-hosted Linux runner
+
+    steps:
+      # 1️⃣  Bring the source onto the runner
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # 2️⃣  System packages for build & tests
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+              build-essential gfortran make \
+              libfftw3-dev liblapack-dev \
+              python3 python3-numpy
+
+      # 3️⃣  Compile the QDyn executable (bin ends up in src/qdyn)
+      - name: Build qdyn
+        run: |
+          make -C src clean
+          make -C src \
+            LIBS="-lfftw3 -lm -llapack"   # override local path in Makefile
+
+      # 4️⃣  Run the full regression-test suite
+      - name: Run test suite
+        run: |
+          cd tests
+          bash run_test_suite.sh | tee ../test_output.log
+
+      # 5️⃣  Fail the workflow if any test reported an error
+      - name: Check for test failures
+        run: |
+          if grep "ERROR found" test_output.log; then
+            echo "Some tests failed — see log above."
+            exit 1
+          fi
