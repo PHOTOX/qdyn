@@ -26,8 +26,8 @@ for file in files:
     # calculate maximum difference in the files (including x axis which shouldn't change)
     max_difference = max(abs(data - ref))
 
-    # compare max difference to threshold
-    if max_difference > 1e-10:
+    # compare max difference to threshold (set based on difference produced by my Mac and GitHub Actions)
+    if max_difference > 5e-8:
         result = False
         output.write(f"Mismatch found in '{data_file}'! (max difference: {max_difference:.2e})\n")
 

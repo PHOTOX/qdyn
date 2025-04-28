@@ -1,7 +1,10 @@
 # test based on ChatGPT's suggestion
 name: CI
 
-on: [push, pull_request]                # run for every push & PR
+on:
+  push:
+    branches: [ master ]                # run for every push to master
+  pull_request:                         # run for every PR
 
 jobs:
   tests:
