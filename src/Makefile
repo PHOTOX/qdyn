@@ -19,7 +19,7 @@ OUT = qdyn
 OBJS = vars.o fparser.o fftw.o utils.o init.o propag.o qdyn.o
 
 myprogram: $(OBJS) 
-	   $(FC) -o $(OUT) ${LIBS} ${FFLAGS} $(OBJS) ${LDLIBS}
+	   $(FC) -o $(OUT) ${FFLAGS} $(OBJS) ${LIBS} ${LDLIBS}
 
 github-build: $(OBJS)
 	   $(FC) -o $(OUT) ${GitHub_LIBS} ${FFLAGS} $(OBJS) ${LDLIBS}
