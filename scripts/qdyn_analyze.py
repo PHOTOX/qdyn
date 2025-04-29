@@ -205,6 +205,25 @@ class read:
 
         return pop_ad, pop_diab
 
+    def dipole_coupling(rank, nstates, xngrid, yngrid=0, folder='.'):
+        """Reading dipole moments from the dipole_coup.n.m.dat files."""
+
+        if rank == 1:
+            dipoles = np.zeros(shape=(nstates, nstates, xngrid))
+            for i in range(0, nstates):
+                for j in range(0, nstates):
+                    dip_file = f'{folder:s}/dipole_coup.{i + 1:d}.{j + 1:d}.dat'
+                    if exists(dip_file):
+                        dipoles[i, j] = np.genfromtxt(dip_file)
+                        print(f"'{dip_file:s}' read")
+                    else:
+                        print(f"'{dip_file:s}' does not exist. Considering it all zeros.")
+        else:
+            print("ERROR: Reading dipole moments is currently implemented only for 1 dimension.")
+            exit(1)
+
+        return dipoles
+
     def ef(rank, nstates, xngrid, yngrid=0, folder='.'):
         """Reading Exact Factorization quantities."""
 
@@ -272,8 +291,7 @@ class read:
                 print(f"Number of lines and number of grid point are not matching in {gitdpes_file:s}. Exiting..")
                 exit(1)
             elif nframes != int(np.shape(gitdpes)[0] / grid_size):
-                print(
-                    f"Number of time frames in {nucdens_file:s} is not consistent with {gitdpes_file:s}. Exiting..")
+                print(f"Number of time frames in {nucdens_file:s} is not consistent with {gitdpes_file:s}. Exiting..")
                 exit(1)
 
             if rank == 1:
@@ -321,15 +339,15 @@ class read:
             nframes = int(np.shape(C)[0] / grid_size)
 
             if rank == 1:
-                C = np.reshape(C, (nframes, grid_size, 1 + nstates*2)).transpose((0, 2, 1))
+                C = np.reshape(C, (nframes, grid_size, 1 + nstates * 2)).transpose((0, 2, 1))
                 C = C[:, 1:]
             elif rank == 2:
-                C = np.reshape(C, (nframes, grid_size, + nstates*2)).transpose((0, 2, 1))
+                C = np.reshape(C, (nframes, grid_size, + nstates * 2)).transpose((0, 2, 1))
                 C = C[:, 2:]
             el_coeff = np.zeros(shape=(nframes, nstates, grid_size), dtype=complex)
             for step in range(nframes):
                 for state in range(nstates):
-                    el_coeff[step, state] = C[step, 2*state] + 1j*C[step, 2*state+1]
+                    el_coeff[step, state] = C[step, 2 * state] + 1j * C[step, 2 * state + 1]
             print(f"'{C_file:s}' read")
         else:
             print("File '%s' does not exist. Exiting.." % C_file)
@@ -344,8 +362,7 @@ class read:
                 print(f"Number of lines and number of grid point are not matching in {gdtdpes_file:s}. Exiting..")
                 exit(1)
             elif nframes != int(np.shape(gdtdpes)[0] / grid_size):
-                print(
-                    f"Number of time frames in {nucdens_file:s} is not consistent with {gdtdpes_file:s}. Exiting..")
+                print(f"Number of time frames in {nucdens_file:s} is not consistent with {gdtdpes_file:s}. Exiting..")
                 exit(1)
 
             if rank == 1:
@@ -384,8 +401,8 @@ class gif:
         gif_frames.append(imageio.v2.imread(fig_file))
         remove(fig_file)
 
-    def make_gif(gif_frame, duration=2, gif_folder='gif_frames'):
-        imageio.mimsave('wavepacket.gif', gif_frame, duration=duration)
+    def make_gif(gif_frame, duration=2, gif_folder='gif_frames', gif_name='wavepacket'):
+        imageio.mimsave(gif_name + '.gif', gif_frame, duration=duration)
         rmdir(gif_folder)
 
 
@@ -439,7 +456,8 @@ class calc:
     def wigner1d_density(wf, x, dy=0.002):
         """Calculating wigner transform of a given wave function.
         The calculation considers atomic units. Therefore, h=1 in the Wigner transform.
-        dy = step for numerical integration."""
+        dy = step for numerical integration.
+        It calls wigner1d_integral function to calculate the integral at each point of the grid."""
 
         # preparing p range for the Wigner density using the FFT grid
         # the FFT grid should be sufficient as it's used to propagate wf with the split operator technique
@@ -516,8 +534,46 @@ class calc:
 
         return samples
 
+    def sample_from_density(density, x, nsamples=100, rank=1, xmin=0, xmax=0):
+        """Sampling from an inputted density.
+        nsamples = number of samples selected from the distribution
+        xmin, xmax = max and min values for which we sample; if set to 0, range determined automatically
+         from the grid."""
+
+        # check dimension
+        if rank != 1:
+            print("ERROR: Sampling from density is implemented only for 1 dimension.")
+            exit(1)
+
+        # setting xmin, xmax if not specified by user
+        if xmin == 0:
+            xmin = np.min(x)
+        if xmax == 0:
+            xmax = np.max(x)
+
+        # setting rnd_max
+        rnd_max = np.max(density)
+
+        # generating lists of sampled data
+        samples = np.zeros(shape=nsamples)
+        # drawing the samples
+        for i in range(nsamples):
+            while True:
+                xp = np.random.uniform(low=xmin, high=xmax, size=1)
+                den_xp = np.interp(xp, x, density)
+                rnd = np.random.uniform(low=0, high=rnd_max, size=1)
+                if rnd < den_xp:
+                    samples[i] = xp
+                    break
+
+        print(f' * Density sampled!')
+        return samples
+
     def quantum_momenta_1d(wf, x, positions):
-        "Calculating quantum momenta (Curchod, Martinez, 2018, eq. 37)."
+        """Calculating quantum momenta (Curchod, Martinez, 2018, eq. 37).
+        Alternative definition of the quantum momenta is in Quantum Chemistry and Dynamics of Excited States, 2021,
+        Chapter 18, Bohmian Approaches to Non-adiabatic Molecular Dynamics, eq. 18.5.
+        Currently, the definition from the book (eq. 18.5) is used as it is thriftier."""
 
         def wf_interp(arg):
             """Interpolated wave function for wigner evaluation"""
@@ -531,8 +587,11 @@ class calc:
         quantum_momenta = np.zeros(shape=np.shape(positions))
         for i in range(nsamples):
             xp = positions[i]
-            quantum_momenta[i] = np.imag(np.conjugate(wf_interp(xp)) * wf_num_deriv(xp)) / (
-                    np.conjugate(wf_interp(xp)) * wf_interp(xp))
+            # Eq 18.5 from Quantum Chemistry and Dynamics of Excited States
+            quantum_momenta[i] = np.imag(wf_num_deriv(xp) / wf_interp(xp))
+            # alternatively Eq 37 from Curchod, Martinez, 2018, CURRENTLY PHASED OUT SINCE THE OTHER FORMULA IS THRIFTIER
+            # quantum_momenta[i] = np.imag(np.conjugate(wf_interp(xp))*wf_num_deriv(xp))/(
+            #             np.conjugate(wf_interp(xp))*wf_interp(xp))
 
         return np.array([positions, quantum_momenta])
 
@@ -550,6 +609,178 @@ class calc:
 
         tbf_wf = amplitude * phase * prefactor * position * momentum
         return tbf_wf
+
+    def el_density_matrix_1d(wf, x):
+        """Calculating electron density matrix from the wave function.
+        The electronic density is defined as rho_ij = <chi_i|chi_j>.
+        Diagonals should be the electronic state populations while off-diagonals are coherences."""
+
+        nstates, ntimes, nxgrid = np.shape(wf)
+
+        if nxgrid != np.shape(x)[0]:
+            print("ERROR: The grid size and the wave function size do not match!")
+            exit(1)
+
+        density_matrix = np.zeros(shape=(nstates, nstates, ntimes), dtype=complex)
+
+        for t in range(ntimes):
+            for i in range(nstates):
+                for j in range(nstates):
+                    density_matrix[i, j, t] = np.trapz(np.conjugate(wf[i, t]) * wf[j, t], x)
+
+        return density_matrix
+
+    def dipoles_1d(wf, dip_coup, x):
+        """Calculating time-dependent expectation value of the dipole moment.
+        The expectation value of dipole moment is defined as mu = sum_ij <chi_i|mu_ij|chi_j>.
+        :param wf: wave function
+        :param dip_coup: dipole coupling matrix
+        :param x: grid
+        """
+
+        nstates, ntimes, nxgrid = np.shape(wf)
+
+        if nxgrid != np.shape(x)[0] or nxgrid != np.shape(dip_coup)[2]:
+            print("ERROR: The grid size and the wave function size do not match!")
+            exit(1)
+
+        dipole = np.zeros(shape=(ntimes), dtype=complex)
+
+        for t in range(ntimes):
+            for i in range(nstates):
+                for j in range(nstates):
+                    dipole[t] += calc.bracket_1d(wf[i, t], dip_coup[i, j], wf[j, t], x)
+
+        if np.max(dipole.imag) > 1e-10:
+            print("WARNING: Imaginary part of the dipole moment is not negligible.")
+            exit(1)
+        else:
+            dipole = dipole.real
+
+        return dipole
+
+    def mean_x_1d(wf, x):
+        """Calculating the expectation value of the position."""
+        nstates, ntimes, nxgrid = np.shape(wf)
+        mean_x = np.zeros(shape=(ntimes))
+
+        for t in range(ntimes):
+            for i in range(nstates):
+                mean_x[t] += calc.bracket_1d(wf[i, t], x, wf[i, t], x).real
+
+        return mean_x
+
+    def aver_force_1D(wf, pot_en, dip_coup, x, field, time_unit='a.u.'):
+        """Calculating the expectation value of force in 1D as defince in Cardosa-Guitierrez, Remacle, J Phys B 2024.
+        The force is decomposed into four terms, F_V, F_[tau,V], F_mu, F_[tau,mu]. Currently, only the terms
+        without commutators with NAC (tau) are implemented.
+        :param wf: wave function
+        :param pot_en: potential energy
+        :param dip_coup: dipole coupling matrix
+        :param x: grid
+        """
+        import matplotlib.pyplot as plt
+
+        if time_unit not in ['a.u.', 'fs']:
+            print("ERROR: Time unit not recognized. Exiting..")
+            exit(1)
+
+        nstates, ntimes, nxgrid = np.shape(wf)
+        force_pot, force_dip = np.zeros(shape=(nstates, ntimes), dtype=complex), np.zeros(shape=(ntimes), dtype=complex)
+
+        for t in range(ntimes):
+            # force coming from potential
+            for i in range(nstates):
+                force_pot[i, t] += - calc.bracket_1d(wf[i, t], np.gradient(pot_en[i], x, edge_order=2), wf[i, t], x)
+
+            for i in range(nstates):
+                for j in range(nstates):
+                    force_dip[t] += calc.bracket_1d(wf[i, t], np.gradient(dip_coup[i, j], x, edge_order=2), wf[j, t],
+                                                    x) * field[1, t]
+
+        if np.max(force_dip.imag) > 1e-15 or np.max(force_pot.imag) > 1e-15:
+            print("ERROR: Imaginary part of the force is not negligible. Exitting..")
+            exit(1)
+        else:
+            force_dip = np.array(force_dip.real, dtype=float)
+            force_pot = np.array(force_pot.real, dtype=float)
+
+        # force_total = force_pot + force_dip
+        force_total = np.sum(force_pot, axis=0) + force_dip
+
+        # Calculating the total force as a time derivative of the wave function from the definition (this is what
+        # I should get from force_total). This is simpler and better way of getting the total force, however,
+        # it doesn't provide the decomposition into different terms.
+        if time_unit == 'fs':
+            time = field[0] * units.fstoau
+        else:
+            time = field[0]
+
+        p = np.zeros(shape=(ntimes))
+        for t in range(ntimes):
+            for i in range(nstates):
+                p[t] += calc.bracket_1d(wf[i, t], 1, -1j * np.gradient(wf[i, t], x, edge_order=2), x).real
+        force_p = np.gradient(p, time, edge_order=2)
+
+        # check if my total force is correct
+        if np.max(np.abs(force_total - force_p)) > 1e-10:
+            print(
+                "WARNING: The total force is not the same as the time derivative of the wave function.")  # exit(1) # todo: turn it on later
+
+        # todo: the following section is for testing purposes and should be removed later
+        # problem at the moment is that my total force calculated from F_V and F_mu is not the same as the time derivative,
+        # i.e., the exact formula. Testing showed that the F_V should be correct, there is just small difference which was
+        # attributed to the numeric derivative accuracy (I copied the exact derivative formula and it worked better).
+        # However, the F_mu term show too large oscillations. I tested by comparing <x> and values obtained by propagating Newton equations.
+        # When I use force_p, it all works perfectly. Thus, it seems I have a problem with the F_mu term, which I can't solve right now.
+        # Or I possibly need other terms but they should be all zero since they depend on the NAC, which is 0.
+        # Thus, I do a dirty trick and get force_mu = force_p - force_pot. This is not ideal but it should work for now.
+        testing = False
+        if testing:
+            # propagate x=1,8 with newton equations using force_total as force
+            mean_x = calc.mean_x_1d(wf, x)
+            x = np.zeros(shape=(ntimes))
+            v = np.zeros(shape=(ntimes))
+            x[0] = mean_x[0]
+
+            dt = time[1] - time[0]
+            mass = 1728.256714
+            for i in range(1, ntimes):
+                x[i] = x[i - 1] + v[i - 1] * dt
+                v[i] = v[i - 1] + force_total[
+                    i - 1] / mass * dt  # v[i] = v[i - 1] + force_p[i - 1]/mass*dt  # v[i] = v[i - 1] + np.sum(force_pot, axis=0)[i - 1]/mass*dt
+
+            plt.subplot(121)
+            # plt.plot(time,force_pot[0])
+            # plt.plot(time,force_pot[1])
+            # plt.plot(time, np.sum(force_pot, axis=0))
+            # plt.plot(time, force_dip/field[1])
+            plt.plot(time, force_dip, label='calculated $F_{\mu}$')
+            # plt.plot(time, force_total)
+            # plt.plot(time, np.convolve(force_total, np.ones(20)/20, mode='same'))
+            # plt.plot(time, np.convolve(force_p, np.ones(20)/20, mode='same'), ls='--')
+            # plt.plot(time, force_p, ls='--')
+            plt.plot(time, force_p - np.sum(force_pot, axis=0), ls='-.', label='"correct" $F_{\mu}$')
+            # plt.plot(time, force_p - np.sum(force_pot, axis=0) - force_dip, ls='-.')
+            # plt.plot(time, (force_p - np.sum(force_pot, axis=0) - force_dip)/(force_dip/field[1]), ls='--')
+
+            plt.legend(labelspacing=0, frameon=False)
+
+            plt.subplot(122)
+
+            plt.plot(time, mean_x)
+            # plt.plot(time,p)
+            plt.plot(time, x)
+            plt.legend(labelspacing=0, frameon=False)
+            plt.show()
+            plt.pause(100)
+            exit()
+
+        print("WARNING: This is only a temporary code and the solution is not guaranteed to be correct.")
+        force_total = force_p
+        force_dip = force_total - np.sum(force_pot, axis=0)
+        # I could possibly make one big array with all the forces and return it
+        return force_total, force_pot, force_dip
 
 
 def progress(percent, width, n, str=''):
