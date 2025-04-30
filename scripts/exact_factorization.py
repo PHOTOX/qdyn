@@ -14,7 +14,7 @@ import qdyn_analyze as qa
 ########## INPUT ##########
 # general plotting settings
 pause = 0.00001  # pause between frames during plotting
-frame_step = 2  # plot only frame_step instead of plotting every frame
+frame_step = 1  # plot only frame_step instead of plotting every frame
 wf_scaling = 0.12  # scaling factor for the wf and density so that they are visible in the plots
 plot_online = True  # if true, plots the results on the fly, otherwise it's just the final plot
 adiabatic = True  # adiabatic vs diabatic BH states
@@ -119,10 +119,11 @@ def plot_ef_1d():
         # plotting nuclear phase of TDVP based on the gauge
         if ef_gauge == 'A0':
             # nuclear phase
-            axs_S.plot(x, nucphase[i, 0], linewidth=1, color=colors[0], label=f'$S$')
+            axs_S.plot(x, nucphase[i, 0], linewidth=2, color=colors[0], label=f'$S$')
             axs_S.plot(x, nucphase[i, 1], linewidth=1, color=colors[1], label=r'$\nabla S$')
             axs_S.axhline(0, linewidth=0.5, color='black')
             axs_S.set_xlim(xminplot, xmaxplot)
+            axs_S.set_ylim(np.min(nucphase[:, 0]), np.max(nucphase[:, 0]))
             axs_S.set_ylabel(r'$S$ (a.u.)')
             axs_S.set_xlabel(r'$x$ (a.u.)')
             axs_S.legend(labelspacing=0)
@@ -131,7 +132,7 @@ def plot_ef_1d():
             axs_S.plot(x, tdvp[i], color=colors[0], label=r'$\vec{A}$')
             axs_S.axhline(0, linewidth=0.5, color='black')
             axs_S.set_xlim(xminplot, xmaxplot)
-            axs_S.set_ylim(np.min(tdvp), np.max(tdvp))
+            axs_S.set_ylim(np.min(tdvp[:i + 1]), np.max(tdvp[:i + 1]))
             axs_S.set_ylabel(r'$\vec{A}$ (a.u.)')
             axs_S.set_xlabel(r'$x$ (a.u.)')
             axs_S.legend(labelspacing=0)
@@ -144,7 +145,7 @@ def plot_ef_1d():
         axs_tdpes.plot(x, gitdpes[i, 3], lw=1, ls='--', color=colors[4], label=r'$A^2$')
         axs_tdpes.axhline(0, linewidth=0.5, color='black')
         axs_tdpes.set_xlim(xminplot, xmaxplot)
-        axs_tdpes.set_ylim(np.min(gitdpes))
+        axs_tdpes.set_ylim(np.min(gitdpes[:i + 1]))
         axs_tdpes.set_ylabel(r'$\varepsilon_{GI}$ (a.u.)')
         axs_tdpes.set_xlabel(r'$x$ (a.u.)')
         axs_tdpes.legend(labelspacing=0)
@@ -184,7 +185,7 @@ def plot_ef_1d():
 
         # populations
         for state in range(1, nstates + 1):
-            axs_pop.plot(t[:i + 1], pop_ad[state][:i + 1], color=colors[state-1], label=rf'$P_{state - 1:d}$')
+            axs_pop.plot(t[:i + 1], pop_ad[state][:i + 1], color=colors[state - 1], label=rf'$P_{state - 1:d}$')
         axs_pop.set_ylim(-0.1, 1.1)
         axs_pop.set_xlim(t[0], t[-1])
         axs_pop.set_xlabel(f'$t$ ({time_unit:s})')
@@ -255,12 +256,24 @@ if (dynamics == 'rt') and 'field_coupling' in namelist['rt']:
 else:
     use_field = False
 
-ef = namelist['rt']['exact_factor']
-ef_gauge = namelist['rt']['ef_gauge']
+# check if exact_factor and ef_gauge are in the input file
+if 'exact_factor' in namelist['rt']:
+    ef = namelist['rt']['exact_factor']
+else:
+    print("ERROR: Exact factorization keyword 'exact_factor' not found in the input file.")
+    exit(1)
+
+if 'ef_gauge' in namelist['rt']:
+    ef_gauge = namelist['rt']['ef_gauge']
+else:
+    print("Default EF gauge considered.")
+    ef_gauge = 'A0'
+
+
 
 ########## initialize ##########
 if ef:
-    print("\nCalculating exact factorization quantities from 1D quantum dynamics on two states.\n")
+    print("\nPlotting exact factorization quantities from 1D quantum dynamics.\n")
 else:
     print("ERROR: Exact factorization quantities not calculated! Exiting...")
     exit(1)
@@ -331,8 +344,11 @@ if rank == 1:
 
 # if plot_on_the_fly:
 if plot_online:
-    plt.pause(50.0)
+    if not gif:
+        plt.pause(200.0)
+    else:
+        plt.pause(0.1)
     plt.ioff()
 
 if gif:
-    qa.gif.make_gif(gif_frames, duration)
+    qa.gif.make_gif(gif_frames, duration, gif_name=f'ef_{ef_gauge}_{rank}D_{nstates}states.gif')

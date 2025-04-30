@@ -644,18 +644,15 @@ class calc:
             print("ERROR: The grid size and the wave function size do not match!")
             exit(1)
 
-        dipole = np.zeros(shape=(ntimes), dtype=complex)
+        dipole = np.zeros(shape=(ntimes), dtype=float)
 
         for t in range(ntimes):
             for i in range(nstates):
-                for j in range(nstates):
-                    dipole[t] += calc.bracket_1d(wf[i, t], dip_coup[i, j], wf[j, t], x)
-
-        if np.max(dipole.imag) > 1e-10:
-            print("WARNING: Imaginary part of the dipole moment is not negligible.")
-            exit(1)
-        else:
-            dipole = dipole.real
+                for j in range(i, nstates):
+                    if i == j:
+                        dipole[t] += np.real(calc.bracket_1d(wf[i, t], dip_coup[i, j], wf[j, t], x))
+                    else:
+                        dipole[t] += 2 * np.real(calc.bracket_1d(wf[i, t], dip_coup[i, j], wf[j, t], x))
 
         return dipole
 
@@ -671,7 +668,7 @@ class calc:
         return mean_x
 
     def aver_force_1D(wf, pot_en, dip_coup, x, field, time_unit='a.u.'):
-        """Calculating the expectation value of force in 1D as defince in Cardosa-Guitierrez, Remacle, J Phys B 2024.
+        """Calculating the expectation value of force in 1D as defined in Cardosa-Guitierrez, Remacle, J Phys B 2024.
         The force is decomposed into four terms, F_V, F_[tau,V], F_mu, F_[tau,mu]. Currently, only the terms
         without commutators with NAC (tau) are implemented.
         :param wf: wave function
