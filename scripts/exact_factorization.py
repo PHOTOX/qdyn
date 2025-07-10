@@ -214,10 +214,6 @@ def plot_ef_1d():
             axs_field.set_xlabel(f'$t$ ({time_unit:s})')
             axs_field.set_ylabel(r'$E$ (a.u.)')
 
-            axs_ef.set_xlim(t[0], t[-1])
-            axs_ef.set_xlabel(f'$t$ ({time_unit:s})')
-            axs_ef.legend(frameon=False, labelspacing=0)
-
         plt.tight_layout()
         # for gif
         if gif:
@@ -351,4 +347,4 @@ if plot_online:
     plt.ioff()
 
 if gif:
-    qa.gif.make_gif(gif_frames, duration, gif_name=f'ef_{ef_gauge}_{rank}D_{nstates}states.gif')
+    qa.gif.make_gif(gif_frames, duration, gif_name=f'ef_{ef_gauge}_{rank}D_{nstates}states')

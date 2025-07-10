@@ -156,7 +156,7 @@ if rank == 1:
                 continue
             rt_file = f'H.{i + 1}.{j + 1}.dat'
             print(f'Saving H[{i},{j}] to file {rt_file:s}.')
-            np.savetxt(rt_file, np.reshape(H[i, j], shape=(1, xngrid)), delimiter=' ')
+            np.savetxt(rt_file, np.reshape(H[i, j], newshape=(1, xngrid)), delimiter=' ')
     # then save dipole couplings
     for i in range(nstates):
         for j in range(nstates):
@@ -165,4 +165,4 @@ if rank == 1:
                 continue
             rt_file = f'dipole_coup.{i + 1}.{j + 1}.dat'
             print(f'Saving dip[{i},{j}] to file {rt_file:s}.')
-            np.savetxt(rt_file, np.reshape(dip[i, j], shape=(1, xngrid)), delimiter=' ')
+            np.savetxt(rt_file, np.reshape(dip[i, j], newshape=(1, xngrid)), delimiter=' ')

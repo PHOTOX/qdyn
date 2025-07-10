@@ -434,6 +434,46 @@ class generate:
 class calc:
     """This class is used to calculations like expectation values or Wigner sampling"""
 
+    def bracket_1d(bra, c, ket, x):
+        """1D bracket calculation."""
+        bracket = np.conjugate(bra) * c * ket
+        return np.trapz(bracket, x=x)
+
+    def wf_energy_1d(wf, pot, mass, x):
+        """Wave function energy. This function is calculates energy of the wave function on a given state in BH
+        expansion, it does not calculate energy of the total wave function."""
+
+        # check a single wf, not an array from BH expansion
+        if np.ndim(wf) != 1:
+            print("ERROR: dimension is not one, probably more than one wf insterted!")
+            exit(1)
+
+        # check that lenght of wf is the same as of x
+        if np.shape(wf)[0] != np.shape(x)[0]:
+            print("ERROR: Length of wf and x are not the same!")
+            exit(1)
+
+        if np.shape(wf)[0] != np.shape(pot)[0]:
+            print("ERROR: Length of wf and pot are not the same!")
+            exit(1)
+
+        # norm
+        norm = np.real(calc.bracket_1d(wf, 1, wf, x))
+
+        # potential energy
+        V = np.real(calc.bracket_1d(wf, pot, wf, x)) / norm
+
+        # kinetic energy
+        p = 2 * np.pi * np.fft.fftfreq(np.shape(x)[0], (x[1] - x[0]))  # momentum space
+        wfp = np.fft.ifft(wf)  # Fourier transform of the wave function
+        wfx = np.fft.fft(wfp * p ** 2 / 2 / mass)  # kinetic energy operator in momentum space and transform to coordinate space
+        T = np.real(calc.bracket_1d(wf, 1, wfx, x)) / norm  # kinetic energy
+
+        # total energy
+        energy = V + T
+
+        return energy
+
     def wigner1d_integral(wf, x, xp, pp, dy):
         """Wigner integral for 1D wave function at point [xp, pp].
         dy is the step for numerical integration."""
@@ -595,11 +635,6 @@ class calc:
 
         return np.array([positions, quantum_momenta])
 
-    def bracket_1d(bra, c, ket, x):
-        """1D bracket calculation."""
-        bracket = np.conjugate(bra) * c * ket
-        return np.trapz(bracket, x=x)
-
     def tbf_1d(x, x0, p, alpha, gamma=1 + 0j, amplitude=1 + 0j):
         """Creating a TBF as used in AIMS. It contains amplitude, phase, momentum and prefactors."""
         phase = np.exp(gamma * 1j)
@@ -692,8 +727,8 @@ class calc:
 
             for i in range(nstates):
                 for j in range(nstates):
-                    force_dip[t] += calc.bracket_1d(wf[i, t], np.gradient(dip_coup[i, j], x, edge_order=2), wf[j, t],
-                                                    x) * field[1, t]
+                    force_dip[t] += calc.bracket_1d(wf[i, t], np.gradient(dip_coup[i, j], x, edge_order=2), wf[j, t], x) * \
+                                    field[1, t]
 
         if np.max(force_dip.imag) > 1e-15 or np.max(force_pot.imag) > 1e-15:
             print("ERROR: Imaginary part of the force is not negligible. Exitting..")
