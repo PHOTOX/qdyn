@@ -24,6 +24,12 @@ module mod_vars
    logical :: field_coupling = .false.
    real(DP) :: field_on = 0.0d0, field_off ! turning on and off field
    character(len = 9000) :: field = ''
+   !-autocorrelation function for spectrum calculation
+   logical :: autocorr = .false.
+   complex(DP), dimension(:), allocatable :: autocorr_func
+   complex(DP), dimension(:, :), allocatable :: wfx0 ! initial wave function for autocorrelation function
+   complex(DP), dimension(:, :, :), allocatable :: wf2x0 ! initial wave function for autocorrelation function
+   complex(DP), dimension(:, :, :, :), allocatable :: wf3x0 ! initial wave function for autocorrelation function
    !-exact factorization
    logical :: exact_factor = .false.
    character(len = 2) :: ef_gauge = 'A0' ! possible gauges: 'S0' (zero nuclear phase), 'A0' (zero TDVP)
@@ -63,7 +69,7 @@ module mod_vars
          xmin, xmax, ymin, ymax, zmin, zmax, mass_x, mass_y, mass_z, nstates, print_wf
    namelist /it/ pot, analytic, project_rot
    namelist /rt/ pot, analytic, field_coupling, field, field_on, field_off, norm_thresh, &
-         exact_factor, ef_gauge, ef_zero
+         exact_factor, ef_gauge, ef_zero, autocorr
    !TODO: rt analytic will not be use probably
 
 CONTAINS
@@ -292,8 +298,15 @@ CONTAINS
          end if
       else
          if (run == 0) then
-            write(*, *) "Field: OFF"
+            write(*, *) "Electric field:                OFF"
          end if
+      end if
+
+      !autocorrelation function
+      if (autocorr) then
+         write(*, *) "Autocorrelation function:       ON"
+      else
+         write(*, *) "Autocorrelation function:      OFF"
       end if
 
       !projecting out rotated wf

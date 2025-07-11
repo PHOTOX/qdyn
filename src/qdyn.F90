@@ -88,6 +88,12 @@ program qdyn
 
          end if
 
+         !calculate and print autocorrelation function
+         if (autocorr) then
+            call calc_autocorr(n)
+            call print_autocorr(n)
+         end if
+
          ! calculate and print exact factorization
          if (exact_factor) then
             !calculate GI exact factorization quantites and print them
