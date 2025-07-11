@@ -22,7 +22,7 @@ jobs:
           sudo apt-get install -y \
               build-essential gfortran make \
               libfftw3-dev liblapack-dev \
-              python3 python3-numpy
+              python3 python3-numpy python3-scipy
 
       # 3️⃣  Compile the QDyn executable (bin ends up in src/qdyn)
       - name: Build qdyn
