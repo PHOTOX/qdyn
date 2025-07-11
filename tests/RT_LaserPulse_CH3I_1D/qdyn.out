@@ -17,6 +17,7 @@
  Field on at                   0.00 a.t.u.
  Field off at              10000.00 a.t.u.
  |E(t)| = 0.05*exp(-(t-3000.5)**2/(2*785.468**2))*(cos(0.164489*t)-sin(0.164489*t)*(t-3000.5)/(785.468**2*0.164489))
+ Autocorrelation function:      OFF
  Norm conservation threshold (norm_thresh) set to     0.10000000
 
  ### Initialization ###

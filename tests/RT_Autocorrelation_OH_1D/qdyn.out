@@ -1,0 +1,45 @@
+ ====== Qdyn =====
+
+ ### Reading input ###
+ * REAL TIME PROPAGATION *
+ Time step:                 0.50000 a.u.
+ Number of steps:             30000
+ Total time:               15000.00 a.u.
+ Grid size in x:                512
+ Number of dimensions:            1
+ Number of steps:             30000
+ xmin:                       1.0000 a.u.
+ xmax:                       5.0000 a.u.
+ Potential:                    file
+ Number of states:                2
+ Printing WF:                   OFF
+ Electric field:                OFF
+ Autocorrelation function:       ON
+ Norm conservation threshold (norm_thresh) set to     0.10000000
+
+ ### Initialization ###
+ Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
+ * <psi_1|H_el|psi_1> = read from file
+ * <psi_1|H_el|psi_2> = 0
+ * <psi_2|H_el|psi_1> = 0
+ * <psi_2|H_el|psi_2> = read from file
+ Adiabatic energies and transformation matrix U calculated.
+ Time-independent problem, exp(H_el) built.
+ ---------
+ Generating initial gaussian wave packet.
+ initial state:           1
+ x0:                2.50000
+ xsigma:            0.15000
+ px0:               0.00000
+ norm:              1.00000
+ Autocorrelation fucntion file:  autocorr_function.dat                             
+ Diabatic populations file:      pop_diab.dat
+ Adiabatic populations file:     pop_ad.dat
+
+
+ ### Propagation ###
+
+Step:      10000 ;   5000.0 a.u.; E=  -0.109188077 a.u.; norm=1.0000000
+Step:      20000 ;  10000.0 a.u.; E=  -0.109187895 a.u.; norm=1.0000000
+Step:      30000 ;  15000.0 a.u.; E=  -0.109188060 a.u.; norm=1.0000000
+ JOB DONE.

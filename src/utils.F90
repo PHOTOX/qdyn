@@ -438,6 +438,30 @@ CONTAINS
 
    end subroutine wf_adiab_trans
 
+   !=== AUTOCORRELATION FUNCTION AND SPECTRUM ===!
+   subroutine calc_autocorr(index)
+      ! calculating the autocorrelation function for a given time
+      integer, intent(in) :: index
+      integer :: i
+
+      ! calculating the autocorrelation function
+      do i = 1, nstates
+         select case(rank)
+         case(1)
+            ! 1D case
+            autocorr_func(index) = autocorr_func(index) + braket_1d(wfx0(i, :), wfx(i, :))
+         case(2)
+            ! 2D case
+            autocorr_func(index) = autocorr_func(index) + braket_2d(wf2x0(i, :, :), wf2x(i, :, :))
+         case(3)
+            ! 3D case
+            autocorr_func(index) = autocorr_func(index) + braket_3d(wf3x0(i, :, :, :), wf3x(i, :, :, :))
+         end select
+      end do
+
+   end subroutine calc_autocorr
+
+
    !=== PRINTING ===!
    subroutine printwf_1d(state)
 
@@ -558,6 +582,15 @@ CONTAINS
    subroutine print_field()
 
       write(102, '(F10.3,F14.9)') time, elmag_field(time)
+
+   end subroutine
+
+   subroutine print_autocorr(index)
+      ! printing at the end of the simulation, not throughout the simulation
+      ! we rather store the big array because we might want to calculate the spectrum in QDyn later
+      integer, intent(in) :: index
+
+      write(105, '(F10.3,F14.9,F14.9)') time, real(autocorr_func(index)), imag(autocorr_func(index))
 
    end subroutine
 
