@@ -13,7 +13,8 @@
  Potential:                analytic
  Number of states:                1
  Printing WF:                    ON
- Field: OFF
+ Electric field:                OFF
+ Autocorrelation function:      OFF
  Norm conservation threshold (norm_thresh) set to     0.10000000
 
  ### Initialization ###

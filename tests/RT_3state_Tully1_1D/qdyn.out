@@ -13,7 +13,8 @@
  Potential:                    file
  Number of states:                3
  Printing WF:                   OFF
- Field: OFF
+ Electric field:                OFF
+ Autocorrelation function:      OFF
  Norm conservation threshold (norm_thresh) set to     0.10000000
 
  ### Initialization ###

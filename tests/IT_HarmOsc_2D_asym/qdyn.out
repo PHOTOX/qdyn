@@ -16,6 +16,7 @@
  Potential:                analytic
  Number of states:               10
  Printing WF:                   OFF
+ Autocorrelation function:      OFF
  Projecting out also 90 degrees rotated wavefunctions due to numeric instabilities
 
  ### Initialization ###
