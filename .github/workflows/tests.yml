@@ -43,4 +43,9 @@ jobs:
           if grep "ERROR found" test_output.log; then
             echo "Some tests failed — see log above."
             exit 1
+          else if grep "SKIP found" test_output.log; then
+            echo "Some tests skipped — see log above."
+            exit 1
+          else
+            echo "All tests passed."
           fi
