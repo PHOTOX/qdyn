@@ -589,6 +589,7 @@ CONTAINS
       integer :: init_state = 1 ! read from input, inital state for the dynamics
       real(DP) :: weights(nstates) ! weights for the initial wave function, read from input (input example 'weights = 0.0, 0.6, 0.4'
       ! where the number of numbers cannot exceed number of states
+      complex(DP), allocatable :: aux_wf(:, :, :) ! auxiliary variable for reading wf
       logical :: gen_init_wf = .true. ! flag to generate initial wave function as Gaussian, read by namelist
       logical :: use_weights = .false. ! flag to use weights for initial wave function, determined from elements of weights
       character(len = 1000) :: line
@@ -613,6 +614,16 @@ CONTAINS
       ! if not provided, the code generates the wf using init_state keyword putting the wf completely on the given state
       weights = 0.0d0
 
+      ! allocating aux_wf
+      if (rank==1)  then
+         allocate(aux_wf(xngrid, 1, 1))
+      elseif (rank==2) then
+         allocate(aux_wf(xngrid, yngrid, 1))
+      elseif (rank==3) then
+         allocate(aux_wf(xngrid, yngrid, zngrid))
+      end if
+
+
       ! intial printing
       write(*, *) "---------"
       write(*, *) "Generating initial wave packet."
@@ -630,8 +641,6 @@ CONTAINS
       close(100)
 
       ! init_state keyword check
-      if (run==1) init_state = 1 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
-
       if ((init_state<1).or.(init_state>nstates)) then
          write(*, *) "Initial state is greater than nstates or less than 1"
          stop 1
@@ -713,14 +722,12 @@ CONTAINS
                gauss = prefactor * dexp(-(x(i) - x0)**2 / (2 * xsigma**2))
                ! momentum calculation p0*(x-x0)
                momenta = px0 * (x(i) - x0)
-               ! whole imaginary wf
-               wfx(init_state, i) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
-               ! for the imag time, I create the came wave packet for all states
-               if (run==1 .and. nstates>=2) then
-                  do jstate = 1, nstates
-                     wfx(jstate, i) = wfx(init_state, i)
-                  end do
-               end if
+               ! whole complex wf
+               aux_wf(i, 1, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+
+               do jstate = 1, nstates
+                  wfx(jstate, i) = weights(jstate) * aux_wf(i, 1, 1)
+               end do
 
             case (2)
                do j = 1, yngrid
@@ -728,16 +735,12 @@ CONTAINS
                   gauss = prefactor * dexp(-(x(i) - x0)**2 / (2 * xsigma**2) - (y(j) - y0)**2 / (2 * ysigma**2))
                   ! momentum calculation p0*(x-x0)
                   momenta = px0 * (x(i) - x0) + py0 * (y(j) - y0)
-                  ! whole imaginary wf
-                  wf2x(init_state, i, j) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+                  ! whole complex wf
+                  aux_wf(i, j, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
-                  ! for the imag time, I create the came wave packet for all states
-                  if (run==1 .and. nstates>=2) then
-                     do jstate = 1, nstates
-                        wf2x(jstate, i, j) = wf2x(init_state, i, j)
-                     end do
-                  end if
-
+                  do jstate = 1, nstates
+                     wf2x(jstate, i, j) = weights(jstate)*aux_wf(i, j, 1)
+                  end do
                end do
 
             case (3)
@@ -748,32 +751,16 @@ CONTAINS
                            (z(k) - z0)**2 / (2 * zsigma**2))
                      ! momentum calculation p0*(x-x0)
                      momenta = px0 * (x(i) - x0) + py0 * (y(j) - y0) + pz0 * (z(k) - z0)
-                     ! whole imaginary wf
-                     wf3x(init_state, i, j, k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+                     ! whole complex wf
+                     aux_wf(i, j, k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
-                     ! for the imag time, I create the came wave packet for all states
-                     if (run==1 .and. nstates>=2) then
-                        do jstate = 1, nstates
-                           wf3x(jstate, i, j, k) = wf3x(init_state, i, j, k)
-                        end do
-                     end if
-
+                     do jstate = 1, nstates
+                        wf3x(jstate, i, j, k) = weights(jstate) * aux_wf(i, j, k)
+                     end do
                   end do
                end do
             end select
          end do
-
-         ! printing norm of generated wf, it is probably point less since I normalize later
-         ! but just to check we have a correct initial guess
-         select case(rank)
-         case(1)
-            norm = braket_1d(wfx(init_state, :), wfx(init_state, :))
-         case(2)
-            norm = braket_2d(wf2x(init_state, :, :), wf2x(init_state, :, :))
-         case(3)
-            norm = braket_3d(wf3x(init_state, :, :, :), wf3x(init_state, :, :, :))
-         end select
-         write(*, '(A17,F10.5)') " norm:                ", norm
 
       else
          write(*, *) "WF will be read from wf.chk file."
@@ -790,6 +777,10 @@ CONTAINS
          if(rank == 1) read(666, *)wfx(init_state, :)
          if(rank == 2) read(666, *)wf2x(init_state, :, :)
          if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
+
+!         if(rank == 1) read(666, *)wfx(init_state, :)
+!         if(rank == 2) read(666, *)wf2x(init_state, :, :)
+!         if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
          close(666)
       end if
 
