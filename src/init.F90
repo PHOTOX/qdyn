@@ -671,7 +671,8 @@ CONTAINS
 
          ! renormalization
          write(*, *) "Renormalizing state weights."
-         norm = sum(weights**2)
+         !         norm = sum(weights**2)
+         norm = sum(weights)
          weights = weights / sqrt(norm) ! renormalizing weights
       end if
 
@@ -726,7 +727,7 @@ CONTAINS
                aux_wf(i, 1, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
                do jstate = 1, nstates
-                  wfx(jstate, i) = weights(jstate) * aux_wf(i, 1, 1)
+                  wfx(jstate, i) = dsqrt(weights(jstate)) * aux_wf(i, 1, 1)
                end do
 
             case (2)
@@ -739,7 +740,7 @@ CONTAINS
                   aux_wf(i, j, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
                   do jstate = 1, nstates
-                     wf2x(jstate, i, j) = weights(jstate)*aux_wf(i, j, 1)
+                     wf2x(jstate, i, j) = dsqrt(weights(jstate)) * aux_wf(i, j, 1)
                   end do
                end do
 
@@ -755,7 +756,7 @@ CONTAINS
                      aux_wf(i, j, k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
                      do jstate = 1, nstates
-                        wf3x(jstate, i, j, k) = weights(jstate) * aux_wf(i, j, k)
+                        wf3x(jstate, i, j, k) = dsqrt(weights(jstate)) * aux_wf(i, j, k)
                      end do
                   end do
                end do
@@ -780,9 +781,9 @@ CONTAINS
          close(666)
 
          do jstate = 1, nstates
-            if(rank == 1) wfx(jstate, :) = weights(jstate) * aux_wf(:, 1, 1)
-            if(rank == 2) wf2x(jstate, :, :) = weights(jstate) * aux_wf(:, :, 1)
-            if(rank == 3) wf3x(jstate, :, :, :) = weights(jstate) * aux_wf(:, :, :)
+            if(rank == 1) wfx(jstate, :) = dsqrt(weights(jstate)) * aux_wf(:, 1, 1)
+            if(rank == 2) wf2x(jstate, :, :) = dsqrt(weights(jstate)) * aux_wf(:, :, 1)
+            if(rank == 3) wf3x(jstate, :, :, :) = dsqrt(weights(jstate)) * aux_wf(:, :, :)
          end do
       end if
 
