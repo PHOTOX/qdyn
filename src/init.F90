@@ -587,10 +587,14 @@ CONTAINS
       real(DP) :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0 ! read in input
       real(DP) :: prefactor, gauss, momenta, norm ! for generating gaussian wf
       integer :: init_state = 1 ! read from input, inital state for the dynamics
-      logical :: gen_init_wf = .true.
+      real(DP) :: weights(nstates) ! weights for the initial wave function, read from input (input example 'weights = 0.0, 0.6, 0.4'
+      ! where the number of numbers cannot exceed number of states
+      complex(DP), allocatable :: aux_wf(:, :, :) ! auxiliary variable for reading wf
+      logical :: gen_init_wf = .true. ! flag to generate initial wave function as Gaussian, read by namelist
+      logical :: use_weights = .false. ! flag to use weights for initial wave function, determined from elements of weights
       character(len = 1000) :: line
 
-      namelist /init_wf/x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0, init_state, gen_init_wf
+      namelist /init_wf/x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0, init_state, gen_init_wf, weights
 
       ! Default values for generated gaussian wavepacket
       x0 = (xmax - xmin) / 2.0d0 + xmin + (xmax - xmin) / 10                      ! shifted a little bit so that the wave packet is not symmetric
@@ -603,11 +607,32 @@ CONTAINS
       py0 = 0.0d0
       pz0 = 0.0d0
 
+      ! weights for initial wavefunction
+      ! this option takes the initial wf and puts it exactly as it is on all electronic states with provided weights without phase
+      ! initially, we set the option to 0 for all elements, the code then checks it and if there are non-zero elements, it generates
+      ! the wf by spreading it over all electronic states
+      ! if not provided, the code generates the wf using init_state keyword putting the wf completely on the given state
+      weights = 0.0d0
+
+      ! allocating aux_wf
+      if (rank==1)  then
+         allocate(aux_wf(xngrid, 1, 1))
+      elseif (rank==2) then
+         allocate(aux_wf(xngrid, yngrid, 1))
+      elseif (rank==3) then
+         allocate(aux_wf(xngrid, yngrid, zngrid))
+      end if
+
+
+      ! intial printing
+      write(*, *) "---------"
+      write(*, *) "Generating initial wave packet."
+
       ! reading &init_wf section in the input.q
       rewind(100)
       read(100, init_wf, iostat = iost)
       if (iost.ne.0) then
-         write(*, *)'ERROR: &init_wf section must be provided in input.q'
+         write(*, *)'ERROR: &init_wf section either not provided or incorrect.'
          backspace(100)
          read(100, fmt = '(A)') line
          write(*, '(A)') ' Invalid line in namelist: ' // trim(line)
@@ -615,18 +640,62 @@ CONTAINS
       end if
       close(100)
 
-      if (run==1) init_state = 1 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
-
+      ! init_state keyword check
       if ((init_state<1).or.(init_state>nstates)) then
          write(*, *) "Initial state is greater than nstates or less than 1"
          stop 1
       end if
 
-      if (gen_init_wf) then
-         write(*, *) "---------"
-         write(*, *) "Generating initial gaussian wave packet."
+      ! weights checked
+      if (run==1) weights = 0.0 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
 
-         if (run==0) write(*, '(A17,I10)') " initial state:      ", init_state
+      ! check weights and decide whether to use them
+      ! check if there is nonzero element in weights
+      do i = 1, nstates
+         ! check nonzaro values
+         if (weights(i) /= 0.0d0) then
+            use_weights = .true. ! if there is at least one non-zero element, we use weights
+         end if
+      end do
+
+      if ((use_weights).and.(run==0)) then
+         write(*, *) "Initializing wave function in all states according to their weights."
+         do i = 1, nstates
+            !check if it is a positive value
+            if (weights(i) < 0.0d0) then
+               write(*, *) "ERROR: Initial wave function weights must be non-negative."
+               write(*, *) "       state: ", i, ",  weight: ", weights(i)
+               stop 1
+            end if
+         end do
+
+         ! renormalization
+         write(*, *) "Renormalizing state weights."
+         !         norm = sum(weights**2)
+         norm = sum(weights)
+         weights = weights / sqrt(norm) ! renormalizing weights
+      end if
+
+      ! write what will be used for initialization
+      if (run==0) then
+         if (use_weights) then
+            write(*, '(A17,100(F10.6))') " State weights:      ", weights
+         else
+            write(*, '(A17,I10)') " Initial state:      ", init_state
+         end if
+      end if
+
+      ! now prepare the weights according to the calculation type since it's used to declare initial wave function in all cases
+      if (run==1) then ! for IT dynamics, we initiate at all states the same wave function
+         weights = 1.0d0
+      else if ((run==0).and.(.not.use_weights)) then ! for RT dynamics with weights not set, use the initial state
+         weights = 0.0d0 ! just to make sure its zeros
+         weights(init_state) = 1.0d0 ! giving the only weight to the initial state
+      end if ! else we use the weights provided by user
+
+      if (gen_init_wf) then
+         !         write(*, *) "---------"
+         write(*, *) "* Gaussian wave packet parameters:"
          write(*, '(A17,F10.5)') " x0:              ", x0
          if (rank>=2) write(*, '(A17,F10.5)') " y0:               ", y0
          if (rank>=3) write(*, '(A17,F10.5)') " z0:               ", z0
@@ -654,14 +723,12 @@ CONTAINS
                gauss = prefactor * dexp(-(x(i) - x0)**2 / (2 * xsigma**2))
                ! momentum calculation p0*(x-x0)
                momenta = px0 * (x(i) - x0)
-               ! whole imaginary wf
-               wfx(init_state, i) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
-               ! for the imag time, I create the came wave packet for all states
-               if (run==1 .and. nstates>=2) then
-                  do jstate = 1, nstates
-                     wfx(jstate, i) = wfx(init_state, i)
-                  end do
-               end if
+               ! whole complex wf
+               aux_wf(i, 1, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+
+               do jstate = 1, nstates
+                  wfx(jstate, i) = dsqrt(weights(jstate)) * aux_wf(i, 1, 1)
+               end do
 
             case (2)
                do j = 1, yngrid
@@ -669,16 +736,12 @@ CONTAINS
                   gauss = prefactor * dexp(-(x(i) - x0)**2 / (2 * xsigma**2) - (y(j) - y0)**2 / (2 * ysigma**2))
                   ! momentum calculation p0*(x-x0)
                   momenta = px0 * (x(i) - x0) + py0 * (y(j) - y0)
-                  ! whole imaginary wf
-                  wf2x(init_state, i, j) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+                  ! whole complex wf
+                  aux_wf(i, j, 1) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
-                  ! for the imag time, I create the came wave packet for all states
-                  if (run==1 .and. nstates>=2) then
-                     do jstate = 1, nstates
-                        wf2x(jstate, i, j) = wf2x(init_state, i, j)
-                     end do
-                  end if
-
+                  do jstate = 1, nstates
+                     wf2x(jstate, i, j) = dsqrt(weights(jstate)) * aux_wf(i, j, 1)
+                  end do
                end do
 
             case (3)
@@ -689,32 +752,16 @@ CONTAINS
                            (z(k) - z0)**2 / (2 * zsigma**2))
                      ! momentum calculation p0*(x-x0)
                      momenta = px0 * (x(i) - x0) + py0 * (y(j) - y0) + pz0 * (z(k) - z0)
-                     ! whole imaginary wf
-                     wf3x(init_state, i, j, k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
+                     ! whole complex wf
+                     aux_wf(i, j, k) = dcmplx(gauss * dcos(momenta), gauss * dsin(momenta))
 
-                     ! for the imag time, I create the came wave packet for all states
-                     if (run==1 .and. nstates>=2) then
-                        do jstate = 1, nstates
-                           wf3x(jstate, i, j, k) = wf3x(init_state, i, j, k)
-                        end do
-                     end if
-
+                     do jstate = 1, nstates
+                        wf3x(jstate, i, j, k) = dsqrt(weights(jstate)) * aux_wf(i, j, k)
+                     end do
                   end do
                end do
             end select
          end do
-
-         ! printing norm of generated wf, it is probably point less since I normalize later
-         ! but just to check we have a correct initial guess
-         select case(rank)
-         case(1)
-            norm = braket_1d(wfx(init_state, :), wfx(init_state, :))
-         case(2)
-            norm = braket_2d(wf2x(init_state, :, :), wf2x(init_state, :, :))
-         case(3)
-            norm = braket_3d(wf3x(init_state, :, :, :), wf3x(init_state, :, :, :))
-         end select
-         write(*, '(A17,F10.5)') " norm:                ", norm
 
       else
          write(*, *) "WF will be read from wf.chk file."
@@ -728,23 +775,29 @@ CONTAINS
          !Procedure for loading WF from file
          read(666, *) !two empty lines
          read(666, *)
-         if(rank == 1) read(666, *)wfx(init_state, :)
-         if(rank == 2) read(666, *)wf2x(init_state, :, :)
-         if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
+         if(rank == 1) read(666, *) aux_wf(:, 1, 1)
+         if(rank == 2) read(666, *) aux_wf(:, :, 1)
+         if(rank == 3) read(666, *) aux_wf(:, :, :)
          close(666)
+
+         do jstate = 1, nstates
+            if(rank == 1) wfx(jstate, :) = dsqrt(weights(jstate)) * aux_wf(:, 1, 1)
+            if(rank == 2) wf2x(jstate, :, :) = dsqrt(weights(jstate)) * aux_wf(:, :, 1)
+            if(rank == 3) wf3x(jstate, :, :, :) = dsqrt(weights(jstate)) * aux_wf(:, :, :)
+         end do
       end if
 
-      !Normalize wf
+      ! Normalize IT dynamics wf - it shouldn't be necessary as the Gaussians are normalized but renormalizatino might be
+      ! necessary if the wave function is excaping the grid. While this is a problem for RT dynamics, it is not for IT dynamics
+      ! since we collapse the wave function to the eigenstates and renormalize at every time step.
       if(run==1) then
          do jstate = 1, nstates
             if(rank == 1) call normalize_1d(wfx(jstate, :))
             if(rank == 2) call normalize_2d(wf2x(jstate, :, :))
             if(rank == 3) call normalize_3d(wf3x(jstate, :, :, :))
          end do
-      else if (run==0) then
-         if(rank == 1) call normalize_1d(wfx(init_state, :))
-         if(rank == 2) call normalize_2d(wf2x(init_state, :, :))
-         if(rank == 3) call normalize_3d(wf3x(init_state, :, :, :))
+      else if (run==0) then ! update norm for RT dynamics, if the norm exceeds threshold, it will stop qdyn
+         call update_norm() ! this is for RT dynamics, we normalize the initial wave function
       end if
 
    end subroutine

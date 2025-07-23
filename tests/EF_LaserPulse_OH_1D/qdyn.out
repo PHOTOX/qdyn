@@ -21,7 +21,7 @@
  Field off at               4135.00 a.t.u.
  |E(t)| = 0.0715*sin(3.141592653589793*t/4135)**2*cos(0.17346*t)
  Autocorrelation function:      OFF
- Norm conservation threshold (norm_thresh) set to     0.10000000
+ Norm conservation threshold (norm_thresh) set to     0.01000000
 
  ### Initialization ###
  Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
@@ -37,6 +37,9 @@
  * <psi_1|mu|psi_2> = read from file
  * <psi_2|mu|psi_1> = read from file
  * <psi_2|mu|psi_2> = 0
+ ---------
+ Generating initial wave packet.
+ Initial state:           1
  WF will be read from wf.chk file.
  ---------
  Exact factorization initialization

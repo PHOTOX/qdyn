@@ -51,6 +51,12 @@ The general section sets general variables like time step, number of steps, mass
 
 #### `&init_wf`
 Settings of the initial wave packet.
+- `init_state`: Specifies in which state should be the wave function guess initialized, e.g. `init_state=2` means that the wave 
+  function guess will be put in the second state. Applies only to RT dynamics. 
+- `weights`: Takes the initial wave function guess and spreads across the states with the given weights. Applies only for 
+  RT dynamics and overrides the use of `init_state`. The input is a list of weights for each state, e.g. `weights=0.1,0.2,0.3` for three states. The weights are always renormalized so integer ratios can 
+  be used also. If the number of weights is less than the number of states, the rest will be set to zero. If the number of weights 
+  is larger than the number of states, the code will issue error.
 
 #### `&it`
 Imaginary-time propagation settings.

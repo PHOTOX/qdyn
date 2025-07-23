@@ -15,7 +15,7 @@
  Printing WF:                   OFF
  Electric field:                OFF
  Autocorrelation function:      OFF
- Norm conservation threshold (norm_thresh) set to     0.10000000
+ Norm conservation threshold (norm_thresh) set to     0.01000000
 
  ### Initialization ###
  Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
@@ -26,12 +26,12 @@
  Adiabatic energies and transformation matrix U calculated.
  Time-independent problem, exp(H_el) built.
  ---------
- Generating initial gaussian wave packet.
- initial state:           2
+ Generating initial wave packet.
+ Initial state:           2
+ * Gaussian wave packet parameters:
  x0:               -1.00000
  xsigma:            0.70711
  px0:               0.00000
- norm:              1.00000
  Diabatic populations file:      pop_diab.dat
  Adiabatic populations file:     pop_ad.dat
 
