@@ -587,10 +587,13 @@ CONTAINS
       real(DP) :: x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0 ! read in input
       real(DP) :: prefactor, gauss, momenta, norm ! for generating gaussian wf
       integer :: init_state = 1 ! read from input, inital state for the dynamics
-      logical :: gen_init_wf = .true.
+      real(DP) :: weights(nstates) ! weights for the initial wave function, read from input (input example 'weights = 0.0, 0.6, 0.4'
+      ! where the number of numbers cannot exceed number of states
+      logical :: gen_init_wf = .true. ! flag to generate initial wave function as Gaussian, read by namelist
+      logical :: use_weights = .false. ! flag to use weights for initial wave function, determined from elements of weights
       character(len = 1000) :: line
 
-      namelist /init_wf/x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0, init_state, gen_init_wf
+      namelist /init_wf/x0, y0, z0, xsigma, ysigma, zsigma, px0, py0, pz0, init_state, gen_init_wf, weights
 
       ! Default values for generated gaussian wavepacket
       x0 = (xmax - xmin) / 2.0d0 + xmin + (xmax - xmin) / 10                      ! shifted a little bit so that the wave packet is not symmetric
@@ -603,11 +606,22 @@ CONTAINS
       py0 = 0.0d0
       pz0 = 0.0d0
 
+      ! weights for initial wavefunction
+      ! this option takes the initial wf and puts it exactly as it is on all electronic states with provided weights without phase
+      ! initially, we set the option to 0 for all elements, the code then checks it and if there are non-zero elements, it generates
+      ! the wf by spreading it over all electronic states
+      ! if not provided, the code generates the wf using init_state keyword putting the wf completely on the given state
+      weights = 0.0d0
+
+      ! intial printing
+      write(*, *) "---------"
+      write(*, *) "Generating initial wave packet."
+
       ! reading &init_wf section in the input.q
       rewind(100)
       read(100, init_wf, iostat = iost)
       if (iost.ne.0) then
-         write(*, *)'ERROR: &init_wf section must be provided in input.q'
+         write(*, *)'ERROR: &init_wf section either not provided or incorrect.'
          backspace(100)
          read(100, fmt = '(A)') line
          write(*, '(A)') ' Invalid line in namelist: ' // trim(line)
@@ -615,6 +629,7 @@ CONTAINS
       end if
       close(100)
 
+      ! init_state keyword check
       if (run==1) init_state = 1 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
 
       if ((init_state<1).or.(init_state>nstates)) then
@@ -622,11 +637,55 @@ CONTAINS
          stop 1
       end if
 
-      if (gen_init_wf) then
-         write(*, *) "---------"
-         write(*, *) "Generating initial gaussian wave packet."
+      ! weights checked
+      if (run==1) weights = 0.0 ! for IT dynamics we always initialize in state 1 as we then copy to the other state
 
-         if (run==0) write(*, '(A17,I10)') " initial state:      ", init_state
+      ! check weights and decide whether to use them
+      ! check if there is nonzero element in weights
+      do i = 1, nstates
+         ! check nonzaro values
+         if (weights(i) /= 0.0d0) then
+            use_weights = .true. ! if there is at least one non-zero element, we use weights
+         end if
+      end do
+
+      if ((use_weights).and.(run==0)) then
+         write(*, *) "Initializing wave function in all states according to their weights."
+         do i = 1, nstates
+            !check if it is a positive value
+            if (weights(i) < 0.0d0) then
+               write(*, *) "ERROR: Initial wave function weights must be non-negative."
+               write(*, *) "       state: ", i, ",  weight: ", weights(i)
+               stop 1
+            end if
+         end do
+
+         ! renormalization
+         write(*, *) "Renormalizing state weights."
+         norm = sum(weights**2)
+         weights = weights / sqrt(norm) ! renormalizing weights
+      end if
+
+      ! write what will be used for initialization
+      if (run==0) then
+         if (use_weights) then
+            write(*, '(A17,100(F10.6))') " State weights:      ", weights
+         else
+            write(*, '(A17,I10)') " Initial state:      ", init_state
+         end if
+      end if
+
+      ! now prepare the weights according to the calculation type since it's used to declare initial wave function in all cases
+      if (run==1) then ! for IT dynamics, we initiate at all states the same wave function
+         weights = 1.0d0
+      else if ((run==0).and.(.not.use_weights)) then ! for RT dynamics with weights not set, use the initial state
+         weights = 0.0d0 ! just to make sure its zeros
+         weights(init_state) = 1.0d0 ! giving the only weight to the initial state
+      end if ! else we use the weights provided by user
+
+      if (gen_init_wf) then
+         !         write(*, *) "---------"
+         write(*, *) "* Gaussian wave packet parameters:"
          write(*, '(A17,F10.5)') " x0:              ", x0
          if (rank>=2) write(*, '(A17,F10.5)') " y0:               ", y0
          if (rank>=3) write(*, '(A17,F10.5)') " z0:               ", z0

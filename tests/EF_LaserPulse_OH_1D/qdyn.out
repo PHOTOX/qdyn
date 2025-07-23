@@ -37,6 +37,9 @@
  * <psi_1|mu|psi_2> = read from file
  * <psi_2|mu|psi_1> = read from file
  * <psi_2|mu|psi_2> = 0
+ ---------
+ Generating initial wave packet.
+ Initial state:           1
  WF will be read from wf.chk file.
  ---------
  Exact factorization initialization

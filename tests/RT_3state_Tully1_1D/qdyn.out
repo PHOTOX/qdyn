@@ -31,8 +31,9 @@
  Adiabatic energies and transformation matrix U calculated.
  Time-independent problem, exp(H_el) built.
  ---------
- Generating initial gaussian wave packet.
- initial state:           3
+ Generating initial wave packet.
+ Initial state:           3
+ * Gaussian wave packet parameters:
  x0:              -15.00000
  xsigma:            0.70711
  px0:              20.00000

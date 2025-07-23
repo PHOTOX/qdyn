@@ -35,8 +35,9 @@
  * <psi_2|mu|psi_1> = read from file
  * <psi_2|mu|psi_2> = 0
  ---------
- Generating initial gaussian wave packet.
- initial state:           1
+ Generating initial wave packet.
+ Initial state:           1
+ * Gaussian wave packet parameters:
  x0:                0.05283
  xsigma:            0.24949
  px0:               0.00000
