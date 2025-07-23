@@ -10,7 +10,7 @@ module mod_vars
    real(DP) :: xmin, xmax, dx, ymin, ymax, dy, zmin, zmax, dz, dtwrite, dt
    real(DP) :: mass_x = 0.0, mass_y = 0.0, mass_z = 0.0
    real(DP) :: time = 0.0, norm, energy(3), energy_diff ! energy(total, potential, kinetic)
-   real(DP) :: norm_thresh = 1.0d-1
+   real(DP) :: norm_thresh = 1.0d-2 ! threshold for norm conservation, used in RT dynamics
    real(DP), dimension(:), allocatable :: x, y, z, px, py, pz
    real(DP), dimension(:), allocatable :: diab_pop, ad_pop
    logical :: project_rot = .true., analytic = .true., print_wf = .true.

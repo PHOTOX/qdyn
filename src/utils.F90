@@ -140,26 +140,11 @@ CONTAINS
          norm = braket_3d(wf3x(1, :, :, :), wf3x(1, :, :, :))
       end select
 
-      !TODO: here should be norm check with some clever threshold
-      ! currenlty very simple patch
+      ! check norm
       if (dabs(dsqrt(norm) - 1.0d0) >= norm_thresh .and. run == 0) then
-         write(*, '(a,F10.8,a)') "WARNING! Norm (", norm, ") exceeded threshold"
-         write(*, *) "Renormalization!"
-         select case(rank)
-         case(1)
-            wfx(:, :) = wfx(:, :) / dsqrt(norm)
-            norm = 0.0d0
-            do istate = 1, nstates
-               norm = norm + braket_1d(wfx(istate, :), wfx(istate, :))
-            end do
-         case(2)
-            call normalize_2d(wf2x(1, :, :))
-            norm = braket_2d(wf2x(1, :, :), wf2x(1, :, :))
-         case(3)
-            call normalize_3d(wf3x(1, :, :, :))
-            norm = braket_3d(wf3x(1, :, :, :), wf3x(1, :, :, :))
-         end select
-
+         write(*, '(a,F10.8,a,F10.8,a)') "ERROR: Norm (", norm, ") deviation from 1.0 exceeded threshold (", norm_thresh, ")!"
+         write(*, '(a)') "Check your time step and grid, or potentially use 'norm_thresh' keyword in &rt."
+         stop 1
       end if
 
    end subroutine update_norm

@@ -4,7 +4,7 @@
     dt = 10.0
     dtwrite = 50.0
     xngrid = 2048
-    xmin = -16.0
+    xmin = -18.0
     xmax = 32.0
     mass_x = 2000.0
     nstates = 3

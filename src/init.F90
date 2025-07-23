@@ -777,24 +777,20 @@ CONTAINS
          if(rank == 1) read(666, *)wfx(init_state, :)
          if(rank == 2) read(666, *)wf2x(init_state, :, :)
          if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
-
-!         if(rank == 1) read(666, *)wfx(init_state, :)
-!         if(rank == 2) read(666, *)wf2x(init_state, :, :)
-!         if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
          close(666)
       end if
 
-      !Normalize wf
+      ! Normalize IT dynamics wf - it shouldn't be necessary as the Gaussians are normalized but renormalizatino might be
+      ! necessary if the wave function is excaping the grid. While this is a problem for RT dynamics, it is not for IT dynamics
+      ! since we collapse the wave function to the eigenstates and renormalize at every time step.
       if(run==1) then
          do jstate = 1, nstates
             if(rank == 1) call normalize_1d(wfx(jstate, :))
             if(rank == 2) call normalize_2d(wf2x(jstate, :, :))
             if(rank == 3) call normalize_3d(wf3x(jstate, :, :, :))
          end do
-      else if (run==0) then
-         if(rank == 1) call normalize_1d(wfx(init_state, :))
-         if(rank == 2) call normalize_2d(wf2x(init_state, :, :))
-         if(rank == 3) call normalize_3d(wf3x(init_state, :, :, :))
+      else if (run==0) then ! update norm for RT dynamics, if the norm exceeds threshold, it will stop qdyn
+         call update_norm() ! this is for RT dynamics, we normalize the initial wave function
       end if
 
    end subroutine

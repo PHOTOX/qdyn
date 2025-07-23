@@ -15,7 +15,7 @@
  Printing WF:                   OFF
  Electric field:                OFF
  Autocorrelation function:       ON
- Norm conservation threshold (norm_thresh) set to     0.10000000
+ Norm conservation threshold (norm_thresh) set to     0.01000000
 
  ### Initialization ###
  Diabatic electronic Hamiltonian (H_el) read from files (H.i.j.dat)
