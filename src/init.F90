@@ -774,10 +774,16 @@ CONTAINS
          !Procedure for loading WF from file
          read(666, *) !two empty lines
          read(666, *)
-         if(rank == 1) read(666, *)wfx(init_state, :)
-         if(rank == 2) read(666, *)wf2x(init_state, :, :)
-         if(rank == 3) read(666, *)wf3x(init_state, :, :, :)
+         if(rank == 1) read(666, *) aux_wf(:, 1, 1)
+         if(rank == 2) read(666, *) aux_wf(:, :, 1)
+         if(rank == 3) read(666, *) aux_wf(:, :, :)
          close(666)
+
+         do jstate = 1, nstates
+            if(rank == 1) wfx(jstate, :) = weights(jstate) * aux_wf(:, 1, 1)
+            if(rank == 2) wf2x(jstate, :, :) = weights(jstate) * aux_wf(:, :, 1)
+            if(rank == 3) wf3x(jstate, :, :, :) = weights(jstate) * aux_wf(:, :, :)
+         end do
       end if
 
       ! Normalize IT dynamics wf - it shouldn't be necessary as the Gaussians are normalized but renormalizatino might be
