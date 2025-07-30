@@ -169,10 +169,10 @@ This software uses the FFTW3 library (Frigo and Johnson, Proc. IEEE, 93(2), 2005
 ## Citation
 If you use QDyn in your research, please cite:
 ```bibtex
-@software{cqdyn,
-  title = {cQDyn: coefficient-based Quantum Dynamics},
-  author = {Janoš, Jiří},
-  url = {https://github.com/JanosJiri/cqdyn},
+@software{qdyn,
+  title = {QDyn: Quantum Dynamics code},
+  author = {Janoš, Jiří; Suchan, Jiří; Slavíček, Petr},
+  url = {https://github.com/PHOTOX/qdyn},
   year = {2025},
 }
 ```
