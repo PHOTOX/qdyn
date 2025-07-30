@@ -171,7 +171,7 @@ If you use QDyn in your research, please cite:
 ```bibtex
 @software{qdyn,
   title = {QDyn: Quantum Dynamics code},
-  author = {Janoš, Jiří; Suchan, Jiří; Slavíček, Petr},
+  author = {Janoš, Jiří and Suchan, Jiří and Slavíček, Petr},
   url = {https://github.com/PHOTOX/qdyn},
   year = {2025},
 }
