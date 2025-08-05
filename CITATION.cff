@@ -1,0 +1,14 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Janoš
+    given-names: Jiří
+    orcid: https://orcid.org/0000-0001-5903-8538
+  - family-names: Suchan
+    given-names: Jiří
+  - family-names: Slavíček
+    given-names: Petr
+title: "QDyn: Quantum Dynamics code"
+version: 1.0
+url: "https://github.com/PHOTOX/qdyn"
+date-released: 2025-07-30
