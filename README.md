@@ -1,3 +1,7 @@
+[![Version](https://img.shields.io/badge/Version-1.0-blue)](https://github.com/PHOTOX/qdyn/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](/LICENSE)
+[![CI](https://github.com/PHOTOX/qdyn/actions/workflows/tests.yml/badge.svg)](https://github.com/PHOTOX/qdyn/actions/workflows/tests.yml)
+
 # QDyn: Quantum Dynamics code
 
 **Autors:** Jiří Janoš, Jiří Suchan, Petr Slavíček
