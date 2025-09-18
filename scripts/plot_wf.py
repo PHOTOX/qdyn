@@ -148,7 +148,7 @@ def plot_rt_1d():
                         axs_pop.plot(pop_ad[0, :i], pop_ad[state, :i], label=f'state {state:d}')
                         axs_pop.set_ylabel('Adiabitc populaitons')
                     else:
-                        axs_pop.plot(pop_diab[0], pop_diab[state], label=f'state {state:d}')
+                        axs_pop.plot(pop_diab[0, :i], pop_diab[state, :i], label=f'state {state:d}')
                         axs_pop.set_ylabel('Diabatic populaitons')
                 if adiabatic:
                     axs_pop.plot(pop_ad[0, :i], pop_ad[-1, :i], label=f'norm', color='black')
