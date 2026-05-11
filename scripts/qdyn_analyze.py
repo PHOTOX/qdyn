@@ -437,7 +437,7 @@ class calc:
     def bracket_1d(bra, c, ket, x):
         """1D bracket calculation."""
         bracket = np.conjugate(bra) * c * ket
-        return np.trapz(bracket, x=x)
+        return np.trapezoid(bracket, x=x)
 
     def wf_energy_1d(wf, pot, mass, x):
         """Wave function energy. This function is calculates energy of the wave function on a given state in BH
@@ -491,7 +491,7 @@ class calc:
         y = np.arange(ymin, ymax, dy)
 
         integrand = wf_interp(xp + y / 2) * np.conjugate(wf_interp(xp - y / 2)) * np.exp(pp * y * 1j)
-        return np.real(np.trapz(x=y, y=integrand) / 2 / np.pi)
+        return np.real(np.trapezoid(x=y, y=integrand) / 2 / np.pi)
 
     def wigner1d_density(wf, x, dy=0.002):
         """Calculating wigner transform of a given wave function.
@@ -661,7 +661,7 @@ class calc:
         for t in range(ntimes):
             for i in range(nstates):
                 for j in range(nstates):
-                    density_matrix[i, j, t] = np.trapz(np.conjugate(wf[i, t]) * wf[j, t], x)
+                    density_matrix[i, j, t] = np.trapezoid(np.conjugate(wf[i, t]) * wf[j, t], x)
 
         return density_matrix
 

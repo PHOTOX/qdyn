@@ -141,7 +141,7 @@ if not analytic:
     if convolution:
         if rank == 1:
             kernel = np.exp(-(x - np.median(x))**2/np.var(x)*1000)
-            kernel = kernel/np.trapz(kernel)
+            kernel = kernel/np.trapezoid(kernel)
             pot[10:-10] = np.convolve(pot, kernel, 'same')[10:-10]
         else:
             print('ERROR: Convolution available only for rank 1!')
