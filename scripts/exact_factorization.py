@@ -154,7 +154,7 @@ def plot_ef_1d():
         axs_gdtdpes.plot(x, gdtdpes[i], color=colors[0], lw=2, label=r'$\varepsilon_{GD}$', zorder=0)
         tdpes = gdtdpes[i] + gitdpes[i, 4]
         axs_gdtdpes.plot(x, tdpes, color=colors[1], lw=2, label=r'$\varepsilon$', zorder=-1)
-        averageE = np.trapz(nucdens[i] * tdpes, x)
+        averageE = np.trapezoid(nucdens[i] * tdpes, x)
         if plot_density:
             axs_gdtdpes.plot(x, nucdens[i] + averageE, color=colors[2],
                              label=r'$|\chi|^2 + \langle\chi|\varepsilon|\chi\rangle$')

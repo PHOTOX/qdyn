@@ -1,6 +1,6 @@
 from os.path import exists
 
-from numpy import genfromtxt, linspace, interp, std, trapz, sqrt, array, reshape, shape
+from numpy import genfromtxt, linspace, interp, std, trapezoid, sqrt, array, reshape, shape
 
 xngrid = 256
 
@@ -34,10 +34,10 @@ x = [[], [], []]
 for i in range(0, nframes_wf, 10):
     x[0].append(t[i] * 0.02418884254)
     dx = wf[i][0][1] - wf[i][0][1]
-    norm = trapz(wf[i][3], wf[i][0], dx=dx)
-    aver_x = trapz(wf[i][3] * wf[i][0], wf[i][0], dx=dx) / norm
+    norm = trapezoid(wf[i][3], wf[i][0], dx=dx)
+    aver_x = trapezoid(wf[i][3] * wf[i][0], wf[i][0], dx=dx) / norm
     x[1].append(aver_x)
-    aver_dx = sqrt(trapz(wf[i][3] * wf[i][0] ** 2, wf[i][0], dx=dx) / norm - aver_x ** 2)
+    aver_dx = sqrt(trapezoid(wf[i][3] * wf[i][0] ** 2, wf[i][0], dx=dx) / norm - aver_x ** 2)
     x[2].append(aver_dx)
 x = array(x)
 

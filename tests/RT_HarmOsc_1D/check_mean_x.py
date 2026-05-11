@@ -21,7 +21,7 @@ t = energy[0]
 # calculating mean x position
 x_mean = []
 for i in range(0, nframes_wf):
-    x_mean.append(np.trapz(y=wf[i, 3] * wf[i, 0], x=wf[i, 0]))
+    x_mean.append(np.trapezoid(y=wf[i, 3] * wf[i, 0], x=wf[i, 0]))
 
 # calculating exact result
 exact = x0 * np.cos(exact_omega * t)
